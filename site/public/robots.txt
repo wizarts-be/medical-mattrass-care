@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.medical-mattress-care.com/sitemap.xml

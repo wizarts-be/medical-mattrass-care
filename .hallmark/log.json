@@ -1,0 +1,32 @@
+[
+ {
+  "shape": "Split Studio",
+  "theme": "loom",
+  "axes": "light/roman-serif/cool",
+  "hero": "Counter",
+  "nav": "search-led bar",
+  "footer": "mast",
+  "imagery": "client product photographs 30, catalogue crops 7, multiplied into sand wells",
+  "photos": [],
+  "entry": "none",
+  "fingerprint": "counter-index-grid-statement-pinned-facts-band",
+  "sections": [
+   "Counter",
+   "Index",
+   "Grid",
+   "Statement",
+   "Pinned",
+   "Facts 2x2",
+   "Band"
+  ],
+  "signature": "the MMC V10 offer in the hero, width picked, quote prefilled",
+  "waived": [
+   "44c",
+   "49b",
+   "59"
+  ],
+  "prompt": "Medical Mattress Care B2B care mattresses site, Carvico inspo",
+  "date": "2026-11-06",
+  "mode": "build"
+ }
+]

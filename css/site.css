@@ -608,3 +608,20 @@ html:not(.js) .nav--over { position: absolute; }
 .contactgrid .card-box:first-child h2 { color: var(--color-accent-muted); }
 .contactgrid .card-box:first-child .big { color: var(--color-accent-ink); }
 .contactgrid .card-box:first-child .big:focus-visible { outline-color: var(--color-accent-ink); }
+
+
+/* UBR: wat de klant eraan heeft, per doelgroep */
+.ubr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+.ubr__col { display: grid; gap: var(--space-xl); align-content: start; justify-items: start; padding: var(--space-2xl); border-radius: var(--radius-lg); background: var(--color-tint); }
+.ubr__col h3 { font-size: var(--text-xl); }
+.ubr__col ul { display: grid; gap: var(--space-lg); margin: 0; padding: 0; list-style: none; }
+.ubr__col li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-md); align-items: start; }
+.ubr__col li .icon { margin-top: var(--space-2xs); color: var(--color-ok); }
+.ubr__col b { display: block; font-weight: 500; font-size: var(--text-lg); line-height: 1.3; color: var(--color-ink); }
+.ubr__col span { display: block; margin-top: var(--space-2xs); color: var(--color-ink-2); }
+.ubr__col--dark { position: relative; isolation: isolate; overflow: hidden; background: var(--color-deep); color: var(--color-accent-ink); --color-focus: var(--color-accent-ink); }
+.ubr__col--dark::after { content: ""; position: absolute; z-index: -1; right: -10%; bottom: -14%; width: 60%; aspect-ratio: 464 / 280; background: color-mix(in oklab, var(--color-accent-ink) 5%, transparent); -webkit-mask: url("../logo/mmc-icoon-wit.svg") center / contain no-repeat; mask: url("../logo/mmc-icoon-wit.svg") center / contain no-repeat; pointer-events: none; }
+.ubr__col--dark h3, .ubr__col--dark b { color: var(--color-accent-ink); }
+.ubr__col--dark span { color: var(--color-accent-muted); }
+.ubr__col--dark li .icon { color: var(--color-signal); }
+@media (max-width: 60rem) { .ubr { grid-template-columns: minmax(0, 1fr); } .ubr__col { padding: var(--space-xl) var(--space-lg); } }

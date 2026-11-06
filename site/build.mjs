@@ -10,6 +10,12 @@ import t from './src/i18n/nl.mjs';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const OUT = join(ROOT, 'public');
 const KEEP = new Set(['css', 'js', 'img', 'logo', 'docs']);
+// Voorbeeld op een subpad (bv. GitHub Pages): BASE_PATH=/medical-mattrass-care node build.mjs
+const BASE = (process.env.BASE_PATH || '').replace(/\/$/, '');
+const withBase = (html) => (!BASE ? html : html
+  .replace(/(\s(?:href|src|action)=")\/(?!\/)/g, `$1${BASE}/`)
+  .replace('<link rel="icon"', '<meta name="robots" content="noindex, nofollow">\n<link rel="icon"')
+  .replace('<script src="' + BASE + '/js/zoekindex.js" defer></script>', `<script>window.MMC_BASE="${BASE}/";window.MMC_HOME="";</script>\n<script src="${BASE}/js/zoekindex.js" defer></script>`));
 
 // ───────── helpers ─────────
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -206,7 +212,7 @@ const grid = (ps, cls = '') => `<ul class="pgrid ${cls}">${ps.map((p) => card(p)
 function page(path, html) {
   const dir = join(OUT, path);
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, 'index.html'), html);
+  writeFileSync(join(dir, 'index.html'), withBase(html));
   gebouwd.push(path);
 }
 const gebouwd = [];
@@ -653,15 +659,15 @@ ${footer()}`);
 }
 
 // ───────── 404 ─────────
-writeFileSync(join(OUT, '404.html'), `${head({ title: 'Pagina niet gevonden', description: 'Deze pagina bestaat niet (meer).', path: '/404.html' })}
+writeFileSync(join(OUT, '404.html'), withBase(`${head({ title: 'Pagina niet gevonden', description: 'Deze pagina bestaat niet (meer).', path: '/404.html' })}
 ${nav()}
 <main id="main">${pagehead([['/', t.home], ['/404.html', 'Niet gevonden']], 'Deze pagina bestaat niet meer', 'Zoek op naam of bestelcode, of bekijk alle producten.', `<div class="actions"><a class="btn" href="/producten/">Alle producten</a></div>`)}</main>
-${footer()}`);
+${footer()}`));
 
 // ───────── zoekindex, sitemap, robots, redirects ─────────
 writeFileSync(join(OUT, 'js', 'zoekindex.js'), `window.MMC_INDEX=${JSON.stringify(producten.map((p) => ({ n: p.naam, c: p.code || '', k: p.kort, u: urlVan(p), f: heeftFoto(p) ? '/img/producten/' + p.foto : '', t: p.toepassingen, v: p.varianten && /MMC/.test(p.varianten.rijen[0][0]) ? p.varianten.rijen.map((r) => r[0]) : [] })))};`);
 writeFileSync(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${gebouwd.filter((p) => !['fr', 'en'].includes(p)).map((p) => `  <url><loc>${bedrijf.url}/${p ? p + '/' : ''}</loc></url>`).join('\n')}\n</urlset>\n`);
-writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${bedrijf.url}/sitemap.xml\n`);
+writeFileSync(join(OUT, 'robots.txt'), BASE ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\nSitemap: ${bedrijf.url}/sitemap.xml\n`);
 const red = Object.entries(oudeUrls).filter(([a, b]) => a !== b);
 writeFileSync(join(OUT, '_redirects'), red.map(([a, b]) => `${a} ${b} 301`).join('\n') + '\n');
 writeFileSync(join(OUT, '.htaccess'), `ErrorDocument 404 /404.html\n` + red.map(([a, b]) => `Redirect 301 ${a} ${b}`).join('\n') + '\n');

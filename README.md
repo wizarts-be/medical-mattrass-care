@@ -28,3 +28,7 @@ Een product aanpassen of toevoegen: wijzig `src/data/producten.mjs` en bouw opni
 ## Ontwerp
 
 Fira Sans (huisstijl), MMC-indigo en oranje als signaal, volle vlakken van rand tot rand, inspiratie Carvico. Tokens in `public/css/tokens.css`, basis in `base.css`, de site in `site.css`. Gecontroleerd met Hallmark (sloplint).
+
+## Voorbeeld online
+
+Elke push naar `main` bouwt de site en zet ze op GitHub Pages: https://wizarts-be.github.io/medical-mattrass-care/ (met `noindex`, niet bedoeld voor Google). Lokaal bouwen met een subpad: `BASE_PATH=/medical-mattrass-care node site/build.mjs`.

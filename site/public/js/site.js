@@ -6,6 +6,15 @@
   const norm = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim();
   const escH = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const params = new URLSearchParams(location.search);
+  // Op een gedeelde kopie (relatieve paden) zet de pagina window.MMC_BASE; anders blijven paden absoluut.
+  const BASE = window.MMC_BASE;
+  const rel = (u) => {
+    if (BASE === undefined || !u || !u.startsWith('/')) return u;
+    let p = u.slice(1);
+    if (p === '') p = window.MMC_HOME ?? 'home.html';
+    else if (p.endsWith('/')) p += 'index.html';
+    return BASE + p;
+  };
 
   // ── Panelen in de navigatie: menu (mobiel), productmenu, zoeken ──
   const toggles = [];
@@ -67,7 +76,7 @@
       if (!input.value.trim()) return close();
       const res = zoek(input.value).slice(0, 7);
       list.innerHTML = res.length
-        ? res.map((p, i) => `<li role="option" id="zr-${i}" aria-selected="false"><a href="${p.u}" tabindex="-1">${p.f ? `<img src="${p.f}" alt="">` : '<span class="thumb-empty"></span>'}<span><b>${escH(p.n)}</b><small>${escH(p.c)}</small></span></a></li>`).join('')
+        ? res.map((p, i) => `<li role="option" id="zr-${i}" aria-selected="false"><a href="${rel(p.u)}" tabindex="-1">${p.f ? `<img src="${rel(p.f)}" alt="">` : '<span class="thumb-empty"></span>'}<span><b>${escH(p.n)}</b><small>${escH(p.c)}</small></span></a></li>`).join('')
         : '<li class="search__empty" role="option" aria-disabled="true">Geen product gevonden. Probeer een bestelcode, zoals MMC V10.</li>';
       list.hidden = false;
       input.setAttribute('aria-expanded', 'true');

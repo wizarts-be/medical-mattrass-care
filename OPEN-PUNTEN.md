@@ -12,8 +12,7 @@
 8. **MMC TVP 24**: aantal per doos.
 9. **Bestelcodes ontbreken** voor MMC Thuis matras (enkel CNK-codes), politiecelmatras, MMC baby dekbed en MMC AT cover.
 10. **Maatwerkproces**: kloppen de drie stappen op `/maatwerk/` (maten sturen, opbouw en offerte, maken en leveren)?
-11. **"Wie belt, krijgt Michel aan de lijn"** (over-mmc): akkoord om dit zo te zeggen?
-12. **"Eén vast aanspreekpunt: Michel Marynissen zelf"** (homepage, sectie "Wat u eraan heeft"): klopt dat? Zo niet, wordt het "Een persoonlijk aanspreekpunt".
+11. **"Eén vast aanspreekpunt: Michel Marynissen zelf"** (homepage, sectie "Wat u eraan heeft"): klopt dat? Zo niet, wordt het "Een persoonlijk aanspreekpunt".
 
 ## Foto's (grootste winst)
 

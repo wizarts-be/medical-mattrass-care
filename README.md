@@ -31,4 +31,4 @@ Fira Sans (huisstijl), MMC-indigo en oranje als signaal, volle vlakken van rand 
 
 ## Voorbeeld online
 
-Elke push naar `main` bouwt de site en zet ze op GitHub Pages: https://wizarts-be.github.io/medical-mattrass-care/ (met `noindex`, niet bedoeld voor Google). Lokaal bouwen met een subpad: `BASE_PATH=/medical-mattrass-care node site/build.mjs`.
+Het voorbeeld staat op GitHub Pages: https://wizarts-be.github.io/medical-mattrass-care/ (met `noindex`, niet bedoeld voor Google). Bijwerken na een wijziging: `sh site/deploy-pages.sh` vanuit deze map. Het script bouwt de site met het subpad en zet ze op de branch `gh-pages`.

@@ -258,6 +258,34 @@ ${nav('', true)}
     </div>
   </section>
 
+  <section class="section" aria-labelledby="ubr-titel">
+    <div class="container">
+      <div class="shead"><div><h2 id="ubr-titel">Wat u eraan heeft</h2></div></div>
+      <div class="ubr">
+        <div class="ubr__col ubr__col--dark">
+          <h3>Voor de aankoper</h3>
+          <ul>
+            <li>${icon('check', 'icon--20')}<div><b>Geen wachttijd bij een tekort</b><span>Bijna alles uit stock.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Eén leverancier, één offerte</b><span>Van matras tot hoeslaken.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Geen verrassingen in prijs of service</b><span>Fairsales-gecertificeerd.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Eén vast aanspreekpunt</b><span>Michel Marynissen zelf.</span></div></li>
+          </ul>
+          <a class="btn btn--signal" href="/offerte/">${t.offerte}</a>
+        </div>
+        <div class="ubr__col">
+          <h3>Voor verpleging en ergotherapie</h3>
+          <ul>
+            <li>${icon('check', 'icon--20')}<div><b>Minder werk aan het bed</b><span>Hoeslaken door één persoon op te leggen.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Veilig voor uw infectiebeleid</b><span>MRSA-bestendig, 95&nbsp;°C wasbaar.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Langer gebruik, minder vervangen</b><span>Hoeslaken 350 keer wasbaar.</span></div></li>
+            <li>${icon('check', 'icon--20')}<div><b>Past ook bij een afwijkend bed</b><span>Maatwerk mogelijk.</span></div></li>
+          </ul>
+          <a class="btn btn--ghost" href="/producten/">Bekijk producten</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="spot" aria-labelledby="hoes-titel">
     <div class="spot__panel">
       <div class="spot__body">

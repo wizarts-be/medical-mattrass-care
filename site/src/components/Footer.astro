@@ -69,9 +69,8 @@ const jaar = new Date().getFullYear();
   h2 { font-size: var(--step--1); font-family: var(--text-face); font-weight: 500; letter-spacing: 0; color: var(--on-indigo); margin-bottom: 0.9rem; font-stretch: 100%; }
   .mt { margin-top: var(--space-m); }
   ul { list-style: none; padding: 0; display: grid; gap: 0.45rem; }
-  a { color: var(--on-indigo-muted); text-decoration: none; }
-  a:hover { color: var(--on-indigo); text-decoration: underline; text-decoration-color: var(--orange); }
-  .intro .btn:hover { text-decoration: none; }
+  a:not(.btn) { color: var(--on-indigo-muted); text-decoration: none; }
+  a:not(.btn):hover { color: var(--on-indigo); text-decoration: underline; text-decoration-color: var(--orange); }
   address { font-style: normal; }
   .uren { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1rem; margin-top: 0.75rem; justify-content: start; font-variant-numeric: tabular-nums; }
   .uren dd { margin: 0; color: var(--on-indigo); }

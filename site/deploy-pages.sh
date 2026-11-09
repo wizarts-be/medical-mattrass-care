@@ -4,8 +4,7 @@
 set -e
 REPO=wizarts-be/medical-mattrass-care
 NAME=medical-mattrass-care
-URL=https://github.com/$REPO.git
-CRED='!gh auth git-credential'
+URL=git@github-work:$REPO.git
 TMP=$(mktemp -d)
 
 # 1. Build
@@ -42,7 +41,7 @@ printf 'User-agent: *\nDisallow: /\n' > "$TMP/build/robots.txt"
 touch "$TMP/build/.nojekyll"
 
 # 3. Fetch gh-pages (or start it), replace its contents with the new build
-if git -c credential.helper= -c "credential.helper=$CRED" clone -q --depth 1 --branch gh-pages "$URL" "$TMP/out" 2>/dev/null; then
+if git clone -q --depth 1 --branch gh-pages "$URL" "$TMP/out" 2>/dev/null; then
   :
 else
   mkdir "$TMP/out" && (cd "$TMP/out" && git init -q -b gh-pages && git remote add origin "$URL")
@@ -55,5 +54,5 @@ cd "$TMP/out"
 git add -A
 if git diff --cached --quiet; then echo "No changes."; exit 0; fi
 git -c user.name="Wizarts" -c user.email="ai@wizarts.be" commit -q -m "Update preview (v2)"
-git -c credential.helper= -c "credential.helper=$CRED" push -q origin gh-pages
+git push -q origin gh-pages
 echo "Published: https://wizarts-be.github.io/$NAME/"

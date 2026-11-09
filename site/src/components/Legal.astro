@@ -6,11 +6,11 @@ interface Props { title: string }
 const { title } = Astro.props;
 ---
 <Base title={title} description={`${title} van ${bedrijf.naam}.`} noindex>
-  <PageHead title={title} crumbs={[{ label: title }]} tone="night" />
-  <div class="wrap prose body">
+  <PageHead title={title} crumbs={[{ label: title }]} />
+  <div class="band band--sheet"><div class="prose body">
     <p>Deze tekst wordt nog aangevuld. Vragen? Mail naar <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>.</p>
     <p>{bedrijf.naam}, {bedrijf.straat}, {bedrijf.postcode} {bedrijf.gemeente}. Ondernemingsnummer {bedrijf.btw}.</p>
     <p>Deze website plaatst geen tracking- of advertentiecookies.</p>
-  </div>
+  </div></div>
 </Base>
-<style>.body { padding-block: var(--space-xl); }</style>
+<style>.body { font-size: var(--step-1); line-height: 1.6; color: var(--ink); }</style>

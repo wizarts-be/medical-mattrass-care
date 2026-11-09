@@ -20,33 +20,35 @@ const maatwerk = items.some((p) => p.maatwerk);
       <div><dt>Producten</dt><dd>{items.length}</dd></div>
       {maatwerk && <div><dt>Maatwerk</dt><dd>mogelijk</dd></div>}
     </dl>
+    <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
   </PageHead>
 
-  <div class="wrap body">
+  <section class="band band--sheet" aria-label={`Alle ${c.naam.toLowerCase()}`}>
     <ul class="grid-cards">{items.map((p) => <ProductCard p={p} headingLevel="h2" />)}</ul>
+  </section>
 
-    <aside class="others" aria-labelledby="andere">
-      <h2 id="andere">Andere categorieën</h2>
-      <ul>
-        {andere.map((x) => (<li><a href={categorieUrl(x)}>{x.naam} <Icon name="arrow" /></a></li>))}
-      </ul>
-    </aside>
-  </div>
+  <nav class="band band--white others" aria-labelledby="andere">
+    <h2 id="andere" class="title-xl">Ook in het gamma.</h2>
+    <ul>
+      {andere.map((x) => (<li><a href={categorieUrl(x)}><span>{x.naam}</span><span class="n">{perCategorie(x.slug).length}</span><Icon name="arrow" /></a></li>))}
+    </ul>
+  </nav>
 
   <QuoteBand />
 </Base>
 
 <style>
-  .facts { display: grid; grid-template-columns: repeat(3, auto); gap: 1.5rem; justify-content: start; }
-  .facts div { border-top: 1px solid var(--sheet-line); padding-top: 0.6rem; }
+  .facts { display: grid; grid-auto-flow: column; grid-auto-columns: max-content; gap: 2rem; }
+  .facts div { border-top: 2px solid var(--orange); padding-top: 0.6rem; }
   .facts dt { font-size: var(--step--1); color: var(--muted); }
-  .facts dd { margin: 0; font-family: var(--display); font-stretch: 112%; font-weight: 560; font-size: var(--step-2); color: var(--ink); }
-  .body { display: grid; gap: var(--space-xl); padding-block: var(--space-xl) var(--space-2xl); }
-  .grid-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem); }
-  .others h2 { font-size: var(--step--1); font-family: var(--text-face); font-stretch: 100%; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-bottom: 0.75rem; }
-  .others ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .others a { display: inline-flex; gap: 0.6rem; align-items: center; padding: 0.6rem 1rem; border: 1px solid var(--sheet-line); background: var(--white); text-decoration: none; color: var(--ink); }
-  .others a :global(svg) { width: 1rem; color: var(--indigo); transition: transform 0.3s var(--ease-out); }
-  .others a:hover :global(svg) { transform: translateX(3px); color: var(--orange-deep); }
-  
+  .facts dd { margin: 0; font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; color: var(--ink); }
+  .others { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--space-l) var(--space-xl); align-items: start; }
+  .others ul { list-style: none; padding: 0; display: grid; }
+  .others a { display: grid; grid-template-columns: 1fr auto 1.2rem; gap: 1rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--sheet-line); text-decoration: none; color: var(--ink); font-family: var(--display); font-stretch: 112%; font-weight: 650; font-size: var(--step-1); letter-spacing: -0.02em; transition: color 0.25s var(--ease-out); }
+  .others a > span:first-child { transition: transform 0.4s var(--ease-out); }
+  .others li:last-child a { border-bottom: 1px solid var(--sheet-line); }
+  .others .n { font-family: var(--text-face); font-weight: 400; font-size: var(--step--1); color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .others a :global(svg) { width: 1.1rem; color: var(--ink); transition: transform 0.35s var(--ease-out), color 0.25s; }
+  @media (hover: hover) { .others a:hover > span:first-child { transform: translateX(0.6rem); } .others a:hover :global(svg) { transform: translateX(4px); color: var(--orange-deep); } }
+  @media (max-width: 900px) { .others { grid-template-columns: 1fr; } }
 </style>

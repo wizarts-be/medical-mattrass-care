@@ -1,25 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
 import Icon from '../components/Icon.astro';
 ---
 <Base title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." noindex>
-  <section class="nf">
-    <div class="wrap">
-      <p class="big" aria-hidden="true">404</p>
-      <h1>Deze pagina is opgeruimd.</h1>
-      <p>Misschien verhuisde ze met onze nieuwe website. Zoek verder in het gamma of vraag het ons.</p>
-      <div class="cta">
-        <a class="btn btn--light" href="/producten/">Naar de producten <Icon name="arrow" /></a>
-        <a class="btn btn--ghost-light" href="/">Naar de startpagina</a>
-      </div>
+  <PageHead title="Deze pagina" accent="is opgeruimd." lede="Misschien verhuisde ze met onze nieuwe website. Zoek verder in het gamma, of vraag het ons." tone="image" image={{ src: '/img/beeld/hero-2560.webp', mobile: '/img/beeld/hero-1280.webp' }}>
+    <div class="cta">
+      <a class="btn btn--light" href="/producten/">Naar de producten <Icon name="arrow" /></a>
+      <a class="btn btn--ghost-light" href="/">Naar de startpagina</a>
     </div>
-  </section>
+  </PageHead>
 </Base>
-<style>
-  .nf { background: var(--indigo); color: var(--on-indigo); padding-block: var(--space-2xl); min-height: 70vh; }
-  .big { font-family: var(--display); font-stretch: 125%; font-weight: 600; font-size: clamp(6rem, 22vw, 18rem); line-height: 0.8; letter-spacing: -0.06em; color: var(--indigo-soft); }
-  h1 { color: var(--on-indigo); font-size: var(--step-4); margin-top: var(--space-m); }
-  p:not(.big) { color: var(--on-indigo-muted); margin-top: 1rem; max-width: 46ch; }
-  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: var(--space-m); }
-  
-</style>
+<style>.cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }</style>

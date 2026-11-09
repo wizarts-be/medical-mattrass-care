@@ -20,61 +20,66 @@ const stappen = [
 const voorbeelden = zichtbaar.filter((p) => p.maatwerk && ['mmc-v10', 'mmc-flex', 'mmc-cg-02', 'mmc-zp-05', 'mmc-km-14'].includes(p.slug));
 ---
 <Base title="Maatwerk" description="Medische matrassen, kussens en hulpstukken op maat. Medical Mattress Care maakt ze in de opbouw en maat die uw instelling nodig heeft.">
-  <PageHead title="Op maat gemaakt." lede="Zit uw matras er niet bij? MMC levert matrassen, kussens en hulpstukken in opbouw en maat naar uw wens." crumbs={[{ label: 'Maatwerk' }]}>
+  <PageHead title="Zit het er niet bij?" accent="Wij maken het." lede="MMC levert matrassen, kussens en hulpstukken in opbouw en maat naar uw wens. In ons eigen Vlaams productiehuis." crumbs={[{ label: 'Maatwerk' }]}>
     <a class="btn" href="/offerte/?type=maatwerk">Maatwerk aanvragen <Icon name="arrow" /></a>
   </PageHead>
 
-  <div class="wrap section">
-    <h2>Wat kan op maat</h2>
-    <dl class="what">
-      {wat.map((w) => (<div><dt>{w.t}</dt><dd>{w.d}</dd></div>))}
-    </dl>
-  </div>
-
-  <section class="steps-band" aria-labelledby="zo">
-    <div class="wrap">
-      <h2 id="zo">Zo werkt het</h2>
-      <ol class="steps">
-        {stappen.map((s, i) => (
-          <li style={`--n:${i}`}>
-            <span class="fold" aria-hidden="true"><span>{i + 1}</span></span>
-            <strong>{s.t}</strong>
-            <span>{s.d}</span>
-          </li>
-        ))}
-      </ol>
+  <section class="band band--white build" aria-labelledby="opbouw">
+    <figure class="layers">
+      <img src="/img/beeld/bed-layers.webp" alt="Een matras uit elkaar gehaald in lagen: hoes, traagschuim en koudschuim" width="1600" height="1000" loading="lazy" />
+    </figure>
+    <div class="build-copy">
+      <h2 id="opbouw" class="title-xl">U kiest de maat.<br />Wij de opbouw.</h2>
+      <p>Lengte, breedte en dikte. Koudschuim, traagschuim en hun densiteit. En de hoes die erbij past. Wij stellen voor wat werkt voor wie erop ligt of zit.</p>
     </div>
   </section>
 
-  <div class="wrap section">
-    <h2>Ook op maat verkrijgbaar</h2>
-    <ul class="grid-cards">{voorbeelden.map((p) => <ProductCard p={p} />)}</ul>
-  </div>
+  <section class="band band--tall band--sheet" aria-labelledby="wat">
+    <h2 id="wat" class="title-xl what-title">Wat kan op maat.</h2>
+    <dl class="ruled">
+      {wat.map((w) => (<div><dt>{w.t}</dt><dd>{w.d}</dd></div>))}
+    </dl>
+  </section>
 
-  <QuoteBand title="Stuur ons uw maten." text="Lengte, breedte, dikte en het gebruik. Wij komen terug met een opbouw en een prijs." href="/offerte/?type=maatwerk" />
+  <section class="band band--tall band--ink" aria-labelledby="zo">
+    <h2 id="zo" class="title-xl steps-title">Zo werkt het.</h2>
+    <ol class="steps">
+      <span class="steps-line" aria-hidden="true"></span>
+      {stappen.map((s, i) => (
+        <li>
+          <span class="step-no">{i + 1}</span>
+          <strong>{s.t}</strong>
+          <span>{s.d}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="band band--white" aria-labelledby="ook">
+    <div class="split-head">
+      <h2 id="ook" class="title-xl">Ook op maat<br />verkrijgbaar.</h2>
+      <p>Een paar producten die we vaak in een andere maat of opbouw maken.</p>
+    </div>
+    <ul class="grid-cards">{voorbeelden.map((p) => <ProductCard p={p} />)}</ul>
+  </section>
+
+  <QuoteBand lines={['Stuur ons', 'uw maten.']} text="Lengte, breedte, dikte en het gebruik. Wij komen terug met een opbouw en een prijs." href="/offerte/?type=maatwerk" label="Maatwerk aanvragen" />
 </Base>
 
 <style>
-  .section { padding-block: var(--space-xl); }
-  h2 { font-size: var(--step-3); margin-bottom: var(--space-m); }
-  .what { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); }
-  .what div { border-top: 2px solid var(--ink); padding-top: 1rem; }
-  .what dt { font-family: var(--display); font-stretch: 115%; font-weight: 560; font-size: var(--step-1); color: var(--ink); }
-  .what dd { margin: 0.4rem 0 0; color: var(--muted); }
-  @media (max-width: 900px) { .what { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 520px) { .what { grid-template-columns: 1fr; } }
+  .build { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-l) var(--space-xl); align-items: center; padding-top: 0; }
+  .layers { margin-left: calc(var(--gutter) * -1); }
+  .layers img { width: 100%; height: auto; }
+  .build-copy { display: grid; gap: 1.4rem; }
+  .build-copy p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 36ch; }
+  @media (max-width: 900px) { .build { grid-template-columns: 1fr; } .layers { margin-inline: calc(var(--gutter) * -1); } }
 
-  .steps-band { background: var(--indigo); color: var(--on-indigo); padding-block: var(--space-xl); }
-  .steps-band h2 { color: var(--on-indigo); }
-  .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m); }
-  .steps li { display: grid; gap: 0.6rem; align-content: start; }
-  .steps strong { font-family: var(--display); font-stretch: 115%; font-weight: 560; font-size: var(--step-2); line-height: 1.1; letter-spacing: -0.025em; }
-  .steps li > span:last-child { color: var(--on-indigo-muted); }
-  /* each step folds the sheet corner a little further */
-  .fold { width: 4.5rem; height: 4.5rem; position: relative; background: var(--indigo-soft); margin-bottom: 0.8rem; }
-  .fold span { position: absolute; left: 0.8rem; bottom: 0.5rem; font-family: var(--display); font-weight: 600; font-size: 1.6rem; }
-  .fold::before { content: ''; position: absolute; right: 0; top: 0; border-style: solid; border-width: 0 calc(1rem + var(--n) * 0.8rem) calc(1rem + var(--n) * 0.8rem) 0; border-color: transparent var(--indigo) var(--lilac-pale) transparent; }
-  .steps li:last-child .fold { background: var(--lilac); color: var(--night); }
-  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
-  .grid-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+  .what-title, .steps-title { margin-bottom: var(--space-l); }
+  .steps { list-style: none; padding: 0; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-m); }
+  .steps-line { position: absolute; left: 0; right: 0; top: 1.3rem; height: 1px; background: rgb(255 255 255 / 0.18); }
+  .steps li { position: relative; display: grid; gap: 0.5rem; align-content: start; }
+  .step-no { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; background: var(--orange); color: var(--ink); font-weight: 600; margin-bottom: 0.8rem; font-variant-numeric: tabular-nums; }
+  .steps strong { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; line-height: 1.05; color: var(--white); }
+  .steps li > span:last-child { color: var(--on-indigo-muted); max-width: 34ch; }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } .steps-line { display: none; } }
 </style>

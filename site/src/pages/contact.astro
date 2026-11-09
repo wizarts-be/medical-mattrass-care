@@ -5,47 +5,52 @@ import Icon from '../components/Icon.astro';
 import { bedrijf } from '../data/site.mjs';
 ---
 <Base title="Contact" description={`Contact Medical Mattress Care: ${bedrijf.telefoon}, ${bedrijf.email}. Showroom en afhalingen in Lokeren.`}>
-  <PageHead title="Contact" crumbs={[{ label: 'Contact' }]} tone="night">
+  <PageHead title="Bel ons" accent="gerust." lede="Een vraag over een product, een maat of een levering? We helpen u liefst meteen." crumbs={[{ label: 'Contact' }]}>
     <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
   </PageHead>
 
-  <div class="wrap grid">
-    <section class="block main">
-      <h2 class="visually-hidden">Bel of mail</h2>
+  <section class="band band--indigo direct" aria-labelledby="bel">
+    <h2 id="bel" class="visually-hidden">Bel of mail</h2>
+    <div class="lines">
       <a class="huge" href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a>
       <a class="mail" href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
-      <dl class="hours">
-        {bedrijf.uren.map(([d, u]) => (<div><dt>{d}</dt><dd>{u}</dd></div>))}
-      </dl>
-    </section>
+    </div>
+    <dl class="hours">
+      {bedrijf.uren.map(([d, u]) => (<div><dt>{d}</dt><dd>{u}</dd></div>))}
+    </dl>
+  </section>
 
-    <section class="block">
-      <h2>{bedrijf.showroom.label}</h2>
-      <address>{bedrijf.showroom.straat}<br />{bedrijf.showroom.postcode} {bedrijf.showroom.gemeente}</address>
-      <a class="link-arrow" href={bedrijf.kaart} rel="noopener">Op de kaart <Icon name="arrow" /></a>
-    </section>
-
-    <section class="block">
-      <h2>Maatschappelijke zetel</h2>
-      <address>{bedrijf.naam}<br />{bedrijf.straat}<br />{bedrijf.postcode} {bedrijf.gemeente}, {bedrijf.land}</address>
-      <p class="muted">Ondernemingsnummer {bedrijf.btw}</p>
-    </section>
-  </div>
+  <section class="band band--white places" aria-label="Adressen">
+    <div class="ruled" style="--cols:2">
+      <div>
+        <h2>{bedrijf.showroom.label}</h2>
+        <address>{bedrijf.showroom.straat}<br />{bedrijf.showroom.postcode} {bedrijf.showroom.gemeente}</address>
+        <a class="link-arrow" href={bedrijf.kaart} rel="noopener">Op de kaart <Icon name="arrow" /></a>
+      </div>
+      <div>
+        <h2>Maatschappelijke zetel</h2>
+        <address>{bedrijf.naam}<br />{bedrijf.straat}<br />{bedrijf.postcode} {bedrijf.gemeente}, {bedrijf.land}</address>
+        <p class="muted">Ondernemingsnummer {bedrijf.btw}</p>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  .grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: var(--space-l); padding-block: var(--space-xl); }
-  .block { display: grid; gap: 0.75rem; align-content: start; border-top: 2px solid var(--ink); padding-top: 1.1rem; }
-  .block h2 { font-size: var(--step-1); }
-  .huge { font-family: var(--display); font-stretch: 125%; font-weight: 600; font-size: var(--step-4); letter-spacing: -0.04em; color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; line-height: 1; }
-  .huge:hover { color: var(--indigo); }
-  .mail { font-size: var(--step-1); color: var(--indigo); font-weight: 500; overflow-wrap: anywhere; }
-  .hours { display: grid; gap: 0.3rem; margin-top: 0.5rem; }
-  .hours div { display: flex; gap: 1rem; justify-content: space-between; max-width: 22rem; border-bottom: 1px solid var(--sheet-line); padding-bottom: 0.3rem; }
-  .hours dd { margin: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
-  address { font-style: normal; color: var(--ink); }
+  .direct { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-l) var(--space-xl); align-items: end; }
+  .lines { display: grid; gap: 1rem; justify-items: start; }
+  .huge { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: clamp(2.6rem, 1rem + 5.4vw, 7rem); letter-spacing: -0.05em; line-height: 0.95; color: var(--white); text-decoration: none; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color 0.3s var(--ease-out); }
+  .huge:hover { color: var(--orange); }
+  .mail { font-size: var(--step-2); color: var(--on-indigo-muted); font-weight: 500; overflow-wrap: anywhere; text-decoration-color: rgb(255 255 255 / 0.3); }
+  .mail:hover { color: var(--white); text-decoration-color: var(--orange); }
+  .hours { display: grid; gap: 0; padding-bottom: 0.6rem; }
+  .hours div { display: flex; gap: 1rem; justify-content: space-between; padding-block: 0.7rem; border-top: 1px solid rgb(255 255 255 / 0.16); }
+  .hours dt { color: var(--on-indigo-muted); }
+  .hours dd { margin: 0; font-variant-numeric: tabular-nums; color: var(--white); font-weight: 500; }
+  @media (max-width: 900px) { .direct { grid-template-columns: 1fr; } .huge { white-space: normal; } }
+
+  .places h2 { font-size: var(--step-2); font-weight: 680; letter-spacing: -0.035em; }
+  address { font-style: normal; color: var(--ink); font-size: var(--step-1); line-height: 1.45; }
   .muted { color: var(--muted); font-size: var(--step--1); }
-  .link-arrow { justify-self: start; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } .main { grid-column: 1 / -1; } }
-  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .places .link-arrow { justify-self: start; color: var(--ink); margin-top: 0.4rem; }
 </style>

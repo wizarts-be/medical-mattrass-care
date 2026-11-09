@@ -1,12 +1,30 @@
 ---
+// Inner-page head in the home's voice: huge bold left-aligned title (bottom-left),
+// short text and actions in a second column (bottom-right).
+// tone: light (white), indigo (PU field), image (full-bleed photo like the home hero).
 interface Crumb { href?: string; label: string }
-interface Props { title: string; lede?: string; crumbs?: Crumb[]; tone?: 'light' | 'indigo' | 'night'; wide?: boolean }
-const { title, lede, crumbs = [], tone: _t = 'light', wide = false } = Astro.props;
-const tone = _t === 'night' ? 'light' : _t;
+interface Props {
+  title: string;
+  accent?: string;          // second title line, in orange
+  lede?: string;
+  crumbs?: Crumb[];
+  tone?: 'light' | 'indigo' | 'night' | 'image';
+  image?: { src: string; mobile?: string; alt?: string; position?: string };
+  wide?: boolean;
+}
+const { title, accent, lede, crumbs = [], tone: _t = 'light', image, wide = false } = Astro.props;
+const tone = _t === 'night' ? 'indigo' : _t === 'image' && !image ? 'indigo' : _t;
 const trail = [{ href: '/', label: 'Home' }, ...crumbs];
+const dark = tone !== 'light';
 ---
-<section class:list={['page-head', `tone-${tone}`]}>
-  <div class="wrap inner">
+<section class:list={['page-head', `tone-${tone}`, { dark }]}>
+  {tone === 'image' && image && (
+    <picture class="bg">
+      {image.mobile && <source media="(max-width: 900px)" srcset={image.mobile} />}
+      <img src={image.src} alt={image.alt ?? ''} width="2560" height="1440" fetchpriority="high" style={image.position ? `object-position:${image.position}` : undefined} />
+    </picture>
+  )}
+  <div class="inner">
     {crumbs.length > 0 && (
       <nav aria-label="Kruimelpad" class="crumbs">
         <ol>
@@ -19,14 +37,16 @@ const trail = [{ href: '/', label: 'Home' }, ...crumbs];
     <div class:list={['grid', { wide }]}>
       <div class="titles">
         <slot name="above" />
-        <h1>{title}</h1>
-        {lede && <p class="lede">{lede}</p>}
+        <h1>
+          <span class="rise"><span>{title}</span></span>
+          {accent && <span class="rise" style="--i:1"><em>{accent}</em></span>}
+        </h1>
+        {lede && <p class="lede rise-after">{lede}</p>}
         <slot name="below" />
       </div>
-      <div class="aside"><slot /></div>
+      <div class="aside rise-after"><slot /></div>
     </div>
   </div>
-  <div class="corner" aria-hidden="true"></div>
 </section>
 
 <script type="application/ld+json" set:html={JSON.stringify({
@@ -35,25 +55,44 @@ const trail = [{ href: '/', label: 'Home' }, ...crumbs];
 })} />
 
 <style>
-  .page-head { position: relative; padding-block: var(--space-l) var(--space-xl); overflow: hidden; }
+  .page-head { position: relative; overflow: hidden; display: grid; }
   .tone-light { background: var(--white); color: var(--ink); }
   .tone-indigo { background: var(--indigo); color: var(--on-indigo); }
+  .tone-image { background: var(--night); color: var(--white); min-height: max(32rem, 78svh); }
+
+  .bg { position: absolute; inset: 0; }
+  .bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; }
+  @media (prefers-reduced-motion: no-preference) { .bg img { animation: settle 2.6s var(--ease-out) both; } }
+  @keyframes settle { from { transform: scale(1.14); } to { transform: scale(1.03); } }
+  .tone-image::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, rgb(21 14 61 / 0.85) 0%, rgb(21 14 61 / 0.5) 45%, rgb(21 14 61 / 0) 78%),
+                linear-gradient(0deg, rgb(21 14 61 / 0.72) 0%, rgb(21 14 61 / 0) 50%);
+  }
+
+  .inner { position: relative; z-index: 2; display: grid; grid-template-rows: auto 1fr; padding: var(--space-m) var(--gutter) var(--space-xl); }
+  .tone-image .inner { padding-bottom: clamp(3rem, 9vh, 6rem); }
+
   .crumbs ol { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 0.6rem; font-size: var(--step--1); color: var(--muted); }
   .crumbs li + li::before { content: '/'; margin-right: 0.6rem; opacity: 0.5; }
-  .crumbs a { color: var(--muted); text-decoration: none; }
+  .crumbs a { color: inherit; text-decoration: none; }
   .crumbs a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--orange); }
   .crumbs [aria-current] { color: var(--ink); }
-  .tone-indigo .crumbs, .tone-indigo .crumbs a { color: var(--on-indigo-muted); }
-  .tone-indigo .crumbs [aria-current] { color: var(--on-indigo); }
-  .grid { margin-top: var(--space-xl); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end; }
-  .grid.wide { grid-template-columns: 1fr; }
-  h1 { font-size: clamp(3rem, 1rem + 6.4vw, 7.5rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.055em; line-height: 0.9; overflow-wrap: anywhere; hyphens: auto; color: var(--indigo); }
-  .tone-indigo h1 { color: var(--on-indigo); }
-  .lede { margin-top: 1.5rem; color: var(--muted); }
-  .tone-indigo .lede { color: var(--on-indigo-muted); }
+  .dark .crumbs ol { color: var(--on-indigo-muted); }
+  .dark .crumbs a:hover, .dark .crumbs [aria-current] { color: var(--white); }
+
+  .grid { align-self: end; margin-top: clamp(3rem, 2rem + 5vw, 7rem); display: grid; justify-items: start; }
+  .tone-image .grid { margin-top: var(--space-2xl); }
+
+  h1 { font-size: clamp(3rem, 1rem + 6.6vw, 8rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; color: var(--ink); hyphens: manual; overflow-wrap: break-word; }
+  .dark h1 { color: var(--white); }
+  h1 em { font-style: normal; color: var(--orange); }
+  .lede { margin-top: 2rem; max-width: 40ch; color: var(--muted); font-size: var(--step-1); line-height: 1.5; }
+  .dark .lede { color: var(--on-indigo-muted); }
+  .aside { display: grid; gap: 1.25rem; justify-items: start; margin-top: var(--space-m); }
   .aside:empty { display: none; }
-  /* the turned-down corner of the sheet */
-  .corner { position: absolute; right: 0; bottom: 0; width: clamp(3rem, 7vw, 6rem); aspect-ratio: 1; background: linear-gradient(135deg, transparent 50%, var(--lilac-pale) 50%, var(--sheet) 100%); }
-  .tone-indigo .corner { background: linear-gradient(135deg, transparent 50%, var(--sheet-deep) 50%, var(--sheet) 100%); }
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; margin-top: var(--space-l); } }
+  .dark .aside :global(.btn--ghost) { --fg: var(--white); --bd: rgb(255 255 255 / 0.5); }
+  @media (max-width: 900px) {
+    .grid { margin-top: var(--space-xl); }
+  }
 </style>

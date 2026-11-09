@@ -16,9 +16,9 @@ const types = [
 const functies = ['Aankoop', 'Directie', 'Hoofdverpleging', 'Ergotherapie', 'Technische dienst', 'Particulier', 'Andere'];
 ---
 <Base title="Offerte aanvragen" description="Vraag een offerte, een staal of een technische fiche aan bij Medical Mattress Care. Geef de producten en aantallen door, u krijgt snel antwoord.">
-  <PageHead title="Vraag uw prijs." lede="Geef door welke producten en hoeveel. Wij sturen een offerte, een staal of de technische fiche." crumbs={[{ label: 'Offerte' }]} tone="night" />
+  <PageHead title="Vraag" accent="uw prijs." lede="Geef door welke producten en hoeveel. Wij sturen een offerte, een staal of de technische fiche." crumbs={[{ label: 'Offerte' }]} />
 
-  <div class="wrap layout">
+  <div class="band band--sheet layout">
     <form class="form" novalidate data-form data-endpoint={ENDPOINT} data-mail={bedrijf.email}>
       <fieldset class="field">
         <legend>Wat wilt u aanvragen?</legend>
@@ -191,15 +191,18 @@ const functies = ['Aankoop', 'Directie', 'Hoofdverpleging', 'Ergotherapie', 'Tec
 </script>
 
 <style>
-  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: var(--space-xl); padding-block: var(--space-l) var(--space-xl); align-items: start; }
-  .form { display: grid; gap: var(--space-m); }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); gap: var(--space-l) var(--space-xl); align-items: start; padding-top: var(--space-l); }
+  .form { display: grid; gap: var(--space-l); background: var(--white); padding: clamp(1.25rem, 1rem + 2.5vw, 3rem); max-width: 56rem; }
+  .form legend, .form > .field > label { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-1); letter-spacing: -0.02em; color: var(--ink); }
   fieldset { border: 0; padding: 0; min-width: 0; }
   legend { margin-bottom: 0.5rem; padding: 0; }
-  .seg { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--sheet-line); background: var(--white); width: fit-content; max-width: 100%; }
+  .seg { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--sheet-line); background: var(--white); width: fit-content; max-width: 100%; margin-top: 0.4rem; }
   .seg label { position: relative; }
   .seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
   .seg span { display: block; padding: 0.75rem 1.1rem; font-weight: 500; color: var(--ink); transition: background-color 0.2s, color 0.2s; }
-  .seg input:checked + span { background: var(--indigo); color: var(--on-indigo); }
+  .seg input:checked + span { background: var(--ink); color: var(--white); }
+  .seg label:hover span { background: var(--sheet); }
+  .seg input:checked:hover + span { background: var(--ink); }
   .seg input:focus-visible + span { outline: 2px solid var(--orange); outline-offset: -2px; }
   .lines { list-style: none; padding: 0; display: grid; gap: 0.5rem; }
   .line { display: grid; grid-template-columns: minmax(0, 1fr) 7rem 3.25rem; gap: 0.5rem; }
@@ -207,7 +210,8 @@ const functies = ['Aankoop', 'Directie', 'Hoofdverpleging', 'Ergotherapie', 'Tec
   .remove :global(svg) { width: 1rem; }
   .remove:hover { color: var(--orange-deep); border-color: currentColor; }
   .remove[hidden] { display: none; }
-  .add { margin-top: 0.6rem; display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 0; padding: 0.4rem 0; color: var(--indigo); font-weight: 500; }
+  .add { margin-top: 0.6rem; display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 0; padding: 0.4rem 0; color: var(--ink); font-weight: 500; }
+  .add :global(svg) { color: var(--orange-deep); }
   .add :global(svg) { width: 1rem; }
   .add:hover { text-decoration: underline; text-decoration-color: var(--orange); }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.25rem; }
@@ -218,11 +222,11 @@ const functies = ['Aankoop', 'Directie', 'Hoofdverpleging', 'Ergotherapie', 'Tec
   .done { padding: var(--space-m); background: var(--white); border-top: 3px solid var(--orange); }
   .done :global(p) { margin-top: 0.4rem; color: var(--muted); }
 
-  .direct { position: sticky; top: calc(var(--header-h) + 2rem); background: var(--indigo); color: var(--on-indigo); padding: var(--space-m); display: grid; gap: 0.9rem; }
-  .direct h2 { color: var(--on-indigo); font-size: var(--step-1); }
+  .direct { position: sticky; top: calc(var(--header-h) + 2rem); background: var(--indigo); color: var(--on-indigo); padding: clamp(1.25rem, 1rem + 2vw, 2.5rem); display: grid; gap: 1rem; border-top: 3px solid var(--orange); }
+  .direct h2 { color: var(--on-indigo); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.04em; }
   .direct a { display: inline-flex; gap: 0.6rem; align-items: center; color: var(--on-indigo); text-decoration: none; word-break: break-word; }
   .direct a :global(svg) { width: 1.1rem; color: var(--orange); flex: none; }
-  .direct .big { font-family: var(--display); font-stretch: 105%; font-weight: 560; font-size: var(--step-1); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .direct .big { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: var(--step-2); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .direct dl { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1rem; justify-content: start; font-size: var(--step--1); color: var(--on-indigo-muted); }
   .direct dd { margin: 0; color: var(--on-indigo); }
   .direct p { font-size: var(--step--1); color: var(--on-indigo-muted); }

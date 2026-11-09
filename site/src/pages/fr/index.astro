@@ -1,20 +1,18 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
 import { bedrijf } from '../../data/site.mjs';
 ---
 <Base title="Version française" description="Notre site en français arrive bientôt. Contactez-nous en attendant." noindex>
-  <section class="soon" lang="fr">
-    <div class="wrap">
-      <h1>Version française</h1>
-      <p>Notre site en français arrive bientôt. Contactez-nous en attendant.</p>
-      <p><a href={`tel:${bedrijf.telefoonHref}`}>+32 473 59 11 71</a> · <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></p>
-      <p><a class="btn btn--light" href="/" lang="nl">Retour au site néerlandais</a></p>
-    </div>
-  </section>
+  <div lang="fr">
+    <PageHead title="Version française" accent="bientôt en ligne." lede="Notre site en français arrive bientôt. Contactez-nous en attendant." tone="image" image={{ src: '/img/beeld/hero-2560.webp', mobile: '/img/beeld/hero-1280.webp' }}>
+      <p class="contact"><a href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a><a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></p>
+      <a class="btn btn--light" href="/" lang="nl">Retour au site néerlandais</a>
+    </PageHead>
+  </div>
 </Base>
 <style>
-  .soon { background: var(--indigo); color: var(--on-indigo); padding-block: var(--space-2xl); min-height: 60vh; }
-  h1 { color: var(--on-indigo); font-size: var(--step-4); }
-  p { margin-top: 1.2rem; color: var(--on-indigo-muted); }
-  a:not(.btn) { color: var(--on-indigo); }
+  .contact { display: grid; gap: 0.3rem; font-size: var(--step-1); }
+  .contact a { color: var(--white); font-weight: 500; text-decoration-color: rgb(255 255 255 / 0.35); font-variant-numeric: tabular-nums; }
+  .contact a:hover { text-decoration-color: var(--orange); }
 </style>

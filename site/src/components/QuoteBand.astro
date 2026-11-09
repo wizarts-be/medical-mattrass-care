@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import { bedrijf } from '../data/site.mjs';
+interface Props { title?: string; text?: string; href?: string }
+const { title = 'Vraag uw prijs.', text = 'Zeg welke producten en hoeveel. U krijgt snel een offerte, of eerst een staal.', href = '/offerte/' } = Astro.props;
+---
+<section class="qband" aria-label="Offerte aanvragen">
+  <div class="wrap g">
+    <h2>{title}</h2>
+    <div class="side">
+      <p>{text}</p>
+      <div class="cta">
+        <a class="btn btn--indigo" href={href}>Offerte aanvragen <Icon name="arrow" /></a>
+        <a class="phone" href={`tel:${bedrijf.telefoonHref}`}><Icon name="phone" />{bedrijf.telefoon}</a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .qband { background: var(--orange); color: var(--night); padding-block: var(--space-xl); }
+  .g { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-xl); align-items: end; }
+  h2 { font-size: var(--step-4); font-stretch: 125%; font-weight: 600; letter-spacing: -0.045em; color: var(--night); }
+  .side { display: grid; gap: 1.25rem; }
+  .side p { font-size: var(--step-1); line-height: 1.45; max-width: 34ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
+  .phone { display: inline-flex; gap: 0.6rem; align-items: center; font-weight: 500; text-decoration: none; font-variant-numeric: tabular-nums; }
+  .phone :global(svg) { width: 1.1rem; }
+  .qband ::selection { background: var(--night); color: var(--orange); }
+  @media (max-width: 800px) { .g { grid-template-columns: 1fr; } }
+</style>

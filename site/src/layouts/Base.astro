@@ -1,0 +1,64 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/fira-sans/latin-400.css';
+import '@fontsource/fira-sans/latin-500.css';
+import '@fontsource/fira-sans/latin-ext-400.css';
+import '@fontsource/fira-sans/latin-ext-500.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { bedrijf } from '../data/site.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  overlayHeader?: boolean;
+  noindex?: boolean;
+  bodyClass?: string;
+  jsonld?: Record<string, unknown>;
+}
+const { title, description, overlayHeader = false, noindex = false, bodyClass, jsonld } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const volledigeTitel = title === bedrijf.naam ? title : `${title} | Medical Mattress Care`;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: bedrijf.naam,
+  url: bedrijf.url,
+  logo: `${bedrijf.url}/logo/mmc-logo-kleur.svg`,
+  telephone: '+32 473 59 11 71',
+  email: bedrijf.email,
+  foundingDate: String(bedrijf.opgericht),
+  address: { '@type': 'PostalAddress', streetAddress: bedrijf.straat, postalCode: bedrijf.postcode, addressLocality: bedrijf.gemeente, addressCountry: 'BE' },
+};
+---
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{volledigeTitel}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#261A66" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="nl" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={volledigeTitel} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/img/og.jpg', Astro.site)} />
+    <meta property="og:locale" content="nl_BE" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? org)} />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip" href="#inhoud">Naar de inhoud</a>
+    <Header overlay={overlayHeader} />
+    <main id="inhoud" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

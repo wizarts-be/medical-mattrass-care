@@ -1,0 +1,52 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import QuoteBand from '../../../components/QuoteBand.astro';
+import Icon from '../../../components/Icon.astro';
+import { categorieen, perCategorie, categorieUrl } from '../../../lib/catalogus.mjs';
+
+export function getStaticPaths() {
+  return categorieen.filter((c) => perCategorie(c.slug).length).map((c) => ({ params: { categorie: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const items = perCategorie(c.slug);
+const andere = categorieen.filter((x) => x.slug !== c.slug && perCategorie(x.slug).length);
+const maatwerk = items.some((p) => p.maatwerk);
+---
+<Base title={c.lang ?? c.naam} description={`${c.lang ?? c.naam} van Medical Mattress Care. ${c.intro}`}>
+  <PageHead title={c.lang ?? c.naam} lede={c.intro} crumbs={[{ href: '/producten/', label: 'Producten' }, { label: c.naam }]}>
+    <dl class="facts">
+      <div><dt>Producten</dt><dd>{items.length}</dd></div>
+      {maatwerk && <div><dt>Maatwerk</dt><dd>mogelijk</dd></div>}
+    </dl>
+  </PageHead>
+
+  <div class="wrap body">
+    <ul class="grid-cards">{items.map((p) => <ProductCard p={p} headingLevel="h2" />)}</ul>
+
+    <aside class="others" aria-labelledby="andere">
+      <h2 id="andere">Andere categorieën</h2>
+      <ul>
+        {andere.map((x) => (<li><a href={categorieUrl(x)}>{x.naam} <Icon name="arrow" /></a></li>))}
+      </ul>
+    </aside>
+  </div>
+
+  <QuoteBand />
+</Base>
+
+<style>
+  .facts { display: grid; grid-template-columns: repeat(3, auto); gap: 1.5rem; justify-content: start; }
+  .facts div { border-top: 1px solid var(--sheet-line); padding-top: 0.6rem; }
+  .facts dt { font-size: var(--step--1); color: var(--muted); }
+  .facts dd { margin: 0; font-family: var(--display); font-stretch: 112%; font-weight: 560; font-size: var(--step-2); color: var(--ink); }
+  .body { display: grid; gap: var(--space-xl); padding-block: var(--space-xl) var(--space-2xl); }
+  .grid-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+  .others h2 { font-size: var(--step--1); font-family: var(--text-face); font-stretch: 100%; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-bottom: 0.75rem; }
+  .others ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .others a { display: inline-flex; gap: 0.6rem; align-items: center; padding: 0.6rem 1rem; border: 1px solid var(--sheet-line); background: var(--white); text-decoration: none; color: var(--ink); }
+  .others a :global(svg) { width: 1rem; color: var(--indigo); transition: transform 0.3s var(--ease-out); }
+  .others a:hover :global(svg) { transform: translateX(3px); color: var(--orange-deep); }
+  
+</style>

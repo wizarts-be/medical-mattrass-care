@@ -1,0 +1,51 @@
+---
+// Isometric line pictograms for product families: one stroke, one orange accent (the cover's zip / seam).
+interface Props { name: 'mattress' | 'cylinder' | 'seat' | 'pillow' | 'duvet' | 'panels' }
+const { name } = Astro.props;
+---
+<svg class="picto" viewBox="0 0 240 160" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {name === 'mattress' && (<>
+    <path class="s" d="M24 70 L144 38 L216 66 L96 98 Z" />
+    <path class="s" d="M24 70 V96 L96 124 V98 M96 124 L216 92 V66" />
+    <path class="a" d="M24 86 L96 114 L216 82" stroke-dasharray="4 5" />
+    <path class="t" d="M24 78 L96 106 L216 74" />
+  </>)}
+  {name === 'cylinder' && (<>
+    <ellipse class="s" cx="64" cy="84" rx="18" ry="30" />
+    <path class="s" d="M64 54 L184 46 M64 114 L184 106" />
+    <path class="s" d="M184 46 C200 46 202 106 184 106" />
+    <path class="a" d="M70 106 L190 98" stroke-dasharray="4 5" />
+  </>)}
+  {name === 'seat' && (<>
+    <path class="s" d="M40 76 L140 50 L206 74 L106 102 Z" />
+    <path class="s" d="M40 76 V92 L106 120 V102 M106 120 L206 92 V74" />
+    <path class="s" d="M70 86 C96 66 132 60 150 72" />
+    <path class="t" d="M88 70 L120 62 M104 78 L140 68 M74 82 L98 76" />
+    <path class="a" d="M40 86 L106 112 L206 84" stroke-dasharray="4 5" />
+  </>)}
+  {name === 'pillow' && (<>
+    <path class="s" d="M36 82 C34 54 84 40 122 42 C162 40 206 54 204 82 C206 110 162 124 122 122 C84 124 34 110 36 82 Z" />
+    <path class="a" d="M60 82 C60 64 92 58 122 58 C152 58 182 64 182 82 C182 100 152 108 122 108 C92 108 60 100 60 82 Z" stroke-dasharray="4 5" />
+  </>)}
+  {name === 'duvet' && (<>
+    <rect class="s" x="40" y="44" width="160" height="28" rx="12" />
+    <rect class="s" x="48" y="76" width="150" height="28" rx="12" />
+    <rect class="s" x="56" y="108" width="140" height="22" rx="10" />
+    <path class="a" d="M58 58 H182" stroke-dasharray="4 5" />
+    <path class="t" d="M66 90 H180 M72 119 H180" />
+  </>)}
+  {name === 'panels' && (<>
+    <path class="s" d="M20 96 L72 80 L104 92 L52 108 Z" />
+    <path class="s" d="M84 76 L136 60 L168 72 L116 88 Z" />
+    <path class="s" d="M148 56 L200 40 L232 52 L180 68 Z" />
+    <path class="s" d="M20 96 V106 L52 118 V108 M52 118 L104 102 V92 M84 76 V86 L116 98 V88 M116 98 L168 82 V72 M148 56 V66 L180 78 V68 M180 78 L232 62 V52" />
+    <path class="a" d="M104 92 L116 88 M168 72 L180 68" />
+  </>)}
+</svg>
+
+<style>
+  .picto { width: 100%; height: auto; }
+  .s { stroke: currentColor; stroke-width: 1.6; }
+  .t { stroke: currentColor; stroke-width: 1; opacity: 0.45; }
+  .a { stroke: var(--orange); stroke-width: 1.8; }
+</style>

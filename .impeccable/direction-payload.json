@@ -1,0 +1,129 @@
+{
+  "title": "Medical Mattress Care: choose the visual world",
+  "question": "The roll assigned 'The made bed'. Keep it, take an alternate, or re-roll. The press-into-the-foam 3D hero is already pinned and lives in every option.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The made bed",
+      "kicker": "THE ROLL",
+      "lineage": "the ward bed seen from above: tucked hospital corners, folded sheets, the 200 x 90 plan",
+      "thesis": "The site is a bed being made and unmade: sheet, cover, foam, each layer folded back to show what it does.",
+      "palette": ["#352C57", "#1B1631", "#E9ECF1", "#E68626", "#9A92C4"],
+      "materials": ["indigo PU cover with sheen", "cool white knitted sheet", "visco foam that remembers your press", "hospital-corner folds"],
+      "viewport": "Top-down indigo mattress at true 200:90 proportion fills the screen; cursor presses in, orange pressure bloom, slow visco recovery. Headline sits on the sheet fold, quote button pinned top right.",
+      "risk": "If the fold transitions are timid, it reads as a plain dark hero with a 3D gimmick.",
+      "raised": [
+        {"from": "challenger-six-pack", "raise": "210 PU cover specs become six calm instrument readouts (95 °C, 115 °C, CRIB 5, 200 cm water column, 600 g vapour, MRSA) with damped needles, not bullet points."},
+        {"from": "challenger-coiled-tower", "raise": "Layer stack text is banded: each line of copy sits in the course of the foam layer it describes, its height matching the layer's cm."},
+        {"from": "challenger-ebru", "raise": "Every press leaves a visible, slowly fading imprint: the material's memory is the feedback state across the site, not just the hero."},
+        {"from": "challenger-saul-bass", "raise": "Full commitment to flat colour fields: indigo owns whole sections edge to edge, one idea per field."},
+        {"from": "challenger-crane", "raise": "Custom-work process is a numbered fold sequence in a strict margin column; each step keeps the earlier creases."}
+      ]
+    },
+    {
+      "id": "model-pick",
+      "kicker": "IMPECCABLE’S PICK",
+      "label": "Pressure map",
+      "lineage": "clinical pressure-mapping mats: heat-map grids over a body outline, as OTs read them",
+      "thesis": "Every product is shown as the pressure it takes away: the heat map is the brand.",
+      "palette": ["#14112A", "#352C57", "#E68626", "#F2C14E", "#F2F3F7"],
+      "materials": ["sensor-cell grid", "thermal gradient", "instrument glass"],
+      "viewport": "A body-outline pressure grid full screen; your cursor is the load, cells go orange to indigo as the MMC Flex redistributes.",
+      "risk": "Familiar data-viz look and colder than the client's 'warm 9/10' ask."
+    },
+    {
+      "id": "challenger-six-pack",
+      "label": "Night instrument panel",
+      "verdict": "competitive",
+      "lineage": "night-flight six-pack gauges",
+      "thesis": "MMC as a calm instrument panel: six gauges that all agree your patient is safe.",
+      "palette": ["#0E0F12", "#F2F2F2", "#7CF29A", "#E68626"],
+      "materials": ["matte panel", "luminous dial markings"],
+      "viewport": "Six spec gauges around the 3D mattress, needles settle as the cover proves itself.",
+      "case": "Strong on product clarity for specs; loses on warmth and audience identification.",
+      "risk": "Reads cold and technical, opposite of the family-business brief.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-night-flight-six-pack-hero.webp"
+    },
+    {
+      "id": "challenger-saul-bass",
+      "label": "Cut-paper title sequence",
+      "verdict": "declined",
+      "lineage": "Saul Bass title cards",
+      "thesis": "The MMC story told in timed flat-colour cards.",
+      "palette": ["#E68626", "#191919", "#F2F2F2"],
+      "materials": ["cut paper", "flat fields"],
+      "viewport": "Orange field, a black cut-paper mattress silhouette.",
+      "case": "Buyers want specs fast; timed cards slow them down.",
+      "kept": "Total commitment to flat colour fields, one idea per field.",
+      "risk": "Pastiche.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-saul-bass-title-hero.webp"
+    },
+    {
+      "id": "challenger-ebru",
+      "label": "Floated pigment",
+      "verdict": "declined",
+      "lineage": "ebru marbling",
+      "thesis": "Pressure as pigment displaced on liquid.",
+      "palette": ["#352C57", "#E68626", "#EFEAF5"],
+      "materials": ["liquid bath", "pigment rings"],
+      "viewport": "Fluid canvas you comb through.",
+      "case": "Beautiful, but buyers do not recognise it and it says nothing about hygiene.",
+      "kept": "Every press leaves a visible imprint that fades: material memory as state.",
+      "risk": "Art piece, not a supplier.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-ebru-floated-pigment-hero.webp"
+    },
+    {
+      "id": "challenger-coiled-tower",
+      "label": "Coiled earth tower",
+      "verdict": "declined",
+      "lineage": "coil-built clay",
+      "thesis": "Layers built course by course.",
+      "palette": ["#B5603A", "#5A3A2A", "#EDE4DA"],
+      "materials": ["clay coils"],
+      "viewport": "A rising banded tower.",
+      "case": "Wrong material world; earthy tones fight hygiene.",
+      "kept": "Text banded in courses matching each layer's thickness.",
+      "risk": "Off-subject.",
+      "hero": "https://impeccable.style/worlds/cards/clay-ceramics-fracture-coiled-earth-tower-hero.webp"
+    },
+    {
+      "id": "challenger-crane",
+      "label": "Origami crane sequence",
+      "verdict": "declined",
+      "lineage": "orizuru fold diagrams",
+      "thesis": "One sheet folded step by step.",
+      "palette": ["#C8322B", "#F4EFE6", "#111111"],
+      "materials": ["washi", "crease lines"],
+      "viewport": "A red square folding into a crane.",
+      "case": "Folding overlaps the made-bed world, which owns it more truthfully.",
+      "kept": "Numbered fold steps in a margin column, each step keeps earlier creases.",
+      "risk": "Cultural costume.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-orizuru-crane-sequence-hero.webp"
+    },
+    {
+      "id": "challenger-greiman",
+      "label": "Hybrid bitmap collage",
+      "verdict": "declined",
+      "lineage": "April Greiman posters",
+      "thesis": "Layers as a deep collage.",
+      "palette": ["#2BA5A5", "#E0338A", "#F4F4F0"],
+      "materials": ["bitmap dither", "angled type"],
+      "viewport": "Angled type ramps over pixelated stills.",
+      "case": "Loud and disorienting for buyers who want a spec table.",
+      "kept": "Courage in scale jumps: footnote to billboard in one view.",
+      "risk": "Noise.",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-greiman-hybrid-collage-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A clean care-supplier site, done impeccably.",
+    "palette": ["#FFFFFF", "#352C57", "#E68626", "#F2F2F2"],
+    "materials": ["white grid", "product photography", "spec tables"],
+    "viewport": "Headline left, product photo right, category tiles below.",
+    "risk": "Indistinguishable from Duvatex and Sampli by design."
+  },
+  "steer": true
+}

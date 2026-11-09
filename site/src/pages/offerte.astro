@@ -1,0 +1,232 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf } from '../data/site.mjs';
+import { zichtbaar } from '../lib/catalogus.mjs';
+
+// TODO koppeling formulier: vul ENDPOINT in (bv. Formspree of eigen PHP). Leeg = de aanvraag opent als e-mail naar info@.
+const ENDPOINT = '';
+const types = [
+  { v: 'offerte', l: 'Offerte' },
+  { v: 'staal', l: 'Staal' },
+  { v: 'fiche', l: 'Technische fiche' },
+  { v: 'maatwerk', l: 'Maatwerk' },
+];
+const functies = ['Aankoop', 'Directie', 'Hoofdverpleging', 'Ergotherapie', 'Technische dienst', 'Particulier', 'Andere'];
+---
+<Base title="Offerte aanvragen" description="Vraag een offerte, een staal of een technische fiche aan bij Medical Mattress Care. Geef de producten en aantallen door, u krijgt snel antwoord.">
+  <PageHead title="Vraag uw prijs." lede="Geef door welke producten en hoeveel. Wij sturen een offerte, een staal of de technische fiche." crumbs={[{ label: 'Offerte' }]} tone="night" />
+
+  <div class="wrap layout">
+    <form class="form" novalidate data-form data-endpoint={ENDPOINT} data-mail={bedrijf.email}>
+      <fieldset class="field">
+        <legend>Wat wilt u aanvragen?</legend>
+        <div class="seg">
+          {types.map((t, i) => (
+            <label><input type="radio" name="type" value={t.v} checked={i === 0} /><span>{t.l}</span></label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Producten en aantallen</legend>
+        <p class="hint">Kies uit de lijst of typ zelf, bv. een maat op maat.</p>
+        <datalist id="productlijst">
+          {zichtbaar.map((p) => <option value={p.code && p.code !== p.naam ? `${p.code} – ${p.naam}` : p.naam} />)}
+        </datalist>
+        <ol class="lines" data-lines>
+          <li class="line">
+            <label class="visually-hidden" for="p-0">Product 1</label>
+            <input id="p-0" class="input" name="product" list="productlijst" placeholder="Bv. MMC V10 A – 200 x 90 x 15 cm" autocomplete="off" />
+            <label class="visually-hidden" for="a-0">Aantal 1</label>
+            <input id="a-0" class="input qty" name="aantal" type="number" min="1" inputmode="numeric" placeholder="Aantal" />
+            <button type="button" class="remove" data-remove hidden><Icon name="close" /><span class="visually-hidden">Verwijder product</span></button>
+          </li>
+        </ol>
+        <button type="button" class="add" data-add><Icon name="plus" />Nog een product</button>
+      </fieldset>
+
+      <div class="cols">
+        <div class="field">
+          <label for="instelling">Instelling of bedrijf</label>
+          <input id="instelling" class="input" name="instelling" autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="functie">Uw functie</label>
+          <select id="functie" class="input" name="functie">
+            <option value="">Kies…</option>
+            {functies.map((f) => <option>{f}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="naam">Naam <span class="req">verplicht</span></label>
+          <input id="naam" class="input" name="naam" autocomplete="name" required aria-describedby="naam-err" />
+          <p class="error-text" id="naam-err" hidden>Vul uw naam in.</p>
+        </div>
+        <div class="field">
+          <label for="email">E-mail <span class="req">verplicht</span></label>
+          <input id="email" class="input" name="email" type="email" autocomplete="email" required aria-describedby="email-err" />
+          <p class="error-text" id="email-err" hidden>Vul een geldig e-mailadres in, zodat we kunnen antwoorden.</p>
+        </div>
+        <div class="field">
+          <label for="tel">Telefoon</label>
+          <input id="tel" class="input" name="telefoon" type="tel" autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label for="gemeente">Leveren in (gemeente)</label>
+          <input id="gemeente" class="input" name="gemeente" autocomplete="address-level2" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="bericht">Bericht</label>
+        <textarea id="bericht" class="input" name="bericht" placeholder="Maten, gebruik, gewenste leverdatum…"></textarea>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" name="privacy" required aria-describedby="privacy-err" />
+        <span>Ik ga akkoord dat MMC mijn gegevens gebruikt om deze aanvraag te beantwoorden. <a href="/privacybeleid/">Privacybeleid</a></span>
+      </label>
+      <p class="error-text" id="privacy-err" hidden>Vink dit aan om te kunnen versturen.</p>
+
+      <div class="submit">
+        <button class="btn" type="submit" data-submit>Aanvraag versturen <Icon name="arrow" /></button>
+        <p class="hint" data-mode>{ENDPOINT ? 'U krijgt een bevestiging per e-mail.' : 'Uw e-mailprogramma opent met uw aanvraag, klaar om te versturen.'}</p>
+      </div>
+      <div class="done" role="status" aria-live="polite" data-done hidden></div>
+    </form>
+
+    <aside class="direct">
+      <h2>Liever meteen spreken?</h2>
+      <a class="big" href={`tel:${bedrijf.telefoonHref}`}><Icon name="phone" />{bedrijf.telefoon}</a>
+      <a href={`mailto:${bedrijf.email}`}><Icon name="mail" />{bedrijf.email}</a>
+      <dl>
+        {bedrijf.uren.map(([d, u]) => (<><dt>{d}</dt><dd>{u}</dd></>))}
+      </dl>
+      <hr class="zip" />
+      <p>Particulier? De MMC Thuis matras vindt u ook bij uw apotheek, met CNK-code.</p>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const lines = form.querySelector<HTMLOListElement>('[data-lines]')!;
+  const addBtn = form.querySelector<HTMLButtonElement>('[data-add]')!;
+  const done = form.querySelector<HTMLElement>('[data-done]')!;
+  let n = 1;
+
+  // prefill from ?type= and ?product=
+  const qs = new URLSearchParams(location.search);
+  const t = qs.get('type');
+  if (t) form.querySelector<HTMLInputElement>(`input[name="type"][value="${CSS.escape(t)}"]`)?.click();
+  const pre = qs.get('product');
+  if (pre) {
+    const opt = [...document.querySelectorAll<HTMLOptionElement>('#productlijst option')].find((o) => o.value.startsWith(pre));
+    (lines.querySelector('input[name="product"]') as HTMLInputElement).value = opt?.value ?? pre;
+  }
+
+  const syncRemove = () => lines.querySelectorAll<HTMLButtonElement>('[data-remove]').forEach((b) => (b.hidden = lines.children.length < 2));
+  addBtn.addEventListener('click', () => {
+    const li = lines.firstElementChild!.cloneNode(true) as HTMLLIElement;
+    li.querySelectorAll('input').forEach((i) => { i.value = ''; });
+    li.querySelectorAll('[id]').forEach((el) => { el.id = el.id.replace(/\d+$/, String(n)); });
+    li.querySelectorAll('label').forEach((l) => { l.htmlFor = l.htmlFor.replace(/\d+$/, String(n)); l.textContent = l.textContent!.replace(/\d+$/, String(n + 1)); });
+    n++;
+    lines.append(li);
+    syncRemove();
+    (li.querySelector('input') as HTMLInputElement).focus();
+  });
+  lines.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('[data-remove]');
+    if (b) { b.closest('li')!.remove(); syncRemove(); (lines.querySelector('input') as HTMLInputElement).focus(); }
+  });
+
+  const check = (el: HTMLInputElement, ok: boolean) => {
+    el.setAttribute('aria-invalid', String(!ok));
+    const err = document.getElementById(el.getAttribute('aria-describedby') ?? '');
+    if (err) err.hidden = ok;
+    return ok;
+  };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const naam = form.elements.namedItem('naam') as HTMLInputElement;
+    const email = form.elements.namedItem('email') as HTMLInputElement;
+    const privacy = form.elements.namedItem('privacy') as HTMLInputElement;
+    const ok = [check(naam, !!naam.value.trim()), check(email, email.validity.valid && !!email.value), check(privacy, privacy.checked)];
+    if (ok.includes(false)) { form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(); return; }
+
+    const fd = new FormData(form);
+    const prods = fd.getAll('product').map((p, i) => [p, fd.getAll('aantal')[i]]).filter(([p]) => String(p).trim());
+    const endpoint = form.dataset.endpoint;
+    if (endpoint) {
+      const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+      btn.disabled = true; btn.textContent = 'Bezig met versturen…';
+      try {
+        const r = await fetch(endpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+        if (!r.ok) throw new Error(String(r.status));
+        form.querySelectorAll('fieldset, .cols, .field, .consent, .submit').forEach((el) => ((el as HTMLElement).hidden = true));
+        done.hidden = false;
+        done.innerHTML = '<strong>Bedankt, uw aanvraag is verstuurd.</strong><p>We antwoorden zo snel mogelijk.</p>';
+      } catch {
+        btn.disabled = false; btn.textContent = 'Opnieuw proberen';
+        done.hidden = false;
+        done.innerHTML = `<p class="error-text">Versturen lukte niet. Probeer opnieuw, of mail ons op <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.</p>`;
+      }
+      return;
+    }
+    const body = [
+      `Aanvraag: ${fd.get('type')}`, '',
+      ...(prods.length ? ['Producten:', ...prods.map(([p, a]) => `- ${p}${a ? ` × ${a}` : ''}`), ''] : []),
+      `Instelling: ${fd.get('instelling') || '-'}`, `Functie: ${fd.get('functie') || '-'}`,
+      `Naam: ${fd.get('naam')}`, `E-mail: ${fd.get('email')}`, `Telefoon: ${fd.get('telefoon') || '-'}`, `Leveren in: ${fd.get('gemeente') || '-'}`, '',
+      String(fd.get('bericht') || ''),
+    ].join('\n');
+    const subject = `Aanvraag ${fd.get('type')} via de website${fd.get('instelling') ? ` – ${fd.get('instelling')}` : ''}`;
+    location.href = `mailto:${form.dataset.mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    done.hidden = false;
+    done.innerHTML = '<strong>Uw e-mail staat klaar.</strong><p>Opende er niets? Mail uw aanvraag naar <a href="mailto:' + form.dataset.mail + '">' + form.dataset.mail + '</a>.</p>';
+  });
+</script>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: var(--space-xl); padding-block: var(--space-l) var(--space-xl); align-items: start; }
+  .form { display: grid; gap: var(--space-m); }
+  fieldset { border: 0; padding: 0; min-width: 0; }
+  legend { margin-bottom: 0.5rem; padding: 0; }
+  .seg { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--sheet-line); background: var(--white); width: fit-content; max-width: 100%; }
+  .seg label { position: relative; }
+  .seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .seg span { display: block; padding: 0.75rem 1.1rem; font-weight: 500; color: var(--ink); transition: background-color 0.2s, color 0.2s; }
+  .seg input:checked + span { background: var(--indigo); color: var(--on-indigo); }
+  .seg input:focus-visible + span { outline: 2px solid var(--orange); outline-offset: -2px; }
+  .lines { list-style: none; padding: 0; display: grid; gap: 0.5rem; }
+  .line { display: grid; grid-template-columns: minmax(0, 1fr) 7rem 3.25rem; gap: 0.5rem; }
+  .remove { width: 3.25rem; height: 3.25rem; border: 1px solid var(--sheet-line); background: var(--white); display: grid; place-items: center; color: var(--muted); }
+  .remove :global(svg) { width: 1rem; }
+  .remove:hover { color: var(--orange-deep); border-color: currentColor; }
+  .remove[hidden] { display: none; }
+  .add { margin-top: 0.6rem; display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 0; padding: 0.4rem 0; color: var(--indigo); font-weight: 500; }
+  .add :global(svg) { width: 1rem; }
+  .add:hover { text-decoration: underline; text-decoration-color: var(--orange); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.25rem; }
+  .req { font-weight: 400; color: var(--muted); margin-left: 0.3rem; }
+  .consent { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.7rem; align-items: start; font-size: var(--step--1); }
+  .consent input { width: 1.25rem; height: 1.25rem; accent-color: var(--indigo); margin-top: 0.15rem; }
+  .submit { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
+  .done { padding: var(--space-m); background: var(--white); border-top: 3px solid var(--orange); }
+  .done :global(p) { margin-top: 0.4rem; color: var(--muted); }
+
+  .direct { position: sticky; top: calc(var(--header-h) + 2rem); background: var(--indigo); color: var(--on-indigo); padding: var(--space-m); display: grid; gap: 0.9rem; }
+  .direct h2 { color: var(--on-indigo); font-size: var(--step-1); }
+  .direct a { display: inline-flex; gap: 0.6rem; align-items: center; color: var(--on-indigo); text-decoration: none; word-break: break-word; }
+  .direct a :global(svg) { width: 1.1rem; color: var(--orange); flex: none; }
+  .direct .big { font-family: var(--display); font-stretch: 105%; font-weight: 560; font-size: var(--step-1); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .direct dl { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1rem; justify-content: start; font-size: var(--step--1); color: var(--on-indigo-muted); }
+  .direct dd { margin: 0; color: var(--on-indigo); }
+  .direct p { font-size: var(--step--1); color: var(--on-indigo-muted); }
+  .direct .zip { color: var(--on-indigo); }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .direct { position: static; } }
+  @media (max-width: 560px) { .cols { grid-template-columns: 1fr; } .line { grid-template-columns: minmax(0, 1fr) 5.5rem; } .line .remove { grid-column: 2; justify-self: end; } }
+</style>

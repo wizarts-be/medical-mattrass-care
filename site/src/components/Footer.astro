@@ -1,0 +1,88 @@
+---
+import Icon from './Icon.astro';
+import { bedrijf } from '../data/site.mjs';
+import { categorieen, categorieUrl } from '../lib/catalogus.mjs';
+const jaar = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="intro">
+      <img src="/logo/mmc-logo-wit.svg" alt="Medical Mattress Care BV" width="160" height="80" />
+      <p>Matrassen, kussens en hulpstukken voor de zorg. Vlaams familiebedrijf sinds {bedrijf.opgericht}.</p>
+      <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+    </div>
+
+    <div>
+      <h2>Contact</h2>
+      <ul>
+        <li><a href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a></li>
+        <li><a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></li>
+      </ul>
+      <h2 class="mt">{bedrijf.showroom.label}</h2>
+      <address>{bedrijf.showroom.straat}<br />{bedrijf.showroom.postcode} {bedrijf.showroom.gemeente}</address>
+      <dl class="uren">
+        {bedrijf.uren.map(([d, u]) => (<><dt>{d}</dt><dd>{u}</dd></>))}
+      </dl>
+    </div>
+
+    <div>
+      <h2>Producten</h2>
+      <ul>
+        {categorieen.map((c) => (<li><a href={categorieUrl(c)}>{c.naam}</a></li>))}
+      </ul>
+    </div>
+
+    <div>
+      <h2>MMC</h2>
+      <ul>
+        <li><a href="/mmc-210-pu-hoes/">De MMC 210 PU-hoes</a></li>
+        <li><a href="/maatwerk/">Maatwerk</a></li>
+        <li><a href="/kwaliteit/">Kwaliteit en certificaten</a></li>
+        <li><a href="/over-mmc/">Over MMC</a></li>
+        <li><a href="/offerte/?type=staal">Staal aanvragen</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap legal">
+    <p>© {jaar} {bedrijf.naam} · {bedrijf.straat}, {bedrijf.postcode} {bedrijf.gemeente} · ON {bedrijf.btw}</p>
+    <ul>
+      <li><a href="/privacybeleid/">Privacy</a></li>
+      <li><a href="/cookiebeleid/">Cookies</a></li>
+      <li><a href="/disclaimer/">Disclaimer</a></li>
+    </ul>
+    <ul class="lang" aria-label="Taal">
+      <li><a href="/" lang="nl" aria-current="true">NL</a></li>
+      <li><a href="/fr/" lang="fr">FR</a></li>
+      <li><a href="/en/" lang="en">EN</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--night); color: var(--on-indigo-muted); padding-block: var(--space-xl) var(--space-m); font-size: var(--step--1); }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: var(--space-l) var(--space-m); }
+  .intro { display: grid; gap: var(--space-m); justify-items: start; align-content: start; max-width: 26rem; }
+  .intro img { width: 10rem; }
+  .intro p { font-size: var(--step-0); color: var(--on-indigo); }
+  h2 { font-size: var(--step--1); font-family: var(--text-face); font-weight: 500; letter-spacing: 0; color: var(--on-indigo); margin-bottom: 0.9rem; font-stretch: 100%; }
+  .mt { margin-top: var(--space-m); }
+  ul { list-style: none; padding: 0; display: grid; gap: 0.45rem; }
+  a { color: var(--on-indigo-muted); text-decoration: none; }
+  a:hover { color: var(--on-indigo); text-decoration: underline; text-decoration-color: var(--orange); }
+  .intro .btn { color: var(--white); }
+  .intro .btn:hover { color: var(--white); text-decoration: none; }
+  address { font-style: normal; }
+  .uren { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1rem; margin-top: 0.75rem; justify-content: start; font-variant-numeric: tabular-nums; }
+  .uren dd { margin: 0; color: var(--on-indigo); }
+  .legal {
+    margin-top: var(--space-xl); padding-top: var(--space-m); border-top: 1px solid rgb(255 255 255 / 0.1);
+    display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: center;
+  }
+  .legal p { margin-right: auto; }
+  .legal ul { display: flex; gap: 1.25rem; }
+  .lang a[aria-current] { color: var(--orange); }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr 1fr; } .intro { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+</style>

@@ -15,7 +15,10 @@ export const bedrijf = {
   opgericht: 2005,
   zaakvoerder: 'Michel Marynissen',
   url: 'https://www.medical-mattress-care.com',
-  kaart: 'https://www.openstreetmap.org/search?query=Puyveldestraat%208%2C%209170%20Sint-Pauwels',
+  kaart: 'https://www.openstreetmap.org/search?query=Scherpeputstraat%2016%2C%209160%20Lokeren',
+  // Van de huidige site (laatst bijgewerkt 2020). Te bevestigen of dit nog klopt.
+  showroom: { straat: 'Scherpeputstraat 16', postcode: '9160', gemeente: 'Lokeren', label: 'Showroom en afhalingen' },
+  uren: [['Maandag tot donderdag', '8.30 tot 17.00'], ['Vrijdag', '8.30 tot 14.30']],
 };
 
 export const categorieen = [
@@ -81,6 +84,6 @@ export const oudeUrls = {
   '/mmc-baby-dekbed/': '/producten/dekbedden/mmc-baby-dekbed/',
   '/hoes-wegwerplakens/': '/producten/lakens/',
   '/hoes-baby-kinder/': '/producten/kinderen/',
-  '/labo-en-certificaten/': '/hygiene-en-kwaliteit/',
+  '/labo-en-certificaten/': '/kwaliteit/',
   '/contact/': '/contact/',
 };

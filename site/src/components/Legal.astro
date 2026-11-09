@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from './PageHead.astro';
+import { bedrijf } from '../data/site.mjs';
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<Base title={title} description={`${title} van ${bedrijf.naam}.`} noindex>
+  <PageHead title={title} crumbs={[{ label: title }]} tone="night" />
+  <div class="wrap prose body">
+    <p>Deze tekst wordt nog aangevuld. Vragen? Mail naar <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>.</p>
+    <p>{bedrijf.naam}, {bedrijf.straat}, {bedrijf.postcode} {bedrijf.gemeente}. Ondernemingsnummer {bedrijf.btw}.</p>
+    <p>Deze website plaatst geen tracking- of advertentiecookies.</p>
+  </div>
+</Base>
+<style>.body { padding-block: var(--space-xl); }</style>

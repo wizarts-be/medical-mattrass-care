@@ -1,0 +1,29 @@
+---
+// Productfoto, of een eerlijk vlak met naam en code als er (nog) geen foto is.
+import { fotoUrl } from '../lib/catalogus.mjs';
+interface Props { p: any; size?: 'thumb' | 'large'; src?: string; alt?: string; eager?: boolean }
+const { p, size = 'large', src, alt, eager = false } = Astro.props;
+const file = src ?? p.foto;
+---
+{file ? (
+  <img class:list={['pimg', size]} src={fotoUrl(file)} alt={alt ?? p.fotoAlt ?? p.naam} width="640" height="427" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+) : (
+  <span class:list={['nofoto', size]} role="img" aria-label={`${p.naam}: foto volgt`}>
+    <span class="n">{p.naam}</span>
+    {size === 'large' && <span class="f">Foto volgt</span>}
+  </span>
+)}
+
+<style>
+  .pimg { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; display: block; }
+  .nofoto {
+    width: 100%; height: 100%; min-height: 100%; display: grid; align-content: space-between; gap: 0.5rem;
+    padding: 0.6rem; background: var(--indigo);
+    background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.035) 0 2px, transparent 2px 9px);
+    color: var(--on-indigo);
+  }
+  .nofoto .n { font-family: var(--display); font-stretch: 112%; font-weight: 560; font-size: 0.72rem; line-height: 1.1; letter-spacing: -0.01em; }
+  .nofoto.large { padding: var(--space-m); }
+  .nofoto.large .n { font-size: var(--step-3); letter-spacing: -0.035em; max-width: 12ch; }
+  .nofoto .f { font-size: var(--step--1); color: var(--on-indigo-muted); }
+</style>

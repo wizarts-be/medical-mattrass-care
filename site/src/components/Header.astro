@@ -1,0 +1,176 @@
+---
+import Icon from './Icon.astro';
+import { bedrijf } from '../data/site.mjs';
+
+interface Props { overlay?: boolean }
+const { overlay = false } = Astro.props;
+const pad = Astro.url.pathname;
+const nav = [
+  { href: '/producten/', label: 'Producten' },
+  { href: '/mmc-210-pu-hoes/', label: 'De hoes' },
+  { href: '/maatwerk/', label: 'Maatwerk' },
+  { href: '/over-mmc/', label: 'Over MMC' },
+  { href: '/contact/', label: 'Contact' },
+];
+const actief = (href: string) => pad === href || (href !== '/' && pad.startsWith(href));
+---
+<header class:list={['site-header', { 'is-overlay': overlay }]} data-header>
+  <div class="bar">
+    <a class="brand" href="/" aria-label="Medical Mattress Care, naar de startpagina">
+      <img src="/logo/mmc-logo-kleur.svg" alt="" width="104" height="52" />
+    </a>
+
+    <nav class="nav" aria-label="Hoofdmenu">
+      <ul>
+        {nav.map((n) => (
+          <li><a href={n.href} aria-current={actief(n.href) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <a class="tel" href={`tel:${bedrijf.telefoonHref}`}><Icon name="phone" /><span>{bedrijf.telefoon}</span></a>
+      <a class="btn btn--small" href="/offerte/">Offerte<span class="long"> aanvragen</span></a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" data-menu-open>
+        <Icon name="menu" /><span class="visually-hidden">Menu openen</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="panel" id="menu-panel" hidden data-menu-panel>
+    <div class="panel-top">
+      <img src="/logo/mmc-logo-wit.svg" alt="" width="104" height="52" />
+      <button class="menu-btn" type="button" data-menu-close><Icon name="close" /><span class="visually-hidden">Menu sluiten</span></button>
+    </div>
+    <nav aria-label="Menu">
+      <ul>
+        {nav.map((n, i) => (
+          <li style={`--i:${i}`}><a href={n.href} aria-current={actief(n.href) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="panel-foot">
+      <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+      <a class="tel-big" href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a>
+      <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+  if (header) {
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  const setOpen = (open: boolean) => {
+    if (!panel || !openBtn) return;
+    openBtn.setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('menu-open', open);
+    if (open) {
+      panel.hidden = false;
+      requestAnimationFrame(() => panel.classList.add('is-open'));
+      closeBtn?.focus();
+    } else {
+      panel.classList.remove('is-open');
+      setTimeout(() => { panel.hidden = true; }, 380);
+      openBtn.focus();
+    }
+  };
+  openBtn?.addEventListener('click', () => setOpen(true));
+  closeBtn?.addEventListener('click', () => setOpen(false));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && openBtn?.getAttribute('aria-expanded') === 'true') setOpen(false); });
+  panel?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+</script>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    color: var(--ink);
+    background: var(--white);
+    transition: background-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  }
+  .site-header.is-overlay { position: fixed; inset: 0 0 auto; background: transparent; }
+  .site-header.is-overlay.is-scrolled,
+  .site-header.is-scrolled { background: rgb(255 255 255 / 0.96); box-shadow: 0 1px 0 var(--sheet-line); }
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header.is-scrolled { background: rgb(255 255 255 / 0.84); backdrop-filter: blur(16px) saturate(1.3); }
+  }
+
+  .bar {
+    height: var(--header-h);
+    display: flex; align-items: center; gap: var(--space-m);
+    padding-inline: var(--gutter);
+    max-width: calc(var(--max) + 2 * var(--gutter)); margin-inline: auto;
+  }
+  .brand { flex: none; display: block; padding-block: 0.9rem 0.4rem; align-self: center; }
+  .brand img { display: block; }
+  .brand img { width: 7.25rem; height: auto; }
+
+  .nav { margin-inline: auto; }
+  .nav ul { display: flex; gap: clamp(1rem, 2vw, 2.25rem); list-style: none; padding: 0; }
+  .nav a {
+    position: relative; display: block; padding-block: 0.5rem;
+    color: var(--ink); text-decoration: none; font-size: 0.98rem; font-weight: 400;
+  }
+  .nav a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0.15rem; height: 2px;
+    background: var(--orange); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .nav a[aria-current='page']::after { transform: scaleX(1); }
+  @media (hover: hover) { .nav a:hover::after { transform: scaleX(1); } }
+
+  .actions { display: flex; align-items: center; gap: 1.25rem; margin-left: auto; }
+  .nav + .actions { margin-left: 0; }
+  .tel { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--ink); text-decoration: none; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+  .tel :global(svg) { width: 1rem; height: 1rem; color: var(--orange-deep); }
+
+  .menu-btn {
+    display: none; width: 3rem; height: 3rem; place-items: center;
+    background: transparent; border: 1px solid var(--sheet-line); color: var(--ink);
+  }
+  .menu-btn :global(svg) { width: 1.25rem; height: 1.25rem; }
+
+  @media (max-width: 1080px) { .tel span { display: none; } }
+  @media (max-width: 900px) {
+    .nav, .tel { display: none; }
+    .menu-btn { display: grid; }
+    .actions { gap: 0.6rem; }
+  }
+  .actions .btn { white-space: nowrap; }
+  @media (max-width: 520px) { .actions .long { display: none; } }
+
+  .panel {
+    position: fixed; inset: 0; z-index: 60;
+    background: var(--indigo-deep); color: var(--on-indigo);
+    display: grid; grid-template-rows: auto 1fr auto;
+    padding: 0 var(--gutter) max(var(--gutter), env(safe-area-inset-bottom));
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.45s var(--ease-out);
+    overscroll-behavior: contain;
+  }
+  .panel.is-open { clip-path: inset(0 0 0 0); }
+  .panel-top { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; }
+  .panel-top img { width: 7.25rem; }
+  .panel .menu-btn { color: var(--on-indigo); border-color: rgb(255 255 255 / 0.25); }
+  .panel nav { align-self: center; }
+  .panel ul { list-style: none; padding: 0; display: grid; gap: 0.25rem; }
+  .panel li { opacity: 0; transform: translateY(12px); transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-out); transition-delay: calc(0.08s + var(--i) * 0.04s); }
+  .panel.is-open li { opacity: 1; transform: none; }
+  .panel nav a {
+    display: block; padding-block: 0.35rem; text-decoration: none; color: var(--on-indigo);
+    font-family: var(--display); font-stretch: 118%; font-weight: 520; font-size: clamp(2rem, 9vw, 3rem); letter-spacing: -0.03em;
+  }
+  .panel nav a[aria-current='page'] { color: var(--orange); }
+  .panel-foot { display: grid; gap: 0.75rem; justify-items: start; color: var(--on-indigo-muted); }
+  .panel-foot a:not(.btn) { color: var(--on-indigo); }
+  .tel-big { font-size: var(--step-1); text-decoration: none; font-variant-numeric: tabular-nums; }
+  :global(html.menu-open) { overflow: hidden; }
+</style>

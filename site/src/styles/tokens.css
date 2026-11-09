@@ -1,0 +1,74 @@
+/* Medical Mattress Care v2 — "The made bed"
+   Indigo PU owns whole fields. Cool knitted-sheet white for reading. Orange = pressure + the primary action. */
+
+:root {
+  /* Brand palette (2026-11): white #FFFFFF, orange #EF5F18, purple-blue #261A66.
+     Everything else is a tint or shade of these three. */
+  --brand-white: #FFFFFF;
+  --brand-orange: #EF5F18;
+  --brand-blue: #261A66;
+
+  /* Purple-blue and its shades/tints */
+  --night: #150E3D;
+  --indigo-deep: #1D1452;
+  --indigo-dark: #261A66;
+  --indigo: #261A66;
+  --indigo-soft: #3D3180;
+  --lilac: #A8A3C2;
+  --lilac-pale: #DAD8E8;
+
+  /* White grounds (tints of the purple-blue) */
+  --sheet: #F5F4F9;
+  --sheet-deep: #ECEBF3;
+  --sheet-line: #DEDCE9;
+  --white: #FFFFFF;
+
+  /* Orange */
+  --orange: #EF5F18;
+  --orange-hot: #F27A3E;
+  --orange-deep: #C74A0E;
+
+  /* Foam (product truth: V10 foam colours) */
+  --visco: #E7DFB0;
+  --cmhr: #BCD6BE;
+
+  /* Text */
+  --ink: #261A66;
+  --text: #352A70;
+  --muted: #5C538C;            /* ≈7:1 on white */
+  --on-indigo: #FFFFFF;
+  --on-indigo-muted: #C9C5E0;  /* ≈8:1 on #261A66 */
+
+  /* Type */
+  --display: 'Archivo Variable', 'Arial Narrow', sans-serif;
+  --text-face: 'Fira Sans', system-ui, sans-serif;
+
+  --step--1: clamp(0.84rem, 0.8rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.45vw, 1.45rem);
+  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2.1rem);
+  --step-3: clamp(2rem, 1.5rem + 2vw, 3.3rem);
+  --step-4: clamp(2.6rem, 1.6rem + 4vw, 5rem);
+  --step-5: clamp(3rem, 1.4rem + 6.4vw, 6rem);
+
+  /* Space */
+  --gutter: clamp(1rem, 0.5rem + 2.4vw, 3rem);
+  --space-xs: 0.5rem;
+  --space-s: 1rem;
+  --space-m: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  --space-l: clamp(2.5rem, 2rem + 2vw, 4rem);
+  --space-xl: clamp(4rem, 3rem + 5vw, 8rem);
+  --space-2xl: clamp(6rem, 4rem + 8vw, 12rem);
+  --max: 88rem;
+  --measure: 66ch;
+
+  /* The 200 x 90 mattress module */
+  --bed-ratio: 200 / 90;
+
+  /* the hidden zip of the PU cover, as the site's rule */
+  --zipline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5' viewBox='0 0 6 5'%3E%3Cpath d='M0 2.5h6' stroke='%23C6CBD6' stroke-width='1'/%3E%3Crect x='1' y='0.5' width='2' height='2' fill='%23B3B8C6'/%3E%3Crect x='4' y='2.5' width='2' height='2' fill='%23B3B8C6'/%3E%3C/svg%3E");
+  --zipline-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5' viewBox='0 0 6 5'%3E%3Cpath d='M0 2.5h6' stroke='%23463D72' stroke-width='1'/%3E%3Crect x='1' y='0.5' width='2' height='2' fill='%23574D88'/%3E%3Crect x='4' y='2.5' width='2' height='2' fill='%23574D88'/%3E%3C/svg%3E");
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --header-h: 4.5rem;
+}

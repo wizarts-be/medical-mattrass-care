@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import Icon from '../components/Icon.astro';
+import { hoesFiche, ontsmetting } from '../data/site.mjs';
+import { offerteUrl } from '../lib/catalogus.mjs';
+
+const eigenschappen = [
+  'Bi-elastisch weefsel: volgt de matras zonder plooien',
+  'Ondoordringbaar voor water en urine, en toch ademend',
+  'Geen naden in de ligvlakken',
+  'Verborgen rits in dezelfde kleur, met L-sluiting: makkelijk af te ritsen',
+  'Bacterie- en schimmelresistent, MRSA-bestendig',
+  'Volledig wasbaar met de ontsmettingsproducten uit de zorgsector',
+];
+const onderhoud = [
+  { sym: '95', label: 'Wasbaar op 95 °C' },
+  { sym: 'bleach', label: 'Niet bleken' },
+  { sym: 'iron', label: 'Niet strijken' },
+  { sym: 'A', label: 'Enkel reinigen met producten met klasse A-label' },
+  { sym: 'dry', label: 'Droogkast tot niveau 1' },
+];
+---
+<Base title="MMC 210 PU-hoes" description="De MMC 210 PU-hoes: MRSA-bestendig, wasbaar op 95 °C, steriliseerbaar tot 115 °C, brandnorm CRIB 5, Oeko-Tex standaard 100. Technische fiche en onderhoud.">
+  <PageHead title="De MMC 210 PU-hoes" lede="Polyurethaan op een bi-elastisch weefsel. Standaard op onze matrassen en de meeste hulpstukken, en ook los te bestellen op maat van uw bestaande matrassen." crumbs={[{ label: 'De hoes' }]} tone="night">
+    <figure class="swatch">
+      <img src="/img/beeld/hero-1280.webp" alt="De stof van de MMC 210 PU-hoes van dichtbij: indigo, met een zachte glans" width="1280" height="720" />
+      <figcaption>Indigo PU, 200 g/m²</figcaption>
+    </figure>
+  </PageHead>
+
+  <section class="facts-band" aria-label="De hoes in vier cijfers">
+    <dl class="wrap facts">
+      <div><dt>95 °C</dt><dd>wasbaar, krimp max. 5 %</dd></div>
+      <div><dt>115 °C</dt><dd>steriliseerbaar</dd></div>
+      <div><dt>CRIB 5</dt><dd>brandnorm, Centexbel 58974/B</dd></div>
+      <div><dt>&gt; 200 cm</dt><dd>waterkolom, ondoordringbaar</dd></div>
+    </dl>
+  </section>
+
+  <div class="wrap two">
+    <section aria-labelledby="eig">
+      <h2 id="eig">Wat de hoes doet</h2>
+      <ul class="checks">
+        {eigenschappen.map((e) => (<li><Icon name="check" />{e}</li>))}
+      </ul>
+
+      <h2 id="ond" class="mt">Onderhoud</h2>
+      <ul class="care" aria-labelledby="ond">
+        {onderhoud.map((o) => (
+          <li>
+            <span class="sym" aria-hidden="true">
+              {o.sym === '95' && <svg viewBox="0 0 40 40"><path d="M5 12h30l-3 22H8z" /><path d="M5 12c3-3 6 3 10 0s7 3 10 0 7 3 10 0" /><text x="20" y="29">95</text></svg>}
+              {o.sym === 'bleach' && <svg viewBox="0 0 40 40"><path d="M20 6L36 34H4z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
+              {o.sym === 'iron' && <svg viewBox="0 0 40 40"><path d="M6 30h28l-3-12H15c-5 0-8 5-9 12z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
+              {o.sym === 'A' && <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" /><text x="20" y="26">A</text></svg>}
+              {o.sym === 'dry' && <svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" /><circle cx="20" cy="20" r="11" /><circle cx="20" cy="20" r="1.8" class="f" /></svg>}
+            </span>
+            <span>{o.label}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="small">Ook bestand tegen: {ontsmetting}.</p>
+    </section>
+
+    <section aria-labelledby="fiche">
+      <table class="spec">
+        <caption id="fiche">Technische fiche</caption>
+        <thead><tr><th scope="col">Eigenschap</th><th scope="col">Norm</th><th scope="col">Waarde</th></tr></thead>
+        <tbody>
+          {hoesFiche.map(([k, n, v]) => (<tr><th scope="row">{k}</th><td class="norm">{n || '–'}</td><td>{v}</td></tr>))}
+        </tbody>
+      </table>
+      <div class="also">
+        <h3>MMC 120 PU</h3>
+        <p>Dezelfde kwaliteit, lichter gewicht. Voor plaatsen waar de hoes minder te lijden heeft, zoals de onrusthekkenbeschermer en het hoofdkussen MMC PUP 23.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn--indigo" href={offerteUrl({ code: 'MMC 210 PU-hoes' })}>Hoezen op maat aanvragen <Icon name="arrow" /></a>
+        <a class="link-arrow" href={offerteUrl({ code: 'MMC 210 PU-hoes' }, 'staal')}>Staal van de stof <Icon name="arrow" /></a>
+      </div>
+    </section>
+  </div>
+
+  <QuoteBand />
+</Base>
+
+<style>
+  .swatch { position: relative; aspect-ratio: var(--bed-ratio); overflow: hidden; }
+  .swatch img { width: 100%; height: 100%; object-fit: cover; }
+  .swatch figcaption { position: absolute; left: 1rem; bottom: 0.8rem; font-size: var(--step--1); color: var(--on-indigo); }
+  .facts-band { background: var(--indigo); color: var(--on-indigo); padding-block: var(--space-xl); }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .facts div { display: grid; gap: 0.3rem; padding: 0 var(--space-m); }
+  .facts div:first-child { padding-left: 0; }
+  .facts div + div { border-left: 1px solid rgb(255 255 255 / 0.16); }
+  .facts dt { font-family: var(--display); font-stretch: 115%; font-weight: 560; font-size: var(--step-3); letter-spacing: -0.035em; line-height: 1; }
+  .facts dd { margin: 0; color: var(--on-indigo-muted); font-size: var(--step--1); }
+  @media (max-width: 800px) { .facts { grid-template-columns: 1fr 1fr; gap: var(--space-m) 0; } .facts div:nth-child(3) { padding-left: 0; border-left: 0; } }
+
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--space-xl); padding-block: var(--space-xl); }
+  h2 { font-size: var(--step-2); margin-bottom: 1.1rem; }
+  .mt { margin-top: var(--space-l); }
+  .checks { list-style: none; padding: 0; display: grid; gap: 0.7rem; }
+  .checks li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.7rem; }
+  .checks :global(svg) { width: 1.3rem; color: var(--orange-deep); margin-top: 0.15rem; }
+  .care { list-style: none; padding: 0; display: grid; gap: 0.6rem; }
+  .care li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.9rem; align-items: center; }
+  .sym svg { width: 2.5rem; height: 2.5rem; fill: none; stroke: var(--indigo); stroke-width: 1.6; }
+  .sym text { fill: var(--indigo); stroke: none; font: 600 10px var(--text-face); text-anchor: middle; }
+  .sym .f { fill: var(--indigo); }
+  .small { margin-top: 1.25rem; font-size: var(--step--1); color: var(--muted); max-width: 60ch; }
+  .norm { color: var(--muted); font-size: var(--step--1); }
+  .also { margin-top: var(--space-l); padding: var(--space-m); background: var(--white); }
+  .also h3 { font-size: var(--step-1); margin-bottom: 0.5rem; }
+  .actions { margin-top: var(--space-m); display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
+  @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .spec thead { display: none; } .spec tr { display: grid; padding: 0.7rem 0; border-top: 1px solid var(--sheet-line); } .spec th, .spec td { border: 0 !important; padding: 0.1rem 0; width: auto; } }
+</style>

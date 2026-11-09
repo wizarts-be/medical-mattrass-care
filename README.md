@@ -1,34 +1,35 @@
-# Medical Mattress Care, website v1
+# Medical Mattress Care, website v2: "The made bed"
 
-Statische site in HTML, CSS en een beetje JavaScript, gegenereerd uit productdata. Geen dependencies.
+Astro site, static output. Concept: the site is a care bed being made and unmade. The home opens on a 3D mattress (Three.js) in the MMC 210 PU cover. You press into it, it sinks like visco and slowly recovers, and the dent shows as a pressure map. Scrolling unmakes the bed: sheet off, cover up, visco and CMHR apart.
 
-## Mappen
+## Folders
 
-- `briefing/` bijgewerkte briefing (`BRIEFING.md`, met de antwoorden uit de vragenlijst), de oorspronkelijke briefing en het oude brandboek.
-- `info/` bronnen van de klant: catalogus, vragenlijst, Fairsales-certificaat, EU-conformiteitsverklaring MMC V10.
-- `assets/` logo's (svg), originele productfoto's, hernoemde productfoto's, uitsneden en scans uit de catalogus.
-- `site/` de website.
-  - `src/data/producten.mjs` alle producten (een object per product).
-  - `src/data/site.mjs` bedrijfsgegevens, categorieën, toepassingen, hoesfiche, oude URL's.
-  - `src/i18n/nl.mjs` interfaceteksten.
-  - `build.mjs` de sjablonen; schrijft alle pagina's naar `public/`.
-  - `public/` de site zelf (css, js, img, logo, docs blijven staan, de rest wordt bij elke build opnieuw gemaakt).
-- `OPEN-PUNTEN.md` vragen aan de klant, foto's en technische to-do's.
+- `briefing/`: client info, questionnaire, brand book, catalogue
+- `assets/`: logos, original and processed photos
+- `PRODUCT.md`: product truth (impeccable)
+- `.impeccable/`: direction contract, review captures
+- `site/`: the website
+  - `src/data/producten.mjs`: all products (one object per product, from v1)
+  - `src/data/site.mjs`: company details, categories, cover sheet, old URLs
+  - `src/scripts/bed.ts`: the 3D engine (pressure simulation, shaders, scroll unmaking)
+  - `src/pages/`: pages; `producten/[categorie]/[slug].astro` generates every product page
+  - `src/styles/tokens.css`: colours, type, spacing
 
-## Werken
+## Working
+
+Homebrew Node on this Mac is broken (missing simdjson). Use the nvm Node:
 
 ```bash
+export PATH=~/.nvm/versions/node/v24.12.0/bin:$PATH
 cd site
-node build.mjs                          # bouwt public/
-python3 -m http.server 4321 -d public   # bekijk op http://localhost:4321
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # writes dist/
 ```
 
-Een product aanpassen of toevoegen: wijzig `src/data/producten.mjs` en bouw opnieuw. Foto's horen in `public/img/producten/`.
+## Notes
 
-## Ontwerp
-
-Fira Sans (huisstijl), MMC-indigo en oranje als signaal, volle vlakken van rand tot rand, inspiratie Carvico. Tokens in `public/css/tokens.css`, basis in `base.css`, de site in `site.css`. Gecontroleerd met Hallmark (sloplint).
-
-## Voorbeeld online
-
-Het voorbeeld staat op GitHub Pages: https://wizarts-be.github.io/medical-mattrass-care/ (met `noindex`, niet bedoeld voor Google). Bijwerken na een wijziging: `sh site/deploy-pages.sh` vanuit deze map. Het script bouwt de site met het subpad en zet ze op de branch `gh-pages`.
+- 3D: falls back to a fabric photo plus a drawn layer diagram without WebGL2. With "reduced motion" there is no lying-down demo and no scroll unmaking (static diagram instead).
+- Forms: `src/pages/offerte.astro`, constant `ENDPOINT`. Empty = the request opens as an email to info@ (works right away). Fill in an endpoint (Formspree, own PHP, CRM) to post directly.
+- Redirects from the old WordPress URLs: `public/_redirects` (Netlify/Cloudflare), `public/.htaccess` (Apache), plus Astro redirect pages.
+- WordPress: the wp-builder-agent can convert this folder later. Note that the 3D home then needs to come along as a custom block or template script.

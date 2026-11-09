@@ -1,0 +1,450 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Pictogram from '../components/Pictogram.astro';
+import { bedrijf } from '../data/site.mjs';
+import { categorieen, categorieUrl, perCategorie, zichtbaar, toppers, productUrl } from '../lib/catalogus.mjs';
+
+const v10 = toppers.find((p) => p.slug === 'mmc-v10');
+const lagen = [
+  { key: 'sheet', titel: 'MMC hoeslaken', tekst: 'Gebreid en bi-elastisch. Blijft strak, ook als het bed omhoog staat.', dock: 0 },
+  { key: 'cover', titel: 'MMC 210 PU-hoes', tekst: 'Ondoordringbaar, toch ademend. Wasbaar op 95 °C.', dock: 2 },
+  { key: 'visco', titel: '5 cm Visco 50', tekst: 'Traagschuim vormt zich naar het lichaam en spreidt de druk.', dock: 1 },
+  { key: 'cmhr', titel: '10 cm CMHR 40', tekst: 'Brandvertragend koudschuim draagt en blijft veerkrachtig.', dock: 0 },
+];
+
+// Range as spec sheets (the client's best sellers lead).
+const n = (...slugs: string[]) => slugs.reduce((a, s) => a + perCategorie(s).length, 0);
+const reeks = [
+  { slug: 'matrassen', naam: 'Matrassen', picto: 'mattress', top: 'MMC V10', specs: [['Opbouw', '10 cm CMHR 40 + 5 cm Visco 50'], ['Maten', '90 tot 180 × 200 cm'], ['Hoes', 'MMC 210 PU']], n: n('matrassen') },
+  { slug: 'positionering-visco', naam: 'Positionering', picto: 'cylinder', top: 'MMC CK 01 · CG 02 · HR 03', specs: [['Schuim', 'visco 45 tot 50 kg/m³'], ['Maten', '50 × 10 tot 50 × 20 cm'], ['Ook', 'kussens met bolletjes']], n: n('positionering-visco', 'positionering-polystyreen') },
+  { slug: 'zitkussens', naam: 'Zitkussens', picto: 'seat', top: 'MMC R3DV 07', specs: [['Schuim', 'gegoten Visco 60'], ['Vorm', 'met abductieheuvel'], ['Hoes', '210 PU met watergordijn']], n: n('zitkussens') },
+  { slug: 'hoofdkussens', naam: 'Hoofdkussens', picto: 'pillow', top: 'MMC PUP 23', specs: [['Maat', '60 × 60 cm, 700 g'], ['Vulling', 'holle vezel'], ['Hoes', 'MMC 120 PU, afneembaar']], n: n('hoofdkussens') },
+  { slug: 'dekbedden', naam: 'Dekbedden', picto: 'duvet', top: 'MMC Bicolor', specs: [['Maat', '220 × 150 cm'], ['Vulling', '300 g/m² Neotherm'], ['Onderhoud', 'wasbaar op 40 °C']], n: n('dekbedden') },
+  { slug: 'bescherming', naam: 'Bescherming', picto: 'panels', top: 'MMC FO 10', specs: [['Maat', '3 × 60 × 60 cm'], ['Schuim', '7 cm CMHR 25'], ['Gebruik', 'naast het bed, bij evacuatie']], n: n('bescherming') },
+] as const;
+const overige = categorieen.filter((c) => !reeks.some((r) => r.slug === c.slug) && !['positionering-polystyreen', 'zitkussens'].includes(c.slug) && perCategorie(c.slug).length);
+
+const hoesFeiten = [
+  { k: 95, u: '°C', v: 'wasbaar' },
+  { k: 115, u: '°C', v: 'steriliseerbaar' },
+  { k: 200, u: 'cm', v: 'waterkolom', pre: '>' },
+  { k: 5, u: '', v: 'brandnorm', pre: 'CRIB ' },
+];
+const principes = [
+  { t: 'Uit stock', d: 'Bijna alle standaardproducten liggen klaar, voor een snelle levering.' },
+  { t: 'Op maat', d: 'Andere maat of opbouw? Wij snijden en maken het voor u.' },
+  { t: 'Scherp geprijsd', d: 'Hoge kwaliteit, dankzij een lage kostenstructuur.' },
+  { t: 'Sinds 2005', d: 'Een Vlaams familiebedrijf, ontwikkeld met onderzoeksinstellingen.' },
+];
+const stappen = [
+  { t: 'U stuurt uw maten', d: 'Lengte, breedte, dikte en het gebruik.' },
+  { t: 'Wij stellen de opbouw voor', d: 'Schuim, densiteit en hoes, met een offerte.' },
+  { t: 'Wij maken en leveren', d: 'In ons Vlaams productiehuis.' },
+];
+const certificaten = [
+  { naam: 'ISO 14001', tekst: 'Productiehuis met eigen groene stroom' },
+  { naam: 'Fairsales', tekst: 'Gecertificeerd sinds 2016', href: '/docs/fairsales-certificaat-2026.pdf' },
+  { naam: 'CRIB 5', tekst: 'Brandtest Centexbel 58974/B' },
+  { naam: 'Oeko-Tex 100', tekst: 'Hoes getest op schadelijke stoffen' },
+  { naam: 'MDR klasse I', tekst: 'MMC V10, medisch hulpmiddel', href: '/docs/mmc-v10-eu-conformiteitsverklaring.pdf' },
+];
+---
+<Base
+  title="Medical Mattress Care BV"
+  description="Medische matrassen, visco matrassen, kussens en positioneringshulpstukken voor woonzorgcentra en ziekenhuizen. Uit stock, op maat, Vlaams sinds 2005. Vraag uw offerte aan."
+  bodyClass="home"
+>
+  <!-- 1 · Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <picture class="hero-bg">
+      <source media="(max-width: 900px)" srcset="/img/beeld/hero-1280.webp" />
+      <img src="/img/beeld/hero-2560.webp" alt="" width="2560" height="1440" fetchpriority="high" />
+    </picture>
+    <div class="hero-inner">
+      <h1 id="hero-title"><span class="line"><span>Minder druk.</span></span><span class="line"><em>Meer hygiëne.</em></span></h1>
+      <div class="hero-side">
+        <p>Medische matrassen, kussens en hulpstukken voor de zorg. Uit stock, op maat, Vlaams sinds {bedrijf.opgericht}.</p>
+        <div class="hero-cta">
+          <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+          <a class="btn btn--light" href="/producten/">Bekijk het gamma</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · V10: drukken en uit elkaar halen -->
+  <div class="bedrun" data-run>
+    <div class="stage" aria-hidden="true">
+      <canvas data-bed></canvas>
+      <div class="labels">
+        {lagen.map((l) => (
+          <div class="layer-label" data-label={l.key} style={`--dock:${l.dock}`}>
+            <span class="tick"></span>
+            <strong>{l.titel}</strong>
+            <span>{l.tekst}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+    <section class="unmake" id="v10" aria-labelledby="v10-title" data-press>
+      <div class="unmake-head">
+        <h2 id="v10-title">De MMC V10,<br />laag per laag.</h2>
+        <p>Een van onze toppers. In vier breedtes, van 90 tot 180 cm.</p>
+        {v10 && <a class="link-arrow" href={productUrl(v10)}>Specificaties en bestelcodes <Icon name="arrow" /></a>}
+        <p class="hint" data-hint><span class="dot"></span><span class="fine">Druk met uw muis op de matras</span><span class="coarse">Tik op de matras</span></p>
+      </div>
+      <div class="static-layers">
+        <img src="/img/beeld/bed-layers.webp" alt="De opbouw van de MMC V10 uit elkaar gehaald: MMC 210 PU-hoes, 5 cm Visco 50, 10 cm CMHR 40" width="1600" height="1000" loading="lazy" />
+        <ol>{lagen.map((l) => (<li><strong>{l.titel}</strong><span>{l.tekst}</span></li>))}</ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- 4 · Het gamma: spec sheets in a horizontal rail -->
+  <section class="range" aria-labelledby="gamma-title" data-range>
+    <div class="range-pin">
+      <div class="range-head">
+        <h2 id="gamma-title">Het gamma.</h2>
+        <p>{zichtbaar.length} producten voor de zorg, in zes families. Zoek op product, vraag uw prijs.</p>
+      </div>
+      <div class="rail-viewport">
+        <ol class="rail" data-rail>
+          {reeks.map((r, i) => (
+            <li class="sheet">
+              <a href={categorieUrl(r.slug)}>
+                <span class="sheet-top"><span class="sheet-no">{String(i + 1).padStart(2, '0')}</span><span class="sheet-n">{r.n} {r.n === 1 ? 'product' : 'producten'}</span></span>
+                <span class="sheet-picto"><Pictogram name={r.picto} /></span>
+                <strong class="sheet-name">{r.naam}</strong>
+                <span class="sheet-top-product">{r.top}</span>
+                <dl class="sheet-specs">
+                  {r.specs.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
+                </dl>
+                <span class="sheet-go">Bekijk {r.naam.toLowerCase()} <Icon name="arrow" /></span>
+              </a>
+            </li>
+          ))}
+          <li class="sheet sheet--all">
+            <a href="/producten/">
+              <span class="sheet-top"><span class="sheet-no">+</span></span>
+              <strong class="sheet-name">Alle {zichtbaar.length} producten</strong>
+              <span class="sheet-more">Ook: {overige.map((c) => c.naam).join(', ')}.</span>
+              <span class="sheet-go">Naar de catalogus <Icon name="arrow" /></span>
+            </a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · De hoes -->
+  <section class="cover" aria-labelledby="hoes-title">
+    <div class="cover-copy">
+      <h2 id="hoes-title" class="reveal">De hoes die alles aankan.</h2>
+      <p class="reveal">De MMC 210 PU-hoes zit standaard op onze matrassen en hulpstukken. Ondoordringbaar voor water en urine, en toch ademend. MRSA-bestendig, en ook los te bestellen.</p>
+      <dl class="facts">
+        {hoesFeiten.map((f) => (
+          <div class="reveal">
+            <dt><span>{f.pre ?? ''}</span><span data-count={f.k}>{f.k}</span>{f.u && <span class="u"> {f.u}</span>}</dt>
+            <dd>{f.v}</dd>
+          </div>
+        ))}
+      </dl>
+      <a class="link-arrow reveal" href="/mmc-210-pu-hoes/">Technische fiche <Icon name="arrow" /></a>
+    </div>
+  </section>
+
+  <!-- 6 · Principes -->
+  <section class="principles" aria-labelledby="why-title">
+    <h2 id="why-title" class="reveal">Waarom zorginstellingen<br />voor MMC kiezen.</h2>
+    <ul>
+      {principes.map((p) => (<li class="reveal"><span class="rule" aria-hidden="true"></span><strong>{p.t}</strong><span>{p.d}</span></li>))}
+    </ul>
+  </section>
+
+  <!-- 7 · Maatwerk -->
+  <section class="custom" aria-labelledby="custom-title">
+    <div class="custom-head">
+      <h2 id="custom-title" class="reveal">Zit het er niet bij?<br />Dan maken we het.</h2>
+      <a class="btn btn--light reveal" href="/offerte/?type=maatwerk">Maatwerk aanvragen <Icon name="arrow" /></a>
+    </div>
+    <ol class="steps" data-steps>
+      <span class="steps-line" aria-hidden="true"><span></span></span>
+      {stappen.map((s, i) => (<li class="reveal"><span class="step-no">{i + 1}</span><strong>{s.t}</strong><span>{s.d}</span></li>))}
+    </ol>
+  </section>
+
+  <!-- 8 · Bewijs -->
+  <section class="proof" aria-labelledby="proof-title">
+    <div class="proof-head">
+      <h2 id="proof-title" class="reveal">Getest en gecertificeerd.</h2>
+      <p class="reveal">Ontwikkeld met onderzoeksinstellingen. Gemaakt door een Vlaams familiebedrijf.</p>
+    </div>
+    <ul class="marks">
+      {certificaten.map((c) => (
+        <li class="reveal">
+          {c.href ? <a href={c.href}><strong>{c.naam}</strong><span>{c.tekst}</span><em>pdf</em></a> : <div><strong>{c.naam}</strong><span>{c.tekst}</span></div>}
+        </li>
+      ))}
+    </ul>
+    {/* REFERENTIES: zodra MMC namen of logo's van instellingen aanlevert, komt hier een rij referenties. */}
+  </section>
+
+  <!-- 9 · Afsluiter -->
+  <section class="close" aria-labelledby="close-title">
+    <h2 id="close-title" class="close-title"><span class="line"><span>Vraag</span></span><span class="line"><span>uw prijs.</span></span></h2>
+    <div class="close-side">
+      <p>Zeg welke producten en hoeveel. U krijgt snel een offerte, of eerst een staal.</p>
+      <div class="close-cta">
+        <a class="btn btn--blue" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+        <a class="btn btn--ghost" href="/offerte/?type=staal">Staal aanvragen</a>
+      </div>
+      <p class="close-contact"><a href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a><a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { createBed, webglAvailable } from '../scripts/bed';
+
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── 3D (only where WebGL2 exists and motion is welcome)
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-bed]');
+  const run = document.querySelector<HTMLElement>('[data-run]');
+  const press = document.querySelector<HTMLElement>('[data-press]');
+  if (canvas && run && press && !reduced && webglAvailable()) {
+    root.classList.add('has-3d');
+    const labels: Record<string, HTMLElement> = {};
+    document.querySelectorAll<HTMLElement>('[data-label]').forEach((el) => (labels[el.dataset.label!] = el));
+    try {
+      createBed({ canvas, run, hero: press, labels, reduced, onReady: () => root.classList.add('bed-ready') });
+    } catch (err) {
+      console.warn('[MMC] 3D niet beschikbaar, statische versie', err);
+      root.classList.remove('has-3d');
+    }
+  } else if (!reduced) {
+    console.info('[MMC] WebGL2 niet beschikbaar in deze browser: statische versie');
+  }
+  const hint = document.querySelector<HTMLElement>('[data-hint]');
+  press?.addEventListener('pointerdown', () => hint?.classList.add('is-done'), { once: true });
+
+  // ── Motion
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+  mm.add({ motion: '(prefers-reduced-motion: no-preference)', wide: '(min-width: 901px)' }, (ctx) => {
+    const { motion, wide } = ctx.conditions as { motion: boolean; wide: boolean };
+    if (!motion) return;
+    const ease = 'expo.out';
+
+    // hero: lines rise out of their mask, image settles and drifts on scroll
+    gsap.from('.hero h1 .line > *', { yPercent: 110, duration: 1.2, ease, stagger: 0.09, delay: 0.1 });
+    gsap.from('.hero-side > *', { y: 28, autoAlpha: 0, duration: 1, ease, stagger: 0.1, delay: 0.5 });
+    gsap.fromTo('.hero-bg img', { scale: 1.18 }, { scale: 1.05, duration: 2.6, ease });
+    gsap.to('.hero-bg', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+
+    // range: pinned horizontal rail on wide screens
+    const rail = document.querySelector<HTMLElement>('[data-rail]');
+    if (rail && wide) {
+      const dist = () => Math.max(0, rail.scrollWidth - (rail.parentElement?.clientWidth ?? innerWidth));
+      gsap.to(rail, {
+        x: () => -dist(), ease: 'none',
+        scrollTrigger: { trigger: '.range-pin', start: 'top top', end: () => `+=${dist()}`, pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1 },
+      });
+    }
+    gsap.from('.sheet', { y: 60, autoAlpha: 0, duration: 1, ease, stagger: 0.07, scrollTrigger: { trigger: '.range', start: 'top 70%' } });
+
+    // cover: numbers count up
+    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+      const to = Number(el.dataset.count);
+      const o = { v: 0 };
+      gsap.to(o, { v: to, duration: 1.6, ease: 'power3.out', onUpdate: () => (el.textContent = String(Math.round(o.v))), scrollTrigger: { trigger: el, start: 'top 85%' } });
+    });
+
+    // generic reveals
+    ScrollTrigger.batch('.reveal', {
+      start: 'top 88%',
+      onEnter: (els) => gsap.fromTo(els, { y: 36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.1, ease, stagger: 0.08, overwrite: true }),
+    });
+    gsap.from('.principles .rule', { scaleX: 0, transformOrigin: 'left', duration: 1.2, ease, stagger: 0.12, scrollTrigger: { trigger: '.principles ul', start: 'top 80%' } });
+    gsap.from('.steps-line > span', { scaleX: 0, transformOrigin: 'left', ease: 'none', scrollTrigger: { trigger: '[data-steps]', start: 'top 80%', end: 'bottom 60%', scrub: true } });
+    gsap.from('.close-title .line > *', { yPercent: 110, duration: 1.2, ease, stagger: 0.1, scrollTrigger: { trigger: '.close', start: 'top 75%' } });
+
+    addEventListener('load', () => ScrollTrigger.refresh());
+  });
+</script>
+
+<style>
+  /* ───────── Hero ───────── */
+  .hero { position: relative; min-height: max(36rem, calc(100svh - var(--header-h))); display: grid; background: var(--night); color: var(--white); overflow: hidden; }
+  .hero-bg { position: absolute; inset: -6% 0 0; }
+  .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; transform: scale(1.05); }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, rgb(21 14 61 / 0.85) 0%, rgb(21 14 61 / 0.55) 42%, rgb(21 14 61 / 0) 75%),
+                linear-gradient(0deg, rgb(21 14 61 / 0.7) 0%, rgb(21 14 61 / 0) 45%);
+  }
+  .hero-inner {
+    position: relative; z-index: 2; align-self: end;
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end;
+    padding: var(--space-xl) var(--gutter) clamp(3rem, 9vh, 6rem);
+  }
+  .hero h1 { color: var(--white); font-size: clamp(3.2rem, 1rem + 8.4vw, 9rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; }
+  .line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+  .line > * { display: block; }
+  .hero h1 em { font-style: normal; color: var(--orange); }
+  .hero-side { display: grid; gap: 1.6rem; max-width: 30rem; padding-bottom: 0.6rem; }
+  .hero-side p { font-size: var(--step-1); line-height: 1.5; color: var(--on-indigo-muted); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; } }
+
+  /* ───────── V10 ───────── */
+  .bedrun { position: relative; background: var(--white); }
+  .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: none; }
+  :global(.has-3d) .stage { display: block; }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s var(--ease-out); }
+  :global(.bed-ready) .stage canvas { opacity: 1; }
+  .unmake { position: relative; padding-block: var(--space-2xl); }
+  :global(.has-3d) .unmake { margin-top: -100svh; height: 360vh; padding: 0; touch-action: pan-y; }
+  .unmake a { position: relative; z-index: 2; }
+  .unmake-head { padding-inline: var(--gutter); max-width: 38rem; display: grid; justify-items: start; gap: 1rem; }
+  :global(.has-3d) .unmake-head { position: sticky; top: calc(var(--header-h) + var(--space-l)); pointer-events: none; }
+  :global(.has-3d) .unmake-head a { pointer-events: auto; }
+  .unmake-head h2 { font-size: clamp(2.4rem, 1rem + 3.4vw, 4.4rem); color: var(--ink); letter-spacing: -0.05em; line-height: 0.92; }
+  .unmake-head p { color: var(--muted); font-size: var(--step-1); line-height: 1.45; max-width: 26ch; }
+  .unmake-head .link-arrow { color: var(--ink); }
+  .hint { display: none; max-width: none !important; white-space: nowrap; align-items: center; gap: 0.6rem; font-size: var(--step--1) !important; color: var(--muted); transition: opacity 0.6s var(--ease-out); margin-top: 0.6rem; }
+  :global(.has-3d) .hint { display: flex; }
+  .hint.is-done { opacity: 0; }
+  .hint .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--orange); animation: ping 2.2s var(--ease-out) infinite; }
+  .hint .coarse { display: none; }
+  @media (pointer: coarse) { .hint .fine { display: none; } .hint .coarse { display: inline; } }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgb(239 95 24 / 0.5); } 80%, 100% { box-shadow: 0 0 0 14px rgb(239 95 24 / 0); } }
+  .labels { position: absolute; inset: 0; pointer-events: none; }
+  .layer-label { position: absolute; left: 0; top: 0; transform: translate(calc(var(--x) + 1.5rem), calc(var(--y) - 50%)); width: 16rem; padding-left: 1rem; display: grid; gap: 0.25rem; opacity: 0; visibility: hidden; font-size: var(--step--1); color: var(--muted); line-height: 1.45; }
+  .layer-label strong { font-family: var(--display); font-stretch: 112%; font-weight: 650; font-size: var(--step-1); color: var(--ink); letter-spacing: -0.02em; line-height: 1.1; }
+  .layer-label .tick { position: absolute; left: -1.5rem; top: 50%; width: 2rem; height: 1px; background: var(--orange); }
+  .layer-label .tick::before { content: ''; position: absolute; left: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); }
+  @media (max-width: 900px), (orientation: portrait) {
+    .layer-label { left: var(--gutter); right: var(--gutter); top: auto; width: auto; bottom: calc(1.25rem + var(--dock) * 5.2rem); transform: none; padding: 0.75rem 1rem; background: var(--white); box-shadow: inset 0 2px 0 var(--orange), 0 6px 20px -12px rgb(38 26 102 / 0.35); }
+    .layer-label .tick { display: none; }
+  }
+  .static-layers { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-l); align-items: center; padding-inline: var(--gutter); margin-top: var(--space-l); }
+  .static-layers img { width: 100%; height: auto; }
+  .static-layers ol { list-style: none; padding: 0; display: grid; gap: 1.1rem; }
+  .static-layers li { display: grid; gap: 0.2rem; color: var(--muted); border-top: 1px solid var(--sheet-line); padding-top: 0.8rem; }
+  .static-layers strong { color: var(--ink); font-family: var(--display); font-stretch: 112%; font-weight: 650; font-size: var(--step-1); }
+  :global(.has-3d) .static-layers { display: none; }
+  @media (max-width: 800px) { .static-layers { grid-template-columns: 1fr; } }
+
+  /* ───────── Range: spec sheets ───────── */
+  .range { background: var(--sheet); }
+  .range-pin { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: var(--space-l); padding-block: var(--space-xl); overflow: hidden; }
+  .range-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end; padding-inline: var(--gutter); }
+  .range-head h2 { font-size: clamp(3rem, 1rem + 6vw, 7rem); color: var(--ink); letter-spacing: -0.055em; line-height: 0.88; }
+  .range-head p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 32ch; padding-bottom: 0.4rem; }
+  .rail-viewport { overflow: visible; }
+  .rail { list-style: none; padding: 0 var(--gutter); display: flex; gap: clamp(0.75rem, 1.4vw, 1.25rem); width: max-content; will-change: transform; }
+  .sheet { width: clamp(17rem, 24vw, 22rem); flex: none; display: grid; }
+  .sheet a { position: relative; display: grid; grid-template-rows: auto auto auto auto 1fr auto; gap: 0.5rem; height: 100%; padding: 1.25rem 1.4rem 1.4rem; background: var(--white); color: var(--ink); text-decoration: none; transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out); }
+  .sheet-top { display: flex; justify-content: space-between; font-size: var(--step--1); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .sheet-no { font-weight: 500; color: var(--orange-deep); }
+  .sheet-picto { display: block; color: var(--ink); margin: 0.6rem -0.4rem 0.4rem; transition: transform 0.6s var(--ease-out); }
+  .sheet-name { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.035em; line-height: 1; }
+  .sheet-top-product { font-size: var(--step--1); color: var(--muted); font-weight: 500; }
+  .sheet-specs { display: grid; gap: 0; margin-top: 0.6rem; font-size: var(--step--1); align-content: start; }
+  .sheet-specs div { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.75rem; padding-block: 0.5rem; border-top: 1px solid var(--sheet-line); }
+  .sheet-specs dt { color: var(--muted); }
+  .sheet-specs dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .sheet-go { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.8rem; font-weight: 500; font-size: var(--step--1); color: var(--ink); }
+  .sheet-go :global(svg) { width: 1rem; transition: transform 0.4s var(--ease-out); }
+  .sheet a::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out); }
+  @media (hover: hover) {
+    .sheet a:hover::after { transform: scaleX(1); }
+    .sheet a:hover .sheet-picto { transform: translateY(-4px); }
+    .sheet a:hover .sheet-go :global(svg) { transform: translateX(4px); }
+  }
+  .sheet--all a { background: var(--ink); color: var(--white); align-content: end; }
+  .sheet--all .sheet-no, .sheet--all .sheet-go { color: var(--white); }
+  .sheet--all .sheet-more { color: var(--on-indigo-muted); font-size: var(--step--1); }
+  .sheet--all .sheet-name { font-size: var(--step-3); }
+  @media (max-width: 900px) {
+    .range-head { grid-template-columns: 1fr; }
+    .rail-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+    .rail-viewport::-webkit-scrollbar { display: none; }
+    .sheet { width: min(80vw, 20rem); scroll-snap-align: start; scroll-margin-left: var(--gutter); }
+  }
+
+  /* ───────── Cover: copy left, four big facts across the full width ───────── */
+  .cover { background: var(--indigo); color: var(--white); padding: var(--space-2xl) var(--gutter); }
+  .cover-copy { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-l) var(--space-xl); align-items: end; }
+  .cover-copy h2 { font-size: clamp(2.6rem, 1rem + 4.4vw, 5.6rem); color: var(--white); letter-spacing: -0.05em; line-height: 0.92; }
+  .cover-copy > p { color: var(--on-indigo-muted); font-size: var(--step-1); line-height: 1.5; max-width: 36ch; padding-bottom: 0.4rem; }
+  .facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); margin-top: var(--space-l); }
+  .facts div { display: grid; gap: 0.4rem; padding-top: 1.1rem; border-top: 2px solid var(--orange); }
+  .facts dt { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: clamp(2.4rem, 1rem + 3.4vw, 4.6rem); letter-spacing: -0.05em; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .facts .u { font-size: 0.45em; letter-spacing: 0; }
+  .facts dd { margin: 0; color: var(--on-indigo-muted); font-size: var(--step-0); }
+  .cover .link-arrow { color: var(--white); grid-column: 1; justify-self: start; }
+  @media (max-width: 900px) { .cover-copy { grid-template-columns: 1fr; } .facts { grid-template-columns: 1fr 1fr; } }
+
+  /* ───────── Principles ───────── */
+  .principles { background: var(--white); padding: var(--space-2xl) var(--gutter); display: grid; gap: var(--space-xl); }
+  .principles h2 { font-size: clamp(2.4rem, 1rem + 3.6vw, 4.8rem); color: var(--ink); letter-spacing: -0.05em; line-height: 0.95; }
+  .principles ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-l) var(--space-m); }
+  .principles li { display: grid; gap: 0.6rem; align-content: start; }
+  .rule { display: block; height: 2px; background: var(--orange); margin-bottom: 0.8rem; }
+  .principles strong { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.035em; color: var(--ink); line-height: 1.05; }
+  .principles li > span:last-child { color: var(--muted); }
+  @media (max-width: 900px) { .principles ul { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .principles ul { grid-template-columns: 1fr; } }
+
+  /* ───────── Custom work ───────── */
+  .custom { background: var(--ink); color: var(--white); padding: var(--space-2xl) var(--gutter); display: grid; gap: var(--space-xl); }
+  .custom-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--space-m); }
+  .custom h2 { font-size: clamp(2.4rem, 1rem + 3.6vw, 4.8rem); color: var(--white); letter-spacing: -0.05em; line-height: 0.95; }
+  .steps { list-style: none; padding: 0; position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m); }
+  .steps-line { position: absolute; left: 0; right: 0; top: 1.3rem; height: 1px; background: rgb(255 255 255 / 0.18); }
+  .steps-line span { display: block; height: 100%; background: var(--orange); }
+  .steps li { position: relative; display: grid; gap: 0.5rem; padding-top: 0; }
+  .step-no { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; background: var(--orange); color: var(--ink); font-weight: 600; margin-bottom: 0.8rem; }
+  .steps strong { font-family: var(--display); font-stretch: 112%; font-weight: 650; font-size: var(--step-1); letter-spacing: -0.02em; }
+  .steps li > span:last-child { color: var(--on-indigo-muted); }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } .steps-line { display: none; } }
+
+  /* ───────── Proof ───────── */
+  .proof { background: var(--sheet); padding-top: var(--space-2xl); }
+  .proof-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end; padding: 0 var(--gutter) var(--space-l); }
+  .proof-head h2 { font-size: clamp(2.4rem, 1rem + 3.6vw, 4.8rem); color: var(--ink); letter-spacing: -0.05em; line-height: 0.95; }
+  .proof-head p { color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 34ch; padding-bottom: 0.4rem; }
+  .marks { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+  .marks li { display: grid; }
+  .marks li > * { position: relative; display: grid; gap: 0.4rem; align-content: start; padding: var(--space-m) var(--space-m) var(--space-l); background: var(--white); min-height: 11rem; text-decoration: none; color: inherit; transition: background-color 0.3s; }
+  .marks li:first-child > * { padding-left: var(--gutter); }
+  .marks a:hover { background: var(--lilac-pale); }
+  .marks em { position: absolute; right: 1rem; top: 1rem; font-style: normal; font-size: 0.72rem; font-weight: 500; color: var(--ink); border: 1px solid var(--sheet-line); padding: 0.1rem 0.35rem; }
+  .marks strong { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; color: var(--ink); line-height: 1.05; }
+  .marks span { font-size: var(--step--1); color: var(--muted); }
+  @media (max-width: 900px) {
+    .proof-head { grid-template-columns: 1fr; }
+    .marks { grid-template-columns: 1fr 1fr; }
+    .marks li > *, .marks li:first-child > * { padding: var(--space-m) var(--gutter); min-height: 0; }
+    .marks li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+
+  /* ───────── Close ───────── */
+  .close { background: var(--orange); color: var(--ink); padding: var(--space-2xl) var(--gutter); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-l) var(--space-xl); align-items: end; }
+  .close h2 { font-size: clamp(3.4rem, 1rem + 8vw, 9rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.055em; line-height: 0.88; color: var(--ink); }
+  .close-side { display: grid; gap: 1.4rem; justify-items: start; padding-bottom: 0.6rem; }
+  .close-side p { font-size: var(--step-1); line-height: 1.5; max-width: 32ch; }
+  .close-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .close .btn--ghost { border-color: var(--ink); color: var(--ink); }
+  .close .close-contact { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; font-size: var(--step-0); }
+  .close-contact a { font-weight: 500; text-decoration-color: rgb(38 26 102 / 0.4); }
+  .close ::selection { background: var(--ink); color: var(--orange); }
+  @media (max-width: 900px) { .close { grid-template-columns: 1fr; } }
+</style>

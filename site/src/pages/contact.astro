@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf } from '../data/site.mjs';
+---
+<Base title="Contact" description={`Contact Medical Mattress Care: ${bedrijf.telefoon}, ${bedrijf.email}. Showroom en afhalingen in Lokeren.`}>
+  <PageHead title="Contact" crumbs={[{ label: 'Contact' }]} tone="night">
+    <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+  </PageHead>
+
+  <div class="wrap grid">
+    <section class="block main">
+      <h2 class="visually-hidden">Bel of mail</h2>
+      <a class="huge" href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a>
+      <a class="mail" href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+      <dl class="hours">
+        {bedrijf.uren.map(([d, u]) => (<div><dt>{d}</dt><dd>{u}</dd></div>))}
+      </dl>
+    </section>
+
+    <section class="block">
+      <h2>{bedrijf.showroom.label}</h2>
+      <address>{bedrijf.showroom.straat}<br />{bedrijf.showroom.postcode} {bedrijf.showroom.gemeente}</address>
+      <a class="link-arrow" href={bedrijf.kaart} rel="noopener">Op de kaart <Icon name="arrow" /></a>
+    </section>
+
+    <section class="block">
+      <h2>Maatschappelijke zetel</h2>
+      <address>{bedrijf.naam}<br />{bedrijf.straat}<br />{bedrijf.postcode} {bedrijf.gemeente}, {bedrijf.land}</address>
+      <p class="muted">Ondernemingsnummer {bedrijf.btw}</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: var(--space-l); padding-block: var(--space-xl); }
+  .block { display: grid; gap: 0.75rem; align-content: start; border-top: 2px solid var(--ink); padding-top: 1.1rem; }
+  .block h2 { font-size: var(--step-1); }
+  .huge { font-family: var(--display); font-stretch: 125%; font-weight: 600; font-size: var(--step-4); letter-spacing: -0.04em; color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; line-height: 1; }
+  .huge:hover { color: var(--indigo); }
+  .mail { font-size: var(--step-1); color: var(--indigo); font-weight: 500; overflow-wrap: anywhere; }
+  .hours { display: grid; gap: 0.3rem; margin-top: 0.5rem; }
+  .hours div { display: flex; gap: 1rem; justify-content: space-between; max-width: 22rem; border-bottom: 1px solid var(--sheet-line); padding-bottom: 0.3rem; }
+  .hours dd { margin: 0; font-variant-numeric: tabular-nums; color: var(--ink); }
+  address { font-style: normal; color: var(--ink); }
+  .muted { color: var(--muted); font-size: var(--step--1); }
+  .link-arrow { justify-self: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } .main { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+</style>

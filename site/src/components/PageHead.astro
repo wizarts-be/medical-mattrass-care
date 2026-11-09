@@ -1,0 +1,59 @@
+---
+interface Crumb { href?: string; label: string }
+interface Props { title: string; lede?: string; crumbs?: Crumb[]; tone?: 'light' | 'indigo' | 'night'; wide?: boolean }
+const { title, lede, crumbs = [], tone: _t = 'light', wide = false } = Astro.props;
+const tone = _t === 'night' ? 'light' : _t;
+const trail = [{ href: '/', label: 'Home' }, ...crumbs];
+---
+<section class:list={['page-head', `tone-${tone}`]}>
+  <div class="wrap inner">
+    {crumbs.length > 0 && (
+      <nav aria-label="Kruimelpad" class="crumbs">
+        <ol>
+          {trail.map((c, i) => (
+            <li>{c.href && i < trail.length - 1 ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+    )}
+    <div class:list={['grid', { wide }]}>
+      <div class="titles">
+        <slot name="above" />
+        <h1>{title}</h1>
+        {lede && <p class="lede">{lede}</p>}
+        <slot name="below" />
+      </div>
+      <div class="aside"><slot /></div>
+    </div>
+  </div>
+  <div class="corner" aria-hidden="true"></div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: c.href ? new URL(c.href, 'https://www.medical-mattress-care.com').href : undefined })),
+})} />
+
+<style>
+  .page-head { position: relative; padding-block: var(--space-l) var(--space-xl); overflow: hidden; }
+  .tone-light { background: var(--white); color: var(--ink); }
+  .tone-indigo { background: var(--indigo); color: var(--on-indigo); }
+  .crumbs ol { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 0.6rem; font-size: var(--step--1); color: var(--muted); }
+  .crumbs li + li::before { content: '/'; margin-right: 0.6rem; opacity: 0.5; }
+  .crumbs a { color: var(--muted); text-decoration: none; }
+  .crumbs a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--orange); }
+  .crumbs [aria-current] { color: var(--ink); }
+  .tone-indigo .crumbs, .tone-indigo .crumbs a { color: var(--on-indigo-muted); }
+  .tone-indigo .crumbs [aria-current] { color: var(--on-indigo); }
+  .grid { margin-top: var(--space-xl); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end; }
+  .grid.wide { grid-template-columns: 1fr; }
+  h1 { font-size: clamp(3rem, 1rem + 6.4vw, 7.5rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.055em; line-height: 0.9; overflow-wrap: anywhere; hyphens: auto; color: var(--indigo); }
+  .tone-indigo h1 { color: var(--on-indigo); }
+  .lede { margin-top: 1.5rem; color: var(--muted); }
+  .tone-indigo .lede { color: var(--on-indigo-muted); }
+  .aside:empty { display: none; }
+  /* the turned-down corner of the sheet */
+  .corner { position: absolute; right: 0; bottom: 0; width: clamp(3rem, 7vw, 6rem); aspect-ratio: 1; background: linear-gradient(135deg, transparent 50%, var(--lilac-pale) 50%, var(--sheet) 100%); }
+  .tone-indigo .corner { background: linear-gradient(135deg, transparent 50%, var(--sheet-deep) 50%, var(--sheet) 100%); }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; margin-top: var(--space-l); } }
+</style>

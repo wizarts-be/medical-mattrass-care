@@ -1,0 +1,38 @@
+---
+import ProductImage from './ProductImage.astro';
+import { productUrl } from '../lib/catalogus.mjs';
+interface Props { p: any; headingLevel?: 'h2' | 'h3' }
+const { p, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const maat = p.specs?.find(([k]: string[]) => /^(Maat|Afmeting)$/.test(k))?.[1];
+---
+<li class="card" data-toepassingen={(p.toepassingen ?? []).join(' ')} data-zoek={`${p.naam} ${p.code ?? ''} ${p.kort}`.toLowerCase()}>
+  <a href={productUrl(p)}>
+    <span class="img"><ProductImage p={p} size="thumb" /></span>
+    <span class="txt">
+      <H class="name">{p.naam}</H>
+      <span class="kort">{p.kort}</span>
+      <span class="meta">
+        {p.code && p.code !== p.naam && <span>{p.code}</span>}
+        {maat && <span>{maat}</span>}
+      </span>
+    </span>
+  </a>
+</li>
+
+<style>
+  .card { display: grid; }
+  a { display: grid; grid-template-rows: auto 1fr; text-decoration: none; color: var(--ink); background: var(--white); transition: background-color 0.4s var(--ease-out); position: relative; }
+  .img { display: block; aspect-ratio: 4 / 3; background: var(--sheet); overflow: hidden; }
+  .img :global(img) { transition: transform 0.9s var(--ease-out); }
+  .txt { display: grid; gap: 0.35rem; align-content: start; padding: 1.1rem 1.2rem 1.4rem; }
+  .name { font-family: var(--display); font-stretch: 112%; font-weight: 560; font-size: var(--step-1); letter-spacing: -0.02em; line-height: 1.15; }
+  .kort { font-size: var(--step--1); color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; margin-top: 0.4rem; font-size: var(--step--1); color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  a::after { content: ''; position: absolute; inset: auto 0 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out); }
+  @media (hover: hover) {
+    a:hover .img :global(img) { transform: scale(1.05); }
+    a:hover::after { transform: scaleX(1); }
+  }
+  a:focus-visible { outline-offset: -3px; }
+</style>

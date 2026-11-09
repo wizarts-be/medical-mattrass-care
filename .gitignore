@@ -1,6 +1,8 @@
 .DS_Store
 node_modules/
-.hallmark/shots/
-.hallmark/before/
-site/.impeccable/review/
-site/.impeccable/mocks/
+site/dist/
+site/.astro/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/live/
+.impeccable/build/

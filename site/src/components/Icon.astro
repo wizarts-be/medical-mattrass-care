@@ -1,0 +1,19 @@
+---
+// Eén lijnstijl: 1.6 px op een 20-raster, rechte uiteinden zoals de vormtaal.
+interface Props { name: 'arrow' | 'arrow-down' | 'phone' | 'mail' | 'pin' | 'download' | 'menu' | 'close' | 'check' | 'plus' | 'clock'; label?: string; }
+const { name, label } = Astro.props;
+const paths: Record<string, string> = {
+  arrow: '<path d="M3 10h13M11 5l5 5-5 5"/>',
+  'arrow-down': '<path d="M10 3v13M5 11l5 5 5-5"/>',
+  phone: '<path d="M6.5 2.5h-3v3c0 6.6 5.4 12 12 12h3v-3l-3.6-1.2-1.6 1.6a10 10 0 0 1-5.2-5.2l1.6-1.6z"/>',
+  mail: '<path d="M2.5 4.5h15v11h-15z"/><path d="M2.5 5l7.5 6 7.5-6"/>',
+  pin: '<path d="M10 18s-5.5-5.4-5.5-9.5a5.5 5.5 0 0 1 11 0C15.5 12.6 10 18 10 18z"/><path d="M10 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>',
+  download: '<path d="M10 2.5v10M5.5 8l4.5 4.5L14.5 8M3 17.5h14"/>',
+  menu: '<path d="M2.5 6.5h15M2.5 13.5h15"/>',
+  close: '<path d="M4.5 4.5l11 11M15.5 4.5l-11 11"/>',
+  check: '<path d="M3.5 10.5l4 4 9-9"/>',
+  plus: '<path d="M10 3v14M3 10h14"/>',
+  clock: '<path d="M10 17.5a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15z"/><path d="M10 6v4.5l3 2"/>',
+};
+---
+<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden={label ? undefined : 'true'} role={label ? 'img' : undefined} aria-label={label} set:html={paths[name]} />

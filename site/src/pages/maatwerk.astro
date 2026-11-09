@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ProductCard from '../components/ProductCard.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import Icon from '../components/Icon.astro';
+import { zichtbaar } from '../lib/catalogus.mjs';
+
+const wat = [
+  { t: 'Matrassen', d: 'Lengte, breedte en dikte, en de opbouw: koudschuim, traagschuim en densiteit.' },
+  { t: 'Hulpstukken', d: 'Cilinders, wiggen en zitkussens in de maat van uw bed of rolstoel.' },
+  { t: 'Hoofdkussens', d: 'De MMC PUP 23 in een andere maat.' },
+  { t: 'Hoezen', d: 'De MMC 210 PU-hoes op maat van uw bestaande matrassen.' },
+];
+const stappen = [
+  { t: 'U stuurt de maten.', d: 'Samen met het gebruik: wie ligt of zit erop, hoe lang, op welk bed of in welke rolstoel.' },
+  { t: 'Wij stellen een opbouw voor.', d: 'Schuimsoort, densiteit en hoes, met een offerte. Op vraag eerst een staal.' },
+  { t: 'Wij maken en leveren.', d: 'In ons Vlaams productiehuis.' },
+];
+const voorbeelden = zichtbaar.filter((p) => p.maatwerk && ['mmc-v10', 'mmc-flex', 'mmc-cg-02', 'mmc-zp-05', 'mmc-km-14'].includes(p.slug));
+---
+<Base title="Maatwerk" description="Medische matrassen, kussens en hulpstukken op maat. Medical Mattress Care maakt ze in de opbouw en maat die uw instelling nodig heeft.">
+  <PageHead title="Op maat gemaakt." lede="Zit uw matras er niet bij? MMC levert matrassen, kussens en hulpstukken in opbouw en maat naar uw wens." crumbs={[{ label: 'Maatwerk' }]}>
+    <a class="btn" href="/offerte/?type=maatwerk">Maatwerk aanvragen <Icon name="arrow" /></a>
+  </PageHead>
+
+  <div class="wrap section">
+    <h2>Wat kan op maat</h2>
+    <dl class="what">
+      {wat.map((w) => (<div><dt>{w.t}</dt><dd>{w.d}</dd></div>))}
+    </dl>
+  </div>
+
+  <section class="steps-band" aria-labelledby="zo">
+    <div class="wrap">
+      <h2 id="zo">Zo werkt het</h2>
+      <ol class="steps">
+        {stappen.map((s, i) => (
+          <li style={`--n:${i}`}>
+            <span class="fold" aria-hidden="true"><span>{i + 1}</span></span>
+            <strong>{s.t}</strong>
+            <span>{s.d}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <div class="wrap section">
+    <h2>Ook op maat verkrijgbaar</h2>
+    <ul class="grid-cards">{voorbeelden.map((p) => <ProductCard p={p} />)}</ul>
+  </div>
+
+  <QuoteBand title="Stuur ons uw maten." text="Lengte, breedte, dikte en het gebruik. Wij komen terug met een opbouw en een prijs." href="/offerte/?type=maatwerk" />
+</Base>
+
+<style>
+  .section { padding-block: var(--space-xl); }
+  h2 { font-size: var(--step-3); margin-bottom: var(--space-m); }
+  .what { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); }
+  .what div { border-top: 2px solid var(--ink); padding-top: 1rem; }
+  .what dt { font-family: var(--display); font-stretch: 115%; font-weight: 560; font-size: var(--step-1); color: var(--ink); }
+  .what dd { margin: 0.4rem 0 0; color: var(--muted); }
+  @media (max-width: 900px) { .what { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .what { grid-template-columns: 1fr; } }
+
+  .steps-band { background: var(--indigo); color: var(--on-indigo); padding-block: var(--space-xl); }
+  .steps-band h2 { color: var(--on-indigo); }
+  .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m); }
+  .steps li { display: grid; gap: 0.6rem; align-content: start; }
+  .steps strong { font-family: var(--display); font-stretch: 115%; font-weight: 560; font-size: var(--step-2); line-height: 1.1; letter-spacing: -0.025em; }
+  .steps li > span:last-child { color: var(--on-indigo-muted); }
+  /* each step folds the sheet corner a little further */
+  .fold { width: 4.5rem; height: 4.5rem; position: relative; background: var(--indigo-soft); margin-bottom: 0.8rem; }
+  .fold span { position: absolute; left: 0.8rem; bottom: 0.5rem; font-family: var(--display); font-weight: 600; font-size: 1.6rem; }
+  .fold::before { content: ''; position: absolute; right: 0; top: 0; border-style: solid; border-width: 0 calc(1rem + var(--n) * 0.8rem) calc(1rem + var(--n) * 0.8rem) 0; border-color: transparent var(--indigo) var(--lilac-pale) transparent; }
+  .steps li:last-child .fold { background: var(--lilac); color: var(--night); }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+  .grid-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+</style>

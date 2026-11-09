@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import QuoteBand from '../../components/QuoteBand.astro';
+import Icon from '../../components/Icon.astro';
+import { categorieen, perCategorie, categorieUrl, zichtbaar } from '../../lib/catalogus.mjs';
+import { toepassingen } from '../../data/site.mjs';
+---
+<Base title="Producten" description="Alle producten van Medical Mattress Care: medische matrassen, visco matrassen, positioneringshulpstukken, zitkussens, hoofdkussens, dekbedden, lakens en hoezen voor de zorg.">
+  <PageHead title="Producten" lede={`${zichtbaar.length} producten voor de zorg. Filter op wat u nodig hebt, of zoek op naam en bestelcode.`} crumbs={[{ label: 'Producten' }]}>
+    <ul class="jump">
+      {categorieen.map((c) => (<li><a href={`#${c.slug}`}>{c.naam}</a></li>))}
+    </ul>
+  </PageHead>
+
+  <div class="tools-wrap" data-tools>
+    <div class="wrap tools">
+      <label class="search">
+        <span class="visually-hidden">Zoek op naam of bestelcode</span>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="M13 13l4.5 4.5" /></svg>
+        <input type="search" class="input" placeholder="Zoek: visco, PUP 23, kussen…" data-search autocomplete="off" />
+      </label>
+      <div class="chips" role="group" aria-label="Filter op toepassing">
+        <button type="button" class="chip" aria-pressed="true" data-filter="">Alles</button>
+        {toepassingen.map((t) => (<button type="button" class="chip" aria-pressed="false" data-filter={t.slug}>{t.kort}</button>))}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap catalogue">
+    <p class="status" role="status" aria-live="polite" data-status></p>
+    {categorieen.map((c) => {
+      const items = perCategorie(c.slug);
+      if (!items.length) return null;
+      return (
+        <section class="cat" id={c.slug} data-cat aria-labelledby={`h-${c.slug}`}>
+          <header>
+            <h2 id={`h-${c.slug}`}><a href={categorieUrl(c)}>{c.naam}</a></h2>
+            <p>{c.kort}</p>
+          </header>
+          <ul class="grid-cards rows">{items.map((p) => <ProductCard p={p} />)}</ul>
+        </section>
+      );
+    })}
+    <div class="empty" hidden data-empty>
+      <p><strong>Geen product gevonden.</strong> Probeer een andere zoekterm, of vraag het ons: veel maken we op maat.</p>
+      <a class="link-arrow" href="/offerte/?type=maatwerk">Maatwerk aanvragen <Icon name="arrow" /></a>
+    </div>
+  </div>
+
+  <QuoteBand title="Niet gevonden wat u zoekt?" text="MMC levert matrassen en kussens in opbouw en maat naar uw wens. Vraag het ons." href="/offerte/?type=maatwerk" />
+</Base>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-search]');
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const rows = [...document.querySelectorAll<HTMLElement>('.rows > li')];
+  const cats = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const status = document.querySelector<HTMLElement>('[data-status]');
+  let filter = '';
+
+  const apply = () => {
+    const q = (input?.value ?? '').trim().toLowerCase();
+    let n = 0;
+    rows.forEach((r) => {
+      const ok = (!filter || (r.dataset.toepassingen ?? '').split(' ').includes(filter)) && (!q || (r.dataset.zoek ?? '').includes(q));
+      r.hidden = !ok;
+      if (ok) n++;
+    });
+    cats.forEach((c) => (c.hidden = !c.querySelector('.rows > li:not([hidden])')));
+    if (empty) empty.hidden = n > 0;
+    if (status) status.textContent = filter || q ? `${n} ${n === 1 ? 'product' : 'producten'} gevonden` : '';
+  };
+  chips.forEach((b) => b.addEventListener('click', () => {
+    filter = b.dataset.filter ?? '';
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    apply();
+  }));
+  input?.addEventListener('input', apply);
+</script>
+
+<style>
+  .jump { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: var(--step--1); }
+  .jump a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--sheet-line); }
+  .jump a:hover { border-color: var(--orange); }
+
+  .tools-wrap { position: sticky; top: var(--header-h); z-index: 20; background: rgb(233 236 241 / 0.94); border-bottom: 1px solid var(--sheet-line); }
+  @supports (backdrop-filter: blur(1px)) { .tools-wrap { background: rgb(233 236 241 / 0.82); backdrop-filter: blur(12px); } }
+  .tools { display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 1rem 1.5rem; align-items: center; padding-block: 0.9rem; }
+  .search { position: relative; }
+  .search svg { position: absolute; left: 0.9rem; top: 50%; translate: 0 -50%; width: 1.1rem; color: var(--muted); pointer-events: none; }
+  .search .input { padding-left: 2.6rem; min-height: 2.9rem; }
+  .chips { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding-block: 2px; overscroll-behavior-x: contain; }
+  .chip {
+    flex: none; min-height: 2.6rem; padding: 0.45rem 0.9rem; border: 1px solid var(--sheet-line); background: var(--white);
+    color: var(--ink); font-size: var(--step--1); font-weight: 500; border-radius: 0;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .chip:hover { border-color: var(--indigo); }
+  .chip[aria-pressed='true'] { background: var(--indigo); color: var(--on-indigo); border-color: var(--indigo); }
+  @media (max-width: 760px) { .tools { grid-template-columns: 1fr; } }
+
+  .catalogue { padding-block: var(--space-m) var(--space-2xl); }
+  .status { min-height: 1.5rem; font-size: var(--step--1); color: var(--muted); }
+  .cat { display: grid; gap: var(--space-m); padding-block: var(--space-xl) 0; scroll-margin-top: calc(var(--header-h) + 5rem); }
+  .cat header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 2rem; }
+  .cat h2 { font-size: var(--step-3); color: var(--indigo); }
+  .cat h2 a { text-decoration: none; }
+  .cat h2 a:hover { text-decoration: underline; text-decoration-color: var(--orange); }
+  .cat header p { color: var(--muted); font-size: var(--step--1); }
+  .grid-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+  .cat[hidden], .rows > li[hidden] { display: none; }
+  .empty { padding-block: var(--space-l); display: grid; gap: 1rem; justify-items: start; }
+</style>

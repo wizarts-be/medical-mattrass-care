@@ -27,6 +27,10 @@ npm run dev      # http://localhost:4321
 npm run build    # writes dist/
 ```
 
+## Preview on GitHub Pages
+
+https://wizarts-be.github.io/medical-mattrass-care/ (noindex). Update after a change, from the mmc_v2 folder: `sh site/deploy-pages.sh`. It builds, prefixes all paths with the Pages sub-path and publishes the gh-pages branch (it needs `gh auth login` with access to wizarts-be).
+
 ## Notes
 
 - 3D: falls back to a fabric photo plus a drawn layer diagram without WebGL2. With "reduced motion" there is no lying-down demo and no scroll unmaking (static diagram instead).

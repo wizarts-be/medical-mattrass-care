@@ -63,32 +63,39 @@ a:hover { text-decoration-color: var(--orange); }
 
 .wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
 
-/* ───────── Buttons ───────── */
+/* ───────── Buttons ─────────
+   Primary: purple-blue with white text (≈14:1). Orange is the interaction colour:
+   hover/focus turns the button deep orange (#C74A0E, 4.7:1 with white). */
 .btn {
-  --bg: var(--orange); --fg: var(--white);
-  display: inline-flex; align-items: center; gap: 0.75em;
-  min-height: 3.25rem; padding: 0.85rem 1.4rem;
-  background: var(--bg); color: var(--fg);
-  /* 19px / 600: white on #EF5F18 (3.3:1) meets WCAG AA as large bold text */
-  font-family: var(--text-face); font-weight: 600; font-size: 1.1875rem; line-height: 1.1; letter-spacing: 0.005em;
-  text-decoration: none; border: 1px solid transparent; border-radius: 0;
-  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  --bg: var(--brand-blue); --fg: var(--white); --bd: transparent;
+  display: inline-flex; align-items: center; gap: 0.7em;
+  min-height: 3rem; padding: 0.8rem 1.3rem;
+  background: var(--bg); color: var(--fg); border: 1px solid var(--bd); border-radius: 0;
+  font-family: var(--text-face); font-weight: 500; font-size: 1rem; line-height: 1.1; letter-spacing: 0.01em;
+  text-decoration: none; white-space: nowrap;
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
-.btn svg { width: 1.1em; height: 1.1em; flex: none; transition: transform 0.35s var(--ease-out); }
+.btn svg { width: 1em; height: 1em; flex: none; transition: transform 0.4s var(--ease-out); }
 .btn:active { transform: translateY(1px); }
 @media (hover: hover) {
-  .btn:hover { --bg: var(--orange-deep); }
+  .btn:hover { --bg: var(--orange-deep); --fg: var(--white); --bd: transparent; }
   .btn:hover svg { transform: translateX(3px); }
 }
-.btn--ghost { --bg: transparent; --fg: currentColor; border-color: currentColor; }
-@media (hover: hover) { .btn--ghost:hover { --bg: transparent; border-color: var(--orange); } }
-.btn--indigo, .btn--blue { --bg: var(--brand-blue); --fg: var(--white); }
+.btn:focus-visible { --bg: var(--orange-deep); --fg: var(--white); }
+
+/* On dark grounds */
 .btn--light { --bg: var(--white); --fg: var(--brand-blue); }
-@media (hover: hover) { .btn--light:hover { --bg: var(--sheet); } }
-@media (hover: hover) { .btn--indigo:hover, .btn--blue:hover { --bg: var(--indigo-soft); } }
-.btn--small { min-height: 2.75rem; padding: 0.55rem 1rem; }
+/* Outline, follows the text colour of its section */
+.btn--ghost { --bg: transparent; --fg: currentColor; --bd: currentColor; }
+.btn--ghost-light { --bg: transparent; --fg: var(--white); --bd: rgb(255 255 255 / 0.5); }
+@media (hover: hover) {
+  .btn--ghost:hover, .btn--ghost-light:hover { --bg: transparent; --fg: currentColor; --bd: var(--orange); }
+  .btn--ghost-light:hover { --fg: var(--white); }
+}
+.btn--indigo, .btn--blue { --bg: var(--brand-blue); --fg: var(--white); }
+.btn--small { min-height: 2.6rem; padding: 0.55rem 1rem; font-size: 0.9375rem; }
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: 0.5em; font-weight: 500; text-decoration: none; white-space: nowrap;

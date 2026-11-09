@@ -9,7 +9,7 @@ const jaar = new Date().getFullYear();
     <div class="intro">
       <img src="/logo/mmc-logo-wit.svg" alt="Medical Mattress Care BV" width="160" height="80" />
       <p>Matrassen, kussens en hulpstukken voor de zorg. Vlaams familiebedrijf sinds {bedrijf.opgericht}.</p>
-      <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+      <a class="btn btn--light" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
     </div>
 
     <div>
@@ -71,8 +71,7 @@ const jaar = new Date().getFullYear();
   ul { list-style: none; padding: 0; display: grid; gap: 0.45rem; }
   a { color: var(--on-indigo-muted); text-decoration: none; }
   a:hover { color: var(--on-indigo); text-decoration: underline; text-decoration-color: var(--orange); }
-  .intro .btn { color: var(--white); }
-  .intro .btn:hover { color: var(--white); text-decoration: none; }
+  .intro .btn:hover { text-decoration: none; }
   address { font-style: normal; }
   .uren { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1rem; margin-top: 0.75rem; justify-content: start; font-variant-numeric: tabular-nums; }
   .uren dd { margin: 0; color: var(--on-indigo); }

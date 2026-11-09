@@ -30,7 +30,7 @@ const actief = (href: string) => pad === href || (href !== '/' && pad.startsWith
 
     <div class="actions">
       <a class="tel" href={`tel:${bedrijf.telefoonHref}`}><Icon name="phone" /><span>{bedrijf.telefoon}</span></a>
-      <a class="btn btn--small" href="/offerte/">Offerte<span class="long"> aanvragen</span></a>
+      <a class="btn btn--small" href="/offerte/">Offerte<span class="long">&nbsp;aanvragen</span></a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" data-menu-open>
         <Icon name="menu" /><span class="visually-hidden">Menu openen</span>
       </button>
@@ -50,7 +50,7 @@ const actief = (href: string) => pad === href || (href !== '/' && pad.startsWith
       </ul>
     </nav>
     <div class="panel-foot">
-      <a class="btn" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
+      <a class="btn btn--light" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
       <a class="tel-big" href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a>
       <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
     </div>

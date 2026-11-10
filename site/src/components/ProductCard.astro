@@ -1,38 +1,116 @@
 ---
+// Product card. Variants:
+//   card    — photo on top, text below (default, used in plain grids)
+//   lead    — the family's main product: bigger photo and type, with its cover line
+//   row     — compact: photo left, text right (stacked next to a lead)
+//   feature — a family of one: wide photo beside a full text column
+// Inside a filtered catalogue (.is-filtering) every variant falls back to a plain card.
 import ProductImage from './ProductImage.astro';
-import { productUrl } from '../lib/catalogus.mjs';
-interface Props { p: any; headingLevel?: 'h2' | 'h3' }
-const { p, headingLevel = 'h3' } = Astro.props;
+import Icon from './Icon.astro';
+import { productUrl, hoes } from '../lib/catalogus.mjs';
+interface Props { p: any; headingLevel?: 'h2' | 'h3'; variant?: 'card' | 'lead' | 'row' | 'feature' }
+const { p, headingLevel = 'h3', variant = 'card' } = Astro.props;
 const H = headingLevel;
 const maat = p.specs?.find(([k]: string[]) => /^(Maat|Afmeting)$/.test(k))?.[1];
+const code = p.code && p.code !== p.naam ? p.code : null;
+// longest word in the name: big type is capped so that word always fits on one line (never hyphenated)
+const len = Math.max(...p.naam.split(/\s+/).map((w: string) => w.length));
+const big = variant === 'lead' || variant === 'feature';
+const h = big ? hoes(p.hoes) : null;
 ---
-<li class="card" data-toepassingen={(p.toepassingen ?? []).join(' ')} data-zoek={`${p.naam} ${p.code ?? ''} ${p.kort}`.toLowerCase()}>
+<li class:list={['card', `v-${variant}`]} data-toepassingen={(p.toepassingen ?? []).join(' ')} data-zoek={`${p.naam} ${p.code ?? ''} ${p.kort}`.toLowerCase()}>
   <a href={productUrl(p)}>
-    <span class="img"><ProductImage p={p} size="thumb" /></span>
+    <span class="img"><ProductImage p={p} size={big ? 'large' : 'thumb'} /></span>
     <span class="txt">
-      <H class="name">{p.naam}</H>
+      {code && <span class="code">{code}</span>}
+      <H class="name" style={`--len:${len}`}>{p.naam}</H>
       <span class="kort">{p.kort}</span>
-      <span class="meta">
-        {p.code && p.code !== p.naam && <span>{p.code}</span>}
-        {maat && <span>{maat}</span>}
-      </span>
+      {big && (h || p.maatwerk || maat) && (
+        <span class="facts">
+          {h && p.categorie !== 'hoezen' && <span>{h.naam}</span>}
+          {maat && <span>{maat}</span>}
+          {p.maatwerk && <span>Ook op maat</span>}
+        </span>
+      )}
+      {!big && maat && <span class="meta">{maat}</span>}
+      <span class="go">Bekijk product <Icon name="arrow" /></span>
     </span>
   </a>
 </li>
 
 <style>
-  .card { display: grid; }
-  a { display: grid; grid-template-rows: auto 1fr; text-decoration: none; color: var(--ink); background: var(--white); transition: background-color 0.4s var(--ease-out); position: relative; }
-  .img { display: block; aspect-ratio: 4 / 3; background: var(--sheet); overflow: hidden; }
+  .card { display: grid; min-width: 0; }
+  a {
+    --card: var(--card-bg, var(--white));
+    display: grid; grid-template-rows: auto 1fr; height: 100%;
+    text-decoration: none; color: var(--ink); background: var(--card); position: relative; overflow: hidden;
+  }
+  .img { display: block; aspect-ratio: 4 / 3; background: var(--sheet-deep); overflow: hidden; }
   .img :global(img) { transition: transform 0.9s var(--ease-out); }
-  .txt { display: grid; gap: 0.35rem; align-content: start; padding: 1.1rem 1.2rem 1.4rem; }
-  .name { font-family: var(--display); font-stretch: 112%; font-weight: 560; font-size: var(--step-1); letter-spacing: -0.02em; line-height: 1.15; }
-  .kort { font-size: var(--step--1); color: var(--muted); }
-  .meta { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; margin-top: 0.4rem; font-size: var(--step--1); color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .txt { container-type: inline-size; display: grid; gap: 0.4rem; align-content: start; padding: 1.15rem 1.25rem 1.35rem; }
+  .code {
+    justify-self: start; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--orange-deep); font-variant-numeric: tabular-nums;
+  }
+  .name { font-family: var(--display); font-stretch: 112%; font-weight: 680; letter-spacing: -0.03em; line-height: 1.05;
+    --fs: var(--step-1); font-size: min(var(--fs), 100cqi / (var(--len) * 0.6)); hyphens: manual; overflow-wrap: normal;
+  }
+  .kort { font-size: var(--step--1); color: var(--muted); line-height: 1.45; max-width: 44ch; }
+  .meta { font-size: var(--step--1); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .facts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+  .facts span { font-size: var(--step--1); font-weight: 500; padding: 0.3rem 0.7rem; border: 1px solid var(--sheet-line); background: var(--white); }
+  .go {
+    display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.7rem; justify-self: start;
+    font-size: var(--step--1); font-weight: 600; color: var(--ink);
+  }
+  .go :global(svg) { width: 1em; height: 1em; transition: transform 0.35s var(--ease-out), color 0.25s; }
   a::after { content: ''; position: absolute; inset: auto 0 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease-out); }
   @media (hover: hover) {
     a:hover .img :global(img) { transform: scale(1.05); }
     a:hover::after { transform: scaleX(1); }
+    a:hover .go :global(svg) { transform: translateX(4px); color: var(--orange-deep); }
   }
   a:focus-visible { outline-offset: -3px; }
+
+  /* Plain card: the arrow line only in big variants, small cards stay quiet */
+  .v-card .go, .v-row .go { display: none; }
+
+  /* Lead: a taller photo, bigger name */
+  .v-lead a { grid-template-rows: minmax(0, 1fr) auto; }
+  .v-lead .img { aspect-ratio: 5 / 4; height: 100%; min-height: 16rem; }
+  .v-lead .txt { padding: 1.5rem 1.6rem 1.8rem; gap: 0.55rem; }
+  .v-lead .name { --fs: clamp(1.7rem, 8cqi, 3.3rem); letter-spacing: -0.045em; line-height: 0.95; }
+  .v-lead .kort { font-size: var(--step-0); }
+
+  /* Row: photo left, text right */
+  .v-row a { grid-template-rows: none; grid-template-columns: minmax(6rem, 34%) 1fr; }
+  .v-row .img { aspect-ratio: auto; height: 100%; min-height: 8.5rem; }
+  .v-row .txt { align-content: center; padding: 1rem 1.1rem; }
+  .v-row .name { --fs: var(--step-1); }
+
+  /* Feature: photo and text side by side, text column carries the family */
+  .v-feature a { grid-template-rows: none; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .v-feature .img { aspect-ratio: 4 / 3; }
+  .v-feature .txt { align-content: center; padding: clamp(1.5rem, 3vw, 3rem); gap: 0.7rem; }
+  .v-feature .name { --fs: clamp(1.7rem, 9cqi, 3.1rem); letter-spacing: -0.045em; line-height: 0.95; }
+  .v-feature .kort { font-size: var(--step-0); }
+  @media (max-width: 760px) {
+    .v-feature a { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  }
+
+  /* Phones: small cards go compact (photo left) so long families stay scannable */
+  @media (max-width: 560px) {
+    .v-card a { grid-template-rows: none; grid-template-columns: minmax(6.5rem, 38%) 1fr; }
+    .v-card .img { aspect-ratio: auto; height: 100%; min-height: 7.5rem; }
+    .v-card .txt { align-content: center; padding: 0.9rem 1rem; }
+    .v-card .name { --fs: var(--step-0); }
+  }
+
+  /* Filtered catalogue: every card is a plain card */
+  :global(.is-filtering) .card a { grid-template-columns: none; grid-template-rows: auto 1fr; }
+  :global(.is-filtering) .card .img { aspect-ratio: 4 / 3; height: auto; min-height: 0; }
+  :global(.is-filtering) .card .txt { padding: 1.15rem 1.25rem 1.35rem; gap: 0.4rem; align-content: start; }
+  :global(.is-filtering) .card .name { --fs: var(--step-1); letter-spacing: -0.03em; line-height: 1.05; }
+  :global(.is-filtering) .card .kort { font-size: var(--step--1); }
+  :global(.is-filtering) .card :is(.facts, .go) { display: none; }
 </style>

@@ -4,11 +4,45 @@ import PageHead from '../../components/PageHead.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import QuoteBand from '../../components/QuoteBand.astro';
 import Icon from '../../components/Icon.astro';
-import { categorieen, perCategorie, categorieUrl, zichtbaar } from '../../lib/catalogus.mjs';
+import { categorieen, perCategorie, categorieUrl, zichtbaar, toppers } from '../../lib/catalogus.mjs';
 import { toepassingen } from '../../data/site.mjs';
+
+// Each family is its own composition. Its ground alternates white / sheet;
+// the cover and the wheelchair cushion get the indigo PU field as colour bands.
+const indigo = new Set(['zitkussens', 'hoezen']);
+const families = categorieen
+  .map((c) => {
+    const all = perCategorie(c.slug);
+    // lead: a client favourite if the family has one, else the first product with a photo
+    const lead = all.find((p) => toppers.includes(p)) ?? all.find((p) => p.foto) ?? all[0];
+    return { c, items: lead ? [lead, ...all.filter((p) => p !== lead)] : [] };
+  })
+  .filter((f) => f.items.length);
+let light = 0;
+const fams = families.map((f, i) => {
+  const tone = indigo.has(f.c.slug) ? 'indigo' : light++ % 2 ? 'white' : 'sheet';
+  const n = f.items.length;
+  const layout = n === 1 ? 'one' : n === 2 ? 'two' : n <= 4 ? 'few' : 'many';
+  // bento: the lead fills 2x2, two cards beside it, then rows of three; a short last row widens its cards
+  const tail = layout === 'many' ? (n - 3) % 3 : 0;
+  return { ...f, i, tone, layout, tail, flip: i % 2 === 1 };
+});
+const variant = (f: { layout: string; tail: number; items: unknown[] }, j: number) =>
+  f.layout === 'one' ? 'feature'
+  : j === 0 ? 'lead'
+  : f.layout === 'few' || (f.tail === 1 && j === f.items.length - 1) ? 'row'
+  : 'card';
 ---
 <Base title="Producten" description="Alle producten van Medical Mattress Care: medische matrassen, visco matrassen, positioneringshulpstukken, zitkussens, hoofdkussens, dekbedden, lakens en hoezen voor de zorg.">
-  <PageHead title="Het gamma." lede={`${zichtbaar.length} producten voor de zorg. Filter op wat u nodig hebt, of zoek op naam en bestelcode.`} crumbs={[{ label: 'Producten' }]} />
+  <PageHead
+    title="Het gamma."
+    lede={`${zichtbaar.length} producten voor de zorg. Filter op wat u nodig hebt, of zoek op naam of bestelcode.`}
+    crumbs={[{ label: 'Producten' }]}
+    tone="image"
+    image={{ src: '/img/beeld/hero-2560.webp', mobile: '/img/beeld/hero-1280.webp', position: '70% 55%' }}
+  >
+    <a class="btn" href="#gamma">Naar de producten <Icon name="arrow" /></a>
+  </PageHead>
 
   <div class="tools-wrap" data-tools>
     <div class="tools">
@@ -24,21 +58,28 @@ import { toepassingen } from '../../data/site.mjs';
     </div>
   </div>
 
-  <div class="catalogue">
+  <div class="catalogue" id="gamma" data-catalogue>
     <p class="status" role="status" aria-live="polite" data-status></p>
-    {categorieen.map((c) => {
-      const items = perCategorie(c.slug);
-      if (!items.length) return null;
-      return (
-        <section class="cat" id={c.slug} data-cat aria-labelledby={`h-${c.slug}`}>
-          <header>
-            <h2 id={`h-${c.slug}`}><a href={categorieUrl(c)}>{c.naam}</a></h2>
-            <p>{c.kort}</p>
-          </header>
-          <ul class="grid-cards rows">{items.map((p) => <ProductCard p={p} />)}</ul>
-        </section>
-      );
-    })}
+    {fams.map((f) => (
+      <section
+        class:list={['fam', `t-${f.tone}`, `l-${f.layout}`, f.tail && `tail-${f.tail}`, { flip: f.flip }]}
+        id={f.c.slug}
+        data-cat
+        aria-labelledby={`h-${f.c.slug}`}
+      >
+        <header class="fam-head">
+          <span class="fam-rule" aria-hidden="true"></span>
+          <h2 id={`h-${f.c.slug}`} style={`--len:${Math.max(...f.c.naam.split(/\s+/).map((w) => w.length))}`}><a href={categorieUrl(f.c)}>{f.c.naam}</a></h2>
+          <p>{f.c.kort}</p>
+          <a class="link-arrow fam-go" href={categorieUrl(f.c)}>
+            {f.items.length === 1 ? `Naar ${f.c.naam.toLowerCase()}` : `Alle ${f.items.length} ${f.c.naam.toLowerCase()}`} <Icon name="arrow" />
+          </a>
+        </header>
+        <ul class="items rows" style={`--rest:${Math.max(f.items.length - 1, 1)}`}>
+          {f.items.map((p, j) => <ProductCard p={p} variant={variant(f, j)} />)}
+        </ul>
+      </section>
+    ))}
     <div class="empty" hidden data-empty>
       <p><strong>Geen product gevonden.</strong> Probeer een andere zoekterm, of vraag het ons: veel maken we op maat.</p>
       <a class="link-arrow" href="/offerte/?type=maatwerk">Maatwerk aanvragen <Icon name="arrow" /></a>
@@ -53,12 +94,14 @@ import { toepassingen } from '../../data/site.mjs';
   const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
   const rows = [...document.querySelectorAll<HTMLElement>('.rows > li')];
   const cats = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
+  const catalogue = document.querySelector<HTMLElement>('[data-catalogue]');
   const empty = document.querySelector<HTMLElement>('[data-empty]');
   const status = document.querySelector<HTMLElement>('[data-status]');
   let filter = '';
 
   const apply = () => {
     const q = (input?.value ?? '').trim().toLowerCase();
+    const filtering = Boolean(filter || q);
     let n = 0;
     rows.forEach((r) => {
       const ok = (!filter || (r.dataset.toepassingen ?? '').split(' ').includes(filter)) && (!q || (r.dataset.zoek ?? '').includes(q));
@@ -66,19 +109,23 @@ import { toepassingen } from '../../data/site.mjs';
       if (ok) n++;
     });
     cats.forEach((c) => (c.hidden = !c.querySelector('.rows > li:not([hidden])')));
+    // While filtering, the compositions collapse to one calm grid of results
+    catalogue?.classList.toggle('is-filtering', filtering);
     if (empty) empty.hidden = n > 0;
-    if (status) status.textContent = filter || q ? `${n} ${n === 1 ? 'product' : 'producten'} gevonden` : '';
+    if (status) status.textContent = filtering ? `${n} ${n === 1 ? 'product' : 'producten'} gevonden` : '';
   };
   chips.forEach((b) => b.addEventListener('click', () => {
     filter = b.dataset.filter ?? '';
     chips.forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
     apply();
+    if (filter) catalogue?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }));
   input?.addEventListener('input', apply);
 </script>
 
 <style>
-  .tools-wrap { position: sticky; top: var(--header-h); z-index: 20; background: rgb(255 255 255 / 0.94); border-block: 1px solid var(--sheet-line); }
+  /* ── Search and filter, sticky under the header ── */
+  .tools-wrap { position: sticky; top: var(--header-h); z-index: 20; background: rgb(255 255 255 / 0.94); border-bottom: 1px solid var(--sheet-line); }
   @supports (backdrop-filter: blur(1px)) { .tools-wrap { background: rgb(255 255 255 / 0.8); backdrop-filter: blur(14px) saturate(1.3); } }
   .tools { display: grid; grid-template-columns: minmax(14rem, 24rem) 1fr; gap: 0.75rem 1.5rem; align-items: center; padding: 0.85rem var(--gutter); }
   .search { position: relative; }
@@ -97,15 +144,85 @@ import { toepassingen } from '../../data/site.mjs';
   .chip[aria-pressed='true'] { background: var(--ink); color: var(--white); border-color: var(--ink); }
   @media (max-width: 760px) { .tools { grid-template-columns: 1fr; } }
 
-  .catalogue { background: var(--sheet); padding: var(--space-m) var(--gutter) var(--space-2xl); }
-  .status { min-height: 1.5rem; font-size: var(--step--1); color: var(--muted); }
-  .cat { display: grid; gap: var(--space-m); padding-top: var(--space-xl); scroll-margin-top: calc(var(--header-h) + 5.5rem); }
-  .cat header { display: grid; gap: 0.8rem; justify-items: start; padding-bottom: var(--space-s); }
-  .cat h2 { font-size: clamp(2.2rem, 1rem + 3vw, 4rem); font-weight: 700; letter-spacing: -0.05em; line-height: 0.95; color: var(--ink); }
-  .cat h2 a { text-decoration: none; }
-  .cat h2 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: var(--orange); }
-  .cat header p { color: var(--muted); font-size: var(--step-1); line-height: 1.45; max-width: 46ch; }
-  .cat[hidden], .rows > li[hidden] { display: none; }
-  .empty { padding-block: var(--space-l); display: grid; gap: 1rem; justify-items: start; }
+  /* ── A family: big name on one side, its products composed on the other ── */
+  .catalogue { position: relative; scroll-margin-top: calc(var(--header-h) + 4.5rem); }
+  .status:empty { display: none; }
+  .status { padding: var(--space-m) var(--gutter) 0; font-size: var(--step--1); color: var(--muted); background: var(--sheet); }
+  .fam {
+    --card-bg: var(--white);
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-l) var(--space-xl); align-items: start;
+    padding: var(--space-xl) var(--gutter); scroll-margin-top: calc(var(--header-h) + 4.5rem);
+  }
+  .fam[hidden], .rows > li[hidden] { display: none; }
+  .t-sheet { background: var(--sheet); }
+  .t-white { background: var(--white); --card-bg: var(--sheet); }
+  .t-indigo { background: var(--indigo); color: var(--on-indigo); }
+  .flip { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+  .flip .fam-head { order: 2; }
+
+  .fam-head { container-type: inline-size; position: sticky; top: calc(var(--header-h) + 6rem); display: grid; gap: 1rem; justify-items: start; }
+  .fam-rule { width: 4rem; height: 2px; background: var(--orange); }
+  .fam h2 { --fs: clamp(2.6rem, 1rem + 4vw, 5.2rem); font-size: min(var(--fs), 100cqi / (var(--len) * 0.62)); font-weight: 700; font-stretch: 112%; letter-spacing: -0.055em; line-height: 0.9; color: var(--ink); hyphens: manual; overflow-wrap: normal; }
+  .fam h2 a { text-decoration: none; color: inherit; }
+  .fam h2 a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.12em; text-decoration-color: var(--orange); }
+  .fam-head p { color: var(--muted); font-size: var(--step-1); line-height: 1.45; max-width: 30ch; }
+  .fam-go { margin-top: 0.4rem; }
+  .t-indigo h2 { color: var(--white); }
+  .t-indigo .fam-head p { color: var(--on-indigo-muted); }
+  .t-indigo .fam-go { color: var(--white); }
+
+  .items { list-style: none; padding: 0; display: grid; gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+  /* one product: a single wide feature */
+  .l-one .items { grid-template-columns: 1fr; }
+  /* two: unequal widths, the second dropped down */
+  .l-two .items { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+  .l-two .items > :global(li:nth-child(2)) { margin-top: var(--space-xl); }
+  .flip.l-two .items { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .flip.l-two .items > :global(li:nth-child(1)) { order: 2; }
+  .flip.l-two .items > :global(li:nth-child(2)) { order: 1; }
+  /* three or four: a tall lead with compact rows stacked beside it */
+  .l-few .items { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .l-few .items > :global(li:first-child) { grid-row: 1 / span var(--rest); }
+  /* five or more: bento, lead takes two by two */
+  .l-many .items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .l-many .items > :global(li:first-child) { grid-column: span 2; grid-row: span 2; }
+  .tail-1 .items > :global(li:last-child) { grid-column: 1 / -1; }
+  .tail-2 .items > :global(li:last-child) { grid-column: span 2; }
+  /* a card without photo must not melt into the indigo field */
+  .t-indigo :global(.nofoto) { background-color: var(--indigo-soft); }
+
+  @media (max-width: 1100px) {
+    .fam, .flip { grid-template-columns: 1fr; }
+    .flip .fam-head { order: 0; }
+    .fam-head { position: static; }
+    .fam-head p { max-width: 46ch; }
+  }
+  @media (max-width: 700px) {
+    .l-two .items, .flip.l-two .items, .l-few .items { grid-template-columns: 1fr; }
+    .l-two .items > :global(li:nth-child(2)) { margin-top: 0; }
+    .l-few .items > :global(li:first-child) { grid-row: auto; }
+    .l-many .items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .l-many .items { grid-template-columns: 1fr; }
+    .l-many .items > :global(li:first-child), .items > :global(li:last-child) { grid-column: auto; grid-row: auto; }
+  }
+
+  /* ── Filtering: drop the compositions, show one calm grid of results ── */
+  .is-filtering .fam {
+    background: var(--sheet); color: var(--ink); --card-bg: var(--white);
+    grid-template-columns: 1fr; padding-block: var(--space-l) 0; gap: var(--space-m);
+  }
+  .is-filtering .fam:last-of-type { padding-bottom: var(--space-xl); }
+  .is-filtering .fam-head { position: static; order: 0; }
+  .is-filtering .fam h2 { --fs: var(--step-3); color: var(--ink); }
+  .is-filtering .fam-head :is(p, .fam-go, .fam-rule) { display: none; }
+  .is-filtering .items, .is-filtering.catalogue .flip.l-two .items {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  }
+  .is-filtering .items > :global(li) { grid-column: auto !important; grid-row: auto !important; margin-top: 0 !important; order: 0 !important; }
+
+  .empty { padding: var(--space-l) var(--gutter) var(--space-xl); display: grid; gap: 1rem; justify-items: start; background: var(--sheet); }
+  .empty[hidden] { display: none; }
   .empty strong { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; color: var(--ink); display: block; margin-bottom: 0.3rem; }
 </style>

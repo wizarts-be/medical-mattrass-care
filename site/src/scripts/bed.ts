@@ -5,14 +5,18 @@
  * Scroll unmakes the bed: sheet off, cover lifted, visco separated from the CMHR core.
  */
 import {
-  WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, PlaneGeometry, BoxGeometry, ShaderMaterial,
+  WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, PlaneGeometry, ShaderMaterial,
   DataTexture, RedFormat, UnsignedByteType, LinearFilter, Vector3, Matrix4, Matrix3, Raycaster, Vector2,
-  LinearSRGBColorSpace, MeshBasicMaterial, ClampToEdgeWrapping, DoubleSide,
+  LinearSRGBColorSpace, ClampToEdgeWrapping, DoubleSide,
+  Shape, ExtrudeGeometry, BufferGeometry, BufferAttribute,
 } from 'three';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const L = 200, W = 90, H = 15;      // cm
 const GW = 160, GH = 72;            // pressure grid
 const DEPTH = 6.5;                  // max sink in cm
+const R = 7;                        // corner radius of the mattress in plan (cm)
+const B = 1.8;                      // soft rounded top/bottom edge of the cover (cm)
 
 const smooth = (t: number, a: number, b: number) => {
   const x = Math.min(1, Math.max(0, (t - a) / (b - a)));
@@ -26,6 +30,8 @@ const topVert = /* glsl */ `
   uniform sampler2D uP;
   uniform float uDepth;
   uniform vec2 uSize;
+  uniform float uR;
+  uniform float uB;
   varying vec2 vUv;
   varying float vD;
   varying vec3 vWorld;
@@ -37,7 +43,13 @@ const topVert = /* glsl */ `
     vD = d;
     vec3 p = position;
     p.y -= d * uDepth;
-    p.y -= (1.0 - smoothstep(0.0, 3.0, e)) * 1.4; // rounded top edge of the mattress
+    // the top sits inside the cover's rounded rim: shrink to the inner rectangle, round its corners
+    vec2 h = uSize * 0.5 - uB;
+    vec2 xz = p.xz * (h / (uSize * 0.5));
+    float r = uR - uB;
+    vec2 q = abs(xz) - (h - r);
+    if (q.x > 0.0 && q.y > 0.0 && length(q) > r) xz = sign(xz) * (h - r + normalize(q) * r);
+    p.xz = xz;
     vec4 w = modelMatrix * vec4(p, 1.0);
     vWorld = w.xyz;
     gl_Position = projectionMatrix * viewMatrix * w;
@@ -55,6 +67,7 @@ const topFrag = /* glsl */ `
   uniform float uSheet;      // fold line position along the length (cm)
   uniform float uSheetFade;
   uniform float uHeat;
+  uniform float uR;
   varying vec2 vUv;
   varying float vD;
   varying vec3 vWorld;
@@ -116,9 +129,9 @@ const topFrag = /* glsl */ `
     float fres = pow(1.0 - max(dot(nn, V), 0.0), 3.0);
 
     // MMC 210 PU: satin indigo with a broad sheen and a tight highlight
-    vec3 indigo = vec3(0.149, 0.102, 0.400);
-    vec3 lilac = vec3(0.56, 0.50, 0.86);
-    vec3 pu = indigo * (0.4 + 0.75 * diff);
+    vec3 indigo = vec3(0.235, 0.235, 0.470);   // lighter, bluer than the brand #261A66
+    vec3 lilac = vec3(0.62, 0.62, 0.86);
+    vec3 pu = indigo * (0.48 + 0.72 * diff);
     pu += lilac * (pow(ndh, 90.0) * 0.6 + pow(ndh, 14.0) * 0.42 + pow(ndh, 4.0) * 0.16);
     pu += lilac * smoothstep(0.35, 1.0, drape + 0.5) * 0.07;
     pu += lilac * fres * 0.25;
@@ -136,8 +149,8 @@ const topFrag = /* glsl */ `
     pu = mix(pu, isoC, isoLine * 0.7);
 
     // seam piping along the edge
-    vec2 ed = min(cm, uSize - cm);
-    float edge = min(ed.x, ed.y);
+    vec2 qe = abs(cm - uSize * 0.5) - (uSize * 0.5 - uR);
+    float edge = -(length(max(qe, 0.0)) + min(max(qe.x, qe.y), 0.0) - uR);
     pu *= mix(0.62, 1.0, smoothstep(0.6, 2.2, edge));
 
     // shadows: sheet edge and folded flap edge on the cover
@@ -194,8 +207,8 @@ const sideFrag = /* glsl */ `
     vec3 Ld = normalize(uLight);
     vec3 V = normalize(uCam - vWorld);
     float diff = clamp(dot(n, Ld) * 0.55 + 0.45, 0.0, 1.0);
-    vec3 indigo = vec3(0.149, 0.102, 0.400);
-    vec3 col = indigo * (0.32 + 0.6 * diff);
+    vec3 indigo = vec3(0.235, 0.235, 0.470);
+    vec3 col = indigo * (0.4 + 0.6 * diff);
     float y = vLocal.y + uH * 0.5;          // 0 at bottom
     col *= mix(0.72, 1.0, smoothstep(0.0, uH, y));
     // the hidden zipper, same colour as the cover
@@ -203,9 +216,7 @@ const sideFrag = /* glsl */ `
     float band = 1.0 - smoothstep(0.0, 0.18, abs(y - uH * 0.38) - 0.42);
     float teeth = step(0.5, fract(along * 1.6));
     col = mix(col, col * (0.55 + 0.35 * teeth), band);
-    col += vec3(0.56, 0.50, 0.86) * pow(1.0 - max(dot(n, V), 0.0), 3.0) * 0.15;
-    // top rim seam
-    col *= mix(0.6, 1.0, smoothstep(uH - 0.9, uH - 2.0, y));
+    col += vec3(0.62, 0.62, 0.86) * pow(1.0 - max(dot(n, V), 0.0), 3.0) * 0.15;
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -242,12 +253,47 @@ const shadowFrag = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vec2 p = (vUv - 0.5) * (uHalf * 2.0 + 80.0);
-    vec2 q = abs(p) - uHalf;
-    float sdf = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+    vec2 q = abs(p) - (uHalf - 7.0);
+    float sdf = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - 7.0;
     float a = (1.0 - smoothstep(-6.0, 34.0, sdf)) * uAlpha;
     gl_FragColor = vec4(0.15, 0.10, 0.40, a);
   }
 `;
+
+/* ───────────────────────── geometry ───────────────────────── */
+
+/** A slab l x h x w (cm) with rounded corners (r) and rounded top/bottom edges (b), centred on the origin.
+ *  caps = false leaves out the flat top and bottom, for the cover shell around the pressure surface. */
+function roundedSlab(l: number, h: number, w: number, r: number, b: number, caps: boolean) {
+  const hx = l / 2 - b, hz = w / 2 - b, rr = Math.max(0.2, r - b);
+  const s = new Shape();
+  s.moveTo(-hx + rr, -hz);
+  s.lineTo(hx - rr, -hz);
+  s.absarc(hx - rr, -hz + rr, rr, -Math.PI / 2, 0, false);
+  s.lineTo(hx, hz - rr);
+  s.absarc(hx - rr, hz - rr, rr, 0, Math.PI / 2, false);
+  s.lineTo(-hx + rr, hz);
+  s.absarc(-hx + rr, hz - rr, rr, Math.PI / 2, Math.PI, false);
+  s.lineTo(-hx, -hz + rr);
+  s.absarc(-hx + rr, -hz + rr, rr, Math.PI, Math.PI * 1.5, false);
+  const ex = new ExtrudeGeometry(s, { depth: h - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 6, curveSegments: 12 });
+  const pos = ex.getAttribute('position');
+  let g = new BufferGeometry();
+  if (caps) {
+    g.setAttribute('position', pos);
+  } else {
+    const side = ex.groups.find((x) => x.materialIndex === 1)!;
+    g.setAttribute('position', new BufferAttribute((pos.array as Float32Array).slice(side.start * 3, (side.start + side.count) * 3), 3));
+  }
+  ex.dispose();
+  g = mergeVertices(g, 1e-3);           // shared vertices -> smooth normals over the rounded edges
+  g.rotateX(-Math.PI / 2);              // extrusion axis becomes height
+  g.computeBoundingBox();
+  const bb = g.boundingBox!;
+  g.translate(0, -(bb.min.y + bb.max.y) / 2, 0);
+  g.computeVertexNormals();
+  return g;
+}
 
 /* ───────────────────────── engine ───────────────────────── */
 
@@ -295,6 +341,7 @@ export function createBed(o: BedOptions) {
       uP: { value: tex }, uTexel: { value: new Vector2(1 / GW, 1 / GH) }, uDepth: { value: DEPTH },
       uSize: { value: new Vector2(L, W) }, uRot: { value: rot }, uLight: { value: light }, uCam: { value: camPos },
       uSheet: { value: L * 0.58 }, uSheetFade: { value: 1 }, uHeat: { value: 1 },
+      uR: { value: R }, uB: { value: B },
     },
   });
   const top = new Mesh(topGeo, topMat);
@@ -305,13 +352,13 @@ export function createBed(o: BedOptions) {
     vertexShader: sideVert, fragmentShader: sideFrag,
     uniforms: { uLight: { value: light }, uCam: { value: camPos }, uH: { value: H } },
   });
-  const hidden = new MeshBasicMaterial({ visible: false });
-  const sides = new Mesh(new BoxGeometry(L, H, W), [sideMat, sideMat, hidden, sideMat, sideMat, sideMat]);
+  // the cover's rounded shell: walls, rounded corners and the soft rim up to the top surface
+  const sides = new Mesh(roundedSlab(L, H, W, R, B, false), sideMat);
   sides.position.y = H / 2;
   coverG.add(sides);
 
   const foam = (h: number, color: [number, number, number], scale: number) =>
-    new Mesh(new BoxGeometry(L - 1.2, h, W - 1.2), new ShaderMaterial({
+    new Mesh(roundedSlab(L - 1.2, h, W - 1.2, R - 0.6, 0.6, true), new ShaderMaterial({
       vertexShader: sideVert, fragmentShader: foamFrag,
       uniforms: { uColor: { value: new Vector3(...color) }, uLight: { value: light }, uScale: { value: scale } },
     }));

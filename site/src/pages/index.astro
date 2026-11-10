@@ -62,14 +62,19 @@ const certificaten = [
       <img src="/img/beeld/hero-2560.webp" alt="" width="2560" height="1440" fetchpriority="high" />
     </picture>
     <div class="hero-inner">
-      <h1 id="hero-title"><span class="line"><span>Slimme druk,</span></span><span class="line"><em>meer hygiëne.</em></span></h1>
-      <div class="hero-side">
-        <p>Medische matrassen, kussens en hulpstukken voor de zorg. Uit stock, op maat, Vlaams sinds {bedrijf.opgericht}.</p>
+      <div class="hero-text">
+        <h1 id="hero-title"><span class="line"><span>Slimme druk,</span></span><span class="line"><em>meer hygiëne.</em></span></h1>
+        <p class="hero-lede">Medische matrassen, kussens en hulpstukken voor de zorg. Uit stock, op maat, Vlaams sinds {bedrijf.opgericht}.</p>
         <div class="hero-cta">
           <a class="btn btn--light" href="/offerte/">Offerte aanvragen <Icon name="arrow" /></a>
           <a class="btn btn--ghost-light" href="/producten/">Bekijk het gamma</a>
         </div>
       </div>
+      <ul class="hero-facts">
+        <li><strong>95 °C</strong><span>wasbare hoes</span></li>
+        <li><strong>MRSA</strong><span>bestendige PU</span></li>
+        <li><strong>{bedrijf.opgericht}</strong><span>Vlaams familiebedrijf</span></li>
+      </ul>
     </div>
   </section>
 
@@ -242,8 +247,7 @@ const certificaten = [
 
     // hero: lines rise out of their mask, image settles and drifts on scroll
     gsap.from('.hero h1 .line > *', { yPercent: 110, duration: 1.2, ease, stagger: 0.09, delay: 0.1 });
-    gsap.from('.hero-side > *', { y: 28, autoAlpha: 0, duration: 1, ease, stagger: 0.1, delay: 0.5 });
-    gsap.fromTo('.hero-bg img', { scale: 1.18 }, { scale: 1.05, duration: 2.6, ease });
+    gsap.from('.hero-text > :not(h1), .hero-facts li', { y: 28, autoAlpha: 0, duration: 1, ease, stagger: 0.08, delay: 0.45 });
     gsap.to('.hero-bg', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
 
@@ -286,22 +290,29 @@ const certificaten = [
   .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; transform: scale(1.05); }
   .hero::before {
     content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(90deg, rgb(21 14 61 / 0.85) 0%, rgb(21 14 61 / 0.55) 42%, rgb(21 14 61 / 0) 75%),
-                linear-gradient(0deg, rgb(21 14 61 / 0.7) 0%, rgb(21 14 61 / 0) 45%);
+    background: linear-gradient(90deg, rgb(21 14 61 / 0.85) 0%, rgb(21 14 61 / 0.5) 42%, rgb(21 14 61 / 0) 75%),
+                linear-gradient(0deg, rgb(21 14 61 / 0.6) 0%, rgb(21 14 61 / 0) 40%);
   }
   .hero-inner {
-    position: relative; z-index: 2; align-self: end;
-    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-m) var(--space-xl); align-items: end;
-    padding: var(--space-xl) var(--gutter) clamp(3rem, 9vh, 6rem);
+    position: relative; z-index: 2; align-self: end; display: grid; gap: var(--space-l);
+    padding: var(--space-xl) var(--gutter) clamp(2rem, 6vh, 4rem);
   }
-  .hero h1 { color: var(--white); font-size: clamp(3.2rem, 1rem + 8.4vw, 9rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; }
+  .hero-text { display: grid; justify-items: start; gap: 1.5rem; }
+  .hero h1 { color: var(--white); font-size: clamp(3rem, 1rem + 5.4vw, 7rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; }
   .line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
   .line > * { display: block; }
+  @media (min-width: 901px) { .hero .line { white-space: nowrap; } }
   .hero h1 em { font-style: normal; color: var(--orange); }
-  .hero-side { display: grid; gap: 1.6rem; max-width: 30rem; padding-bottom: 0.6rem; }
-  .hero-side p { font-size: var(--step-1); line-height: 1.5; color: var(--on-indigo-muted); }
+  .hero-lede { font-size: var(--step-1); line-height: 1.5; color: var(--on-indigo-muted); max-width: 34ch; }
   .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-  @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; } }
+  .hero-facts {
+    list-style: none; padding: 1.1rem 0 0; display: flex; flex-wrap: wrap; gap: 0.8rem clamp(1.5rem, 4vw, 4rem);
+    border-top: 1px solid rgb(255 255 255 / 0.18); max-width: 44rem;
+  }
+  .hero-facts li { display: grid; gap: 0.15rem; }
+  .hero-facts strong { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; line-height: 1; color: var(--white); }
+  .hero-facts span { font-size: var(--step--1); color: var(--on-indigo-muted); }
+  @media (max-width: 600px) { .hero-facts strong { font-size: var(--step-1); } }
 
   /* ───────── V10 ───────── */
   .bedrun { position: relative; background: var(--white); }

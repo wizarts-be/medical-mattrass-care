@@ -15,7 +15,7 @@ cp -R site/dist "$TMP/build"
 python3 - "$TMP/build" "/$NAME" <<'PY'
 import os, re, sys
 root, base = sys.argv[1], sys.argv[2]
-attr = re.compile(r'''((?:href|src|srcset|action|content|data-[a-z-]+)=["'])/(?!/)''')
+attr = re.compile(r'''((?:href|src|srcset|poster|action|content|data-[a-z-]+)=["'])/(?!/)''')
 css_url = re.compile(r'''url\((["']?)/(?!/)''')
 refresh = re.compile(r'(url=)/(?!/)')
 js_abs = re.compile(r'''(["'])/_astro/''')

@@ -472,6 +472,7 @@ export function createBed(o: BedOptions) {
     topMat.uniforms.uSheet.value = lerp(L * 0.58, L * 1.75, smooth(t, 0.0, 0.2));
     topMat.uniforms.uSheetFade.value = 1 - smooth(t, 0.14, 0.24);
 
+
     // frame: fit the bed (plus explode height) into the view
     const fov = (camera.fov * Math.PI) / 180;
     const hfov = 2 * Math.atan(Math.tan(fov / 2) * camera.aspect);
@@ -568,15 +569,30 @@ export function createBed(o: BedOptions) {
       visco: project(visco, 0),
       cmhr: project(cmhr, 0),
     };
+    // side labels (wide screens): keep them from overlapping when the layers sit close together
+    const side = vw > 900 && !portrait;
+    const shown: { k: string; h: number }[] = [];
     for (const k in o.labels) {
       const el = o.labels[k];
       const [a, b, c, d] = windows[k];
       const vis = smooth(t, a, b) * (1 - smooth(t, c, d));
       el.style.opacity = vis.toFixed(3);
       el.style.visibility = vis > 0.01 ? 'visible' : 'hidden';
+      el.dataset.active = vis > 0.5 ? '1' : '0';
+      if (vis > 0.01) shown.push({ k, h: el.offsetHeight });
+    }
+    if (side) {
+      shown.sort((p, q) => pos[p.k].y - pos[q.k].y);
+      for (let i = 1; i < shown.length; i++) {
+        const prev = shown[i - 1], cur = shown[i];
+        const min = pos[prev.k].y + prev.h / 2 + cur.h / 2 + 10;   // labels are centred on their y
+        if (pos[cur.k].y < min) pos[cur.k].y = min;
+      }
+    }
+    for (const k in o.labels) {
+      const el = o.labels[k];
       el.style.setProperty('--x', `${Math.min(pos[k].x, vw - 300).toFixed(1)}px`);
       el.style.setProperty('--y', `${pos[k].y.toFixed(1)}px`);
-      el.dataset.active = vis > 0.5 ? '1' : '0';
     }
   };
 
@@ -589,9 +605,10 @@ export function createBed(o: BedOptions) {
     readProgress();
     shown += (progress - shown) * (o.reduced ? 1 : 1 - Math.exp(-dt * 9));
 
-    // demo: someone lies down, then gets up and the visco slowly recovers
-    const t = seenAt ? (now - seenAt) / 1000 : 0;
-    bodyAmt = o.reduced || !seenAt ? 0 : smooth(t, 0.3, 1.3) * (1 - smooth(t, 3.0, 3.5));
+    // demo: someone lies down, gets up, the visco slowly recovers; repeats every 9 s while the bed is made
+    const t = seenAt ? ((now - seenAt) / 1000) % 9 : 0;
+    const resting = shown < 0.05 && !pressed;
+    bodyAmt = o.reduced || !seenAt || !resting ? 0 : smooth(t, 0.4, 1.4) * (1 - smooth(t, 3.2, 3.7));
     if (pointer && now - lastMove > 2600 && !pressed) pointer = null;
 
     stepPressure(dt);

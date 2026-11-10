@@ -18,7 +18,7 @@ De huidige website is https://medical-mattress-care.com (WordPress, NL/FR/EN), l
 - **Medical Mattress Care BV**, Puyveldestraat 8, 9170 Sint-Pauwels (België). Ondernemingsnummer 0875.860.609.
 - Opgericht in 2005 door zaakvoerder Michel Marynissen.
 - Telefoon: 0473 59 11 71.
-- E-mail: info@medical-mattress-care.com. Daarnaast is michel@medicalmattresscare.com in gebruik. Welk adres op de site komt, is nog niet beslist.
+- E-mail op de site: michel@medicalmattresscare.com (beslist 2026-11). info@medical-mattress-care.com bestaat ook, maar staat niet op de site.
 - Website-taal: Nederlands is de hoofdtaal, Frans en Engels zijn ook nodig. Vertalingen FR en EN zijn er nog niet.
 
 ### Verhaal

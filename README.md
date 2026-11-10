@@ -34,6 +34,6 @@ https://wizarts-be.github.io/medical-mattrass-care/ (noindex). Update after a ch
 ## Notes
 
 - 3D: falls back to a fabric photo plus a drawn layer diagram without WebGL2. With "reduced motion" there is no lying-down demo and no scroll unmaking (static diagram instead).
-- Forms: `src/pages/offerte.astro`, constant `ENDPOINT`. Empty = the request opens as an email to info@ (works right away). Fill in an endpoint (Formspree, own PHP, CRM) to post directly.
+- Forms: `src/pages/offerte.astro`, constant `ENDPOINT`. Empty = the request opens as an email to michel@medicalmattresscare.com (works right away). Fill in an endpoint (Formspree, own PHP, CRM) to post directly.
 - Redirects from the old WordPress URLs: `public/_redirects` (Netlify/Cloudflare), `public/.htaccess` (Apache), plus Astro redirect pages.
 - WordPress: the wp-builder-agent can convert this folder later. Note that the 3D home then needs to come along as a custom block or template script.

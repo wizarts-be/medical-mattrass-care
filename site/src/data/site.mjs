@@ -10,8 +10,8 @@ export const bedrijf = {
   btw: '0875.860.609',
   telefoon: '0473 59 11 71',
   telefoonHref: '+32473591171',
-  // AANNAME: e-mailadres op de site nog te bevestigen (michel@medicalmattresscare.com is ook in gebruik).
-  email: 'info@medical-mattress-care.com',
+  // Beslist 2026-11: michel@ is het contactadres op de site (ook voor offerte-aanvragen).
+  email: 'michel@medicalmattresscare.com',
   opgericht: 2005,
   zaakvoerder: 'Michel Marynissen',
   url: 'https://www.medical-mattress-care.com',

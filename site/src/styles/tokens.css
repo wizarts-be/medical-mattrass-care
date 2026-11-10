@@ -58,7 +58,7 @@
   --space-m: clamp(1.5rem, 1.2rem + 1vw, 2rem);
   --space-l: clamp(2.5rem, 2rem + 2vw, 4rem);
   --space-xl: clamp(4rem, 3rem + 5vw, 8rem);
-  --space-2xl: clamp(6rem, 4rem + 8vw, 12rem);
+  --space-2xl: clamp(5rem, 3.5rem + 6vw, 9rem);
   --max: 88rem;
   --measure: 66ch;
 

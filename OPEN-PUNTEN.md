@@ -1,5 +1,9 @@
 # Open points, MMC v2
 
+## Before go-live
+
+- **Remove the post-it review script** from `site/src/layouts/Base.astro` (the line marked REMOVE BEFORE GO-LIVE). Feedback lands in the Sheet of project `mmc`: https://docs.google.com/spreadsheets/d/1GKzs5_a98w9qyUw9KBVuTOC9lhbyDpFW2LB_rFQdhgg/edit
+
 ## To ask the client
 
 1. **Showroom Lokeren** (Scherpeputstraat 16) and **opening hours**: taken from the current site (2020). Still correct?
@@ -9,7 +13,7 @@
    - "U krijgt snel antwoord."
    - Custom work in three steps (send sizes → we propose a build + quote → we make and deliver).
 4. **MMC V10 widths**: the home says "In vier breedtes, van 90 tot 180 cm" (V10 A to D). OK?
-5. **Form destination**: where should quote requests go? Now they open as an email to info@.
+5. **Form destination**: where should quote requests go? Now they open as an email to michel@medicalmattresscare.com.
 6. **Status**: MMC AT cover (shown as "Beschikbaarheid op aanvraag"), Bicolor fifth colour name, TVP 24 per box, missing order codes (Thuis matras, police-cell mattress, baby duvet, AT cover).
 7. **Legal texts**: privacy, cookies, disclaimer still to be supplied.
 8. **FR/EN**: translations (pages `/fr/` and `/en/` now show a holding message).

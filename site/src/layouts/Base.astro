@@ -52,6 +52,8 @@ const org = {
     <meta property="og:image" content={new URL('/img/og.jpg', Astro.site)} />
     <meta property="og:locale" content="nl_BE" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? org)} />
+    <!-- Post-its for client review (wizarts-be/postit-review, project "mmc"). REMOVE BEFORE GO-LIVE. -->
+    <script is:inline src="https://wizarts-postits.netlify.app/postits.js" defer data-postit-laag data-project="mmc" data-vaste-header=".site-header"></script>
   </head>
   <body class={bodyClass}>
     <a class="skip" href="#inhoud">Naar de inhoud</a>

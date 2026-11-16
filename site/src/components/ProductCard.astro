@@ -7,7 +7,7 @@
 // Inside a filtered catalogue (.is-filtering) every variant falls back to a plain card.
 import ProductImage from './ProductImage.astro';
 import Icon from './Icon.astro';
-import { productUrl, hoes } from '../lib/catalogus.mjs';
+import { productUrl, hoes, categorie } from '../lib/catalogus.mjs';
 interface Props { p: any; headingLevel?: 'h2' | 'h3'; variant?: 'card' | 'lead' | 'row' | 'feature' }
 const { p, headingLevel = 'h3', variant = 'card' } = Astro.props;
 const H = headingLevel;
@@ -17,11 +17,13 @@ const code = p.code && p.code !== p.naam ? p.code : null;
 const len = Math.max(...p.naam.split(/\s+/).map((w: string) => w.length));
 const big = variant === 'lead' || variant === 'feature';
 const h = big ? hoes(p.hoes) : null;
+const fam = categorie(p.categorie)?.naam;
 ---
 <li class:list={['card', `v-${variant}`]} data-toepassingen={(p.toepassingen ?? []).join(' ')} data-zoek={`${p.naam} ${p.code ?? ''} ${p.kort}`.toLowerCase()}>
   <a href={productUrl(p)}>
     <span class="img"><ProductImage p={p} size={big ? 'large' : 'thumb'} /></span>
     <span class="txt">
+      {fam && <span class="fam">{fam}</span>}
       {code && <span class="code">{code}</span>}
       <H class="name" style={`--len:${len}`}>{p.naam}</H>
       <span class="kort">{p.kort}</span>
@@ -40,6 +42,7 @@ const h = big ? hoes(p.hoes) : null;
 
 <style>
   .card { display: grid; min-width: 0; }
+  .card[hidden] { display: none; }
   a {
     --card: var(--card-bg, var(--white));
     display: grid; grid-template-rows: auto 1fr; height: 100%;
@@ -56,6 +59,8 @@ const h = big ? hoes(p.hoes) : null;
     --fs: var(--step-1); font-size: min(var(--fs), 100cqi / (var(--len) * 0.6)); hyphens: manual; overflow-wrap: normal;
   }
   .kort { font-size: var(--step--1); color: var(--muted); line-height: 1.45; max-width: 44ch; }
+  /* family name: only in the filtered catalogue, where the family heads are gone */
+  .fam { display: none; font-size: var(--step--1); color: var(--muted); }
   .meta { font-size: var(--step--1); font-weight: 500; font-variant-numeric: tabular-nums; }
   .facts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
   .facts span { font-size: var(--step--1); font-weight: 500; padding: 0.3rem 0.7rem; border: 1px solid var(--sheet-line); background: var(--white); }
@@ -113,4 +118,5 @@ const h = big ? hoes(p.hoes) : null;
   :global(.is-filtering) .card .name { --fs: var(--step-1); letter-spacing: -0.03em; line-height: 1.05; }
   :global(.is-filtering) .card .kort { font-size: var(--step--1); }
   :global(.is-filtering) .card :is(.facts, .go) { display: none; }
+  :global(.is-filtering) .card .fam { display: block; }
 </style>

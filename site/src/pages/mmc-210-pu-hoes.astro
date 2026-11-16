@@ -6,21 +6,42 @@ import Icon from '../components/Icon.astro';
 import { hoesFiche, ontsmetting } from '../data/site.mjs';
 import { offerteUrl } from '../lib/catalogus.mjs';
 
-const eigenschappen = [
-  'Bi-elastisch weefsel: volgt de matras zonder plooien',
-  'Ondoordringbaar voor water en urine, en toch ademend',
-  'Geen naden in de ligvlakken',
-  'Verborgen rits in dezelfde kleur, met L-sluiting: makkelijk af te ritsen',
-  'Bacterie- en schimmelresistent, MRSA-bestendig',
-  'Volledig wasbaar met de ontsmettingsproducten uit de zorgsector',
+// Four facts a buyer checks first
+const kern = [
+  { v: '95 °C', l: 'wasbaar' },
+  { v: '115 °C', l: 'steriliseerbaar' },
+  { v: 'CRIB 5', l: 'brandnorm' },
+  { v: 'MRSA', l: 'bestendig' },
 ];
+
+const eigenschappen = [
+  { t: 'Ondoordringbaar, toch ademend', d: 'Water en urine blijven buiten, waterdamp kan weg: 600 g/m² per 24 uur.' },
+  { t: 'Bacterie- en schimmelresistent', d: 'MRSA-bestendig, getest volgens ATCC #6538 en ASTM G 21-96.' },
+  { t: 'Geen naden in de ligvlakken', d: 'Niets waar vuil of vocht in kan blijven zitten.' },
+  { t: 'Verborgen rits met L-sluiting', d: 'In dezelfde kleur als de hoes. Makkelijk af te ritsen voor de was.' },
+  { t: 'Bi-elastisch weefsel', d: 'Volgt de matras zonder plooien.' },
+  { t: 'Oeko-Tex standaard 100', d: 'Polyurethaan op een weefsel van 100% polyester.' },
+];
+
+// The fiche, grouped so a buyer finds a value without scanning twelve rows
+const rij = (k: string) => {
+  const [naam, norm, waarde] = hoesFiche.find(([n]) => n === k)!;
+  return { naam: naam.replace('Waterdampdoorlaatbaarheid', 'Waterdamp\u00ADdoorlaatbaarheid'), norm, waarden: waarde.replace(/,\s*/g, '|').replace(/ bij /, '|bij ').split('|') };
+};
+const fiche = [
+  { groep: 'Materiaal', rijen: ['Stof', 'Coating', 'Totaal gewicht'].map(rij) },
+  { groep: 'Sterkte', rijen: ['Treksterkte', 'Rek', 'Hydrolyse', 'Krimp bij wassen op 95 °C'].map(rij) },
+  { groep: 'Bescherming', rijen: ['Waterkolom', 'Waterdampdoorlaatbaarheid', 'Brandwerend', 'Antibacterieel', 'Schimmelwerend'].map(rij) },
+];
+
 const onderhoud = [
-  { sym: '95', label: 'Wasbaar op 95 °C' },
+  { sym: '95', label: 'Wassen tot 95 °C' },
   { sym: 'bleach', label: 'Niet bleken' },
   { sym: 'iron', label: 'Niet strijken' },
-  { sym: 'A', label: 'Enkel reinigen met producten met klasse A-label' },
-  { sym: 'dry', label: 'Droogkast tot niveau 1' },
+  { sym: 'A', label: 'Reinigen met klasse A-label' },
+  { sym: 'dry', label: 'Droogkast niveau 1' },
 ];
+const middelen = ontsmetting.split(/,\s*/);
 ---
 <Base title="MMC 210 PU-hoes" description="De MMC 210 PU-hoes: MRSA-bestendig, wasbaar op 95 °C, steriliseerbaar tot 115 °C, brandnorm CRIB 5, Oeko-Tex standaard 100. Technische fiche en onderhoud.">
   <PageHead
@@ -37,92 +58,169 @@ const onderhoud = [
     </div>
   </PageHead>
 
-  <section class="band band--indigo" aria-labelledby="cijfers">
-    <div class="split-head">
-      <h2 id="cijfers" class="title-xl">Ondoordringbaar,<br />en toch ademend.</h2>
-      <p>Water en urine blijven buiten, de matras blijft droog. MRSA-bestendig en volledig wasbaar met de ontsmettingsproducten uit de zorg.</p>
+  <nav class="jump" aria-label="Op deze pagina">
+    <div class="wrap jump-in">
+      <dl class="kern">
+        {kern.map((k) => (<div><dt>{k.v}</dt><dd>{k.l}</dd></div>))}
+      </dl>
+      <ul class="jump-links">
+        <li><a class="btn btn--ghost btn--small" href="#eigenschappen">Eigenschappen <Icon name="arrow-down" /></a></li>
+        <li><a class="btn btn--ghost btn--small" href="#fiche">Technische fiche <Icon name="arrow-down" /></a></li>
+        <li><a class="btn btn--ghost btn--small" href="#onderhoud">Onderhoud <Icon name="arrow-down" /></a></li>
+      </ul>
     </div>
-    <dl class="facts">
-      <div><dt>95<span class="u"> °C</span></dt><dd>wasbaar, krimp max. 5 %</dd></div>
-      <div><dt>115<span class="u"> °C</span></dt><dd>steriliseerbaar</dd></div>
-      <div><dt><span class="u">CRIB </span>5</dt><dd>brandnorm, Centexbel 58974/B</dd></div>
-      <div><dt><span class="u">&gt; </span>200<span class="u"> cm</span></dt><dd>waterkolom</dd></div>
-    </dl>
-  </section>
+  </nav>
 
-  <section class="band band--white does" aria-labelledby="eig">
-    <h2 id="eig" class="title-xl">Wat de hoes doet.</h2>
-    <ul class="checks">
-      {eigenschappen.map((e) => (<li><Icon name="check" /><span>{e}</span></li>))}
-    </ul>
-  </section>
-
-  <section class="band band--sheet fiche" aria-labelledby="fiche">
-    <div class="fiche-main">
-      <table class="spec">
-        <caption id="fiche">Technische fiche</caption>
-        <thead><tr><th scope="col">Eigenschap</th><th scope="col">Norm</th><th scope="col">Waarde</th></tr></thead>
-        <tbody>
-          {hoesFiche.map(([k, n, v]) => (<tr><th scope="row">{k}</th><td class="norm">{n || '–'}</td><td>{v}</td></tr>))}
-        </tbody>
-      </table>
-    </div>
-    <div class="fiche-side">
-      <h2 id="ond">Onderhoud</h2>
-      <ul class="care" aria-labelledby="ond">
-        {onderhoud.map((o) => (
+  <section class="sec" id="eigenschappen" aria-labelledby="eig-h">
+    <div class="wrap two">
+      <div class="lead">
+        <h2 id="eig-h" class="h2">Gemaakt voor de zorg.</h2>
+        <p class="intro">Eén hoes voor matrassen en hulpstukken, die heet gewassen, ontsmet en gesteriliseerd kan worden.</p>
+        <figure class="photo">
+          <img src="/img/producten/mmc-pu-hoes-rits.jpg" alt="Matras in de MMC 210 PU-hoes met verborgen rits" width="640" height="427" loading="lazy" decoding="async" />
+          <figcaption>Verborgen rits in dezelfde kleur als de hoes.</figcaption>
+        </figure>
+      </div>
+      <ul class="props">
+        {eigenschappen.map((e) => (
           <li>
-            <span class="sym" aria-hidden="true">
-              {o.sym === '95' && <svg viewBox="0 0 40 40"><path d="M5 12h30l-3 22H8z" /><path d="M5 12c3-3 6 3 10 0s7 3 10 0 7 3 10 0" /><text x="20" y="29">95</text></svg>}
-              {o.sym === 'bleach' && <svg viewBox="0 0 40 40"><path d="M20 6L36 34H4z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
-              {o.sym === 'iron' && <svg viewBox="0 0 40 40"><path d="M6 30h28l-3-12H15c-5 0-8 5-9 12z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
-              {o.sym === 'A' && <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" /><text x="20" y="26">A</text></svg>}
-              {o.sym === 'dry' && <svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" /><circle cx="20" cy="20" r="11" /><circle cx="20" cy="20" r="1.8" class="f" /></svg>}
-            </span>
-            <span>{o.label}</span>
+            <span class="tick" aria-hidden="true"><Icon name="check" /></span>
+            <div><h3>{e.t}</h3><p>{e.d}</p></div>
           </li>
         ))}
       </ul>
-      <p class="small">Ook bestand tegen: {ontsmetting}.</p>
-      <div class="also">
-        <h3>MMC 120 PU</h3>
-        <p>Dezelfde kwaliteit, lichter gewicht. Voor plaatsen waar de hoes minder te lijden heeft, zoals de onrusthekkenbeschermer en het hoofdkussen MMC PUP 23.</p>
+    </div>
+  </section>
+
+  <section class="sec sec--sheet" id="fiche" aria-labelledby="fiche-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="fiche-h" class="h2">Technische fiche</h2>
+        <p class="intro">MMC 210 PU. Waarden volgens de vermelde norm.</p>
+      </div>
+      <div class="fiche">
+        {fiche.map((g) => (
+          <section class="group" aria-labelledby={`g-${g.groep}`}>
+            <h3 id={`g-${g.groep}`}>{g.groep}</h3>
+            <dl>
+              {g.rijen.map((r) => (
+                <div class="row">
+                  <dt>{r.naam}{r.norm && <span class="norm">{r.norm}</span>}</dt>
+                  <dd>{r.waarden.map((w) => <span>{w}</span>)}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
+      <p class="note"><strong>MMC 120 PU.</strong> Dezelfde kwaliteit, lichter gewicht. Voor plaatsen waar de hoes minder te lijden heeft, zoals de onrusthekkenbeschermer en het hoofdkussen MMC PUP 23.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="onderhoud" aria-labelledby="ond-h">
+    <div class="wrap two">
+      <div class="lead">
+        <h2 id="ond-h" class="h2">Onderhoud.</h2>
+        <p class="intro">Was regelmatig boven 60 °C om huisstofmijt te doden. Ontsmetten kan met de producten die u in de zorg al gebruikt.</p>
+      </div>
+      <div>
+        <ul class="care">
+          {onderhoud.map((o) => (
+            <li>
+              <span class="sym" aria-hidden="true">
+                {o.sym === '95' && <svg viewBox="0 0 40 40"><path d="M5 12h30l-3 22H8z" /><path d="M5 12c3-3 6 3 10 0s7 3 10 0 7 3 10 0" /><text x="20" y="29">95</text></svg>}
+                {o.sym === 'bleach' && <svg viewBox="0 0 40 40"><path d="M20 6L36 34H4z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
+                {o.sym === 'iron' && <svg viewBox="0 0 40 40"><path d="M6 30h28l-3-12H15c-5 0-8 5-9 12z" /><path d="M8 8l24 26M32 8L8 34" /></svg>}
+                {o.sym === 'A' && <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" /><text x="20" y="26">A</text></svg>}
+                {o.sym === 'dry' && <svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" /><circle cx="20" cy="20" r="11" /><circle cx="20" cy="20" r="1.8" class="f" /></svg>}
+              </span>
+              <span>{o.label}</span>
+            </li>
+          ))}
+        </ul>
+        <h3 class="sub">Bestand tegen</h3>
+        <ul class="chips">
+          {middelen.map((m) => <li>{m}</li>)}
+        </ul>
       </div>
     </div>
   </section>
 
-  <QuoteBand lines={['Hoezen', 'op maat.']} text="De MMC 210 PU-hoes past ook op uw bestaande matrassen. Geef de maten door, of vraag eerst een staal van de stof." href={offerteUrl({ code: 'MMC 210 PU-hoes' })} label="Hoezen aanvragen" />
+  <QuoteBand lines={['Hoezen', 'op maat.']} text="De MMC 210 PU-hoes past ook op uw bestaande matrassen. Geef de maten door, of vraag eerst een staal van de stof." href={offerteUrl({ code: 'MMC 210 PU-hoes' })} label="Hoezen aanvragen" steps={[
+    { t: 'Geef de maten door', d: 'Lengte, breedte en hoogte van de matras of het hulpstuk, en hoeveel hoezen u nodig hebt.' },
+    { t: 'Vraag eerst een staal', d: 'Voel en test de stof zelf voor u bestelt.' },
+    { t: 'U krijgt snel een offerte', d: 'Op maat van uw aantallen. Vragen? Bel of mail ons rechtstreeks.' },
+  ]} />
 </Base>
 
 <style>
   .head-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
-  .facts div { display: grid; gap: 0.4rem; padding-top: 1.1rem; border-top: 2px solid var(--orange); }
-  .facts dt { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: clamp(2.4rem, 1rem + 3.4vw, 4.6rem); letter-spacing: -0.05em; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .facts .u { font-size: 0.45em; letter-spacing: 0; }
-  .facts dd { margin: 0; color: var(--on-indigo-muted); }
-  @media (max-width: 900px) { .facts { grid-template-columns: 1fr 1fr; } }
+  .wrap { max-width: 80rem; margin-inline: auto; padding-inline: var(--gutter); }
+  .h2 { font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.8rem); font-weight: 700; font-stretch: 112%; letter-spacing: -0.045em; line-height: 0.95; color: var(--ink); text-wrap: balance; }
+  .intro { margin-top: 1rem; color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; text-wrap: pretty; }
 
-  .does { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: var(--space-l) var(--space-xl); align-items: start; }
-  .checks { list-style: none; padding: 0; display: grid; }
-  .checks li { display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.9rem; padding-block: 1rem; border-top: 1px solid var(--sheet-line); font-size: var(--step-1); line-height: 1.4; color: var(--ink); }
-  .checks li:last-child { border-bottom: 1px solid var(--sheet-line); }
-  .checks :global(svg) { width: 1.4rem; color: var(--orange-deep); margin-top: 0.2rem; }
-  @media (max-width: 900px) { .does { grid-template-columns: 1fr; } }
+  /* ── Facts + in-page links under the hero ── */
+  .jump { background: var(--white); border-bottom: 1px solid var(--sheet-line); }
+  .jump-in { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; min-height: 4.5rem; }
+  .kern { display: flex; gap: clamp(1rem, 2.2vw, 2rem); margin: 0; }
+  .kern div { display: flex; align-items: baseline; gap: 0.4rem; }
+  .kern dt { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: var(--step-1); letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; }
+  .kern dd { margin: 0; font-size: var(--step--1); color: var(--muted); }
+  .jump-links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; color: var(--ink); }
+  .jump-links .btn { --bd: var(--sheet-line); }
+  @media (hover: hover) { .jump-links .btn:hover :global(svg) { transform: translateY(3px); } }
+  @media (max-width: 1100px) { .jump-in { flex-wrap: wrap; padding-block: 1rem; } }
+  .jump-links { gap: 0.4rem; }
+  .jump-links .btn { padding: 0.5rem 0.75rem; gap: 0.45em; font-size: 0.875rem; min-height: 2.5rem; }
+  @media (max-width: 640px) {
+    .kern { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 1.5rem; width: 100%; padding-block: 1rem; }
+  }
 
-  .fiche { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-l) var(--space-xl); align-items: start; }
-  .fiche .spec caption { font-weight: 680; font-stretch: 112%; font-size: var(--step-3); letter-spacing: -0.04em; padding-bottom: 1.2rem; }
-  .norm { color: var(--muted); font-size: var(--step--1); }
-  .fiche-side h2 { font-size: var(--step-3); font-weight: 680; letter-spacing: -0.04em; margin-bottom: 1.2rem; }
-  .care { list-style: none; padding: 0; display: grid; gap: 0.7rem; }
-  .care li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.9rem; align-items: center; color: var(--ink); }
-  .sym svg { width: 2.5rem; height: 2.5rem; fill: none; stroke: var(--ink); stroke-width: 1.6; }
+  /* ── Sections share one rhythm ── */
+  .sec { padding-block: var(--space-xl) calc(var(--space-xl) * 1.1); background: var(--white); scroll-margin-top: var(--header-h); }
+  .sec--sheet { background: var(--sheet); }
+  .two { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-l) var(--space-xl); align-items: start; }
+  .sec-head { margin-bottom: var(--space-l); }
+  @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+
+  /* ── Properties: a quiet two-column list ── */
+  .photo { margin: var(--space-l) 0 0; display: grid; gap: 0.7rem; max-width: 30rem; }
+  .photo img { width: 100%; height: auto; display: block; border-radius: 4px; background: var(--sheet-deep); }
+  .photo figcaption { font-size: var(--step--1); color: var(--muted); }
+  .props { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-l); }
+  .props li { display: grid; grid-template-columns: 2.25rem 1fr; gap: 0.9rem; align-items: start; padding-top: var(--space-m); border-top: 1px solid var(--sheet-line); }
+  .tick { width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--sheet); color: var(--orange-deep); }
+  .tick :global(svg) { width: 1.1rem; }
+  .props h3 { font-size: var(--step-0); font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .props p { margin-top: 0.3rem; color: var(--muted); font-size: var(--step--1); line-height: 1.5; }
+  @media (max-width: 600px) { .props { grid-template-columns: 1fr; } }
+
+  /* ── Fiche: three grouped panels, label left, value right ── */
+  .fiche { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 1.5rem); align-items: stretch; }
+  .group { background: var(--white); border-radius: 6px; padding: clamp(1.25rem, 2vw, 1.75rem); box-shadow: 0 1px 2px rgb(38 26 102 / 0.05), 0 8px 24px -12px rgb(38 26 102 / 0.12); }
+  .group h3 { font-size: 0.8rem; font-weight: 600; color: var(--orange-deep); letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 0.8rem; border-bottom: 1px solid var(--ink); }
+  .group dl { margin: 0; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.25rem 1rem; padding-block: 0.8rem; font-size: 0.95rem; border-bottom: 1px solid var(--sheet-line); }
+  .row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .row dt { font-weight: 400; color: var(--text); line-height: 1.35; hyphens: manual; min-width: 0; }
+  .norm { display: block; margin-top: 0.15rem; font-size: 0.78rem; font-weight: 400; color: var(--muted); }
+  .row dd { margin: 0; display: grid; justify-items: end; text-align: right; color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.4; }
+  .row dd span { white-space: nowrap; }
+  .note { margin-top: var(--space-m); max-width: 64ch; color: var(--muted); }
+  .note strong { color: var(--ink); font-weight: 600; }
+  @media (max-width: 1100px) { .fiche { grid-template-columns: 1fr 1fr; } .group:last-child { grid-column: 1 / -1; } }
+  @media (max-width: 700px) { .fiche { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } .row dd { justify-items: start; text-align: left; max-width: none; } }
+
+  /* ── Care: symbols as a row of tiles, disinfectants as tags ── */
+  .care { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; }
+  .care li { display: grid; justify-items: start; gap: 0.75rem; padding: 1rem; border-radius: 6px; background: var(--sheet); font-size: var(--step--1); line-height: 1.35; color: var(--ink); font-weight: 500; }
+  .sym svg { width: 2.25rem; height: 2.25rem; fill: none; stroke: var(--ink); stroke-width: 1.6; display: block; }
   .sym text { fill: var(--ink); stroke: none; font: 600 10px var(--text-face); text-anchor: middle; }
   .sym .f { fill: var(--ink); }
-  .small { margin-top: 1.25rem; font-size: var(--step--1); color: var(--muted); max-width: 60ch; }
-  .also { margin-top: var(--space-l); padding: var(--space-m); background: var(--white); border-top: 2px solid var(--orange); }
-  .also h3 { font-size: var(--step-1); font-weight: 680; margin-bottom: 0.5rem; }
-  .also p { color: var(--muted); }
-  @media (max-width: 900px) { .fiche { grid-template-columns: 1fr; } }
-  @media (max-width: 600px) { .spec thead { display: none; } .spec tr { display: grid; padding: 0.7rem 0; background: var(--zipline) left bottom / 6px 5px repeat-x; } .spec th, .spec td { background: none !important; padding: 0.1rem 0; width: auto; } }
+  .sub { margin-top: var(--space-l); font-size: var(--step-0); font-weight: 600; color: var(--ink); }
+  .chips { list-style: none; padding: 0; margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chips li { padding: 0.4rem 0.8rem; border: 1px solid var(--sheet-line); border-radius: 999px; font-size: var(--step--1); color: var(--text); }
+  @media (max-width: 1100px) { .care { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .care { grid-template-columns: 1fr 1fr; } }
 </style>

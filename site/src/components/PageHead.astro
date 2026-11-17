@@ -11,13 +11,23 @@ interface Props {
   tone?: 'light' | 'indigo' | 'night' | 'image';
   image?: { src: string; mobile?: string; alt?: string; position?: string };
   wide?: boolean;
+  compact?: boolean;       // short head: smaller title, little air, for pages that get straight to the point
 }
-const { title, accent, lede, crumbs = [], tone: _t = 'light', image, wide = false } = Astro.props;
+const { title, accent, lede, crumbs = [], tone: _t = 'light', image, wide = false, compact = false } = Astro.props;
 const tone = _t === 'night' ? 'indigo' : _t === 'image' && !image ? 'indigo' : _t;
 const trail = [{ href: '/', label: 'Home' }, ...crumbs];
+
+// Long Dutch compounds ("Positioneringshulpstukken") are wider than the screen at title size.
+// 1) give them a soft hyphen at the joint, 2) cap the size so the longest unbreakable piece always fits.
+const joints = /(?<=\p{L}{3})(hulpstukken|zitkussen|kussen|matras|hoes|preventie|positionering|beschermer|driehoek)/giu;
+const soft = (t?: string) => t?.split(' ').map((w) => (w.length > 12 ? w.replace(joints, '­$1') : w)).join(' ');
+const titleH = soft(title)!;
+const accentH = soft(accent);
+const longest = Math.max(...[titleH, accentH ?? ''].join(' ').split(/[\s­]+/).map((w) => w.length + 1));
+const fit = `--fit: calc((100vw - 2 * var(--gutter)) / ${(longest * 0.66).toFixed(2)})`;
 const dark = tone !== 'light';
 ---
-<section class:list={['page-head', `tone-${tone}`, { dark }]}>
+<section class:list={['page-head', `tone-${tone}`, { dark, compact }]}>
   {tone === 'image' && image && (
     <picture class="bg">
       {image.mobile && <source media="(max-width: 900px)" srcset={image.mobile} />}
@@ -37,9 +47,9 @@ const dark = tone !== 'light';
     <div class:list={['grid', { wide }]}>
       <div class="titles">
         <slot name="above" />
-        <h1>
-          <span class="rise"><span>{title}</span></span>
-          {accent && <span class="rise" style="--i:1"><em>{accent}</em></span>}
+        <h1 style={fit}>
+          <span class="rise"><span>{titleH}</span></span>
+          {accentH && <span class="rise" style="--i:1"><em>{accentH}</em></span>}
         </h1>
         {lede && <p class="lede rise-after">{lede}</p>}
         <slot name="below" />
@@ -84,7 +94,7 @@ const dark = tone !== 'light';
   .grid { align-self: end; margin-top: clamp(3rem, 2rem + 5vw, 7rem); display: grid; justify-items: start; }
   .tone-image .grid { margin-top: var(--space-2xl); }
 
-  h1 { font-size: clamp(3rem, 1rem + 6.6vw, 8rem); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; color: var(--ink); hyphens: manual; overflow-wrap: break-word; }
+  h1 { font-size: min(clamp(3rem, 1rem + 6.6vw, 8rem), var(--fit, 100vw)); font-stretch: 112%; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; color: var(--ink); hyphens: manual; overflow-wrap: break-word; }
   .dark h1 { color: var(--white); }
   h1 em { font-style: normal; color: var(--orange); }
   .lede { margin-top: 2rem; max-width: 40ch; color: var(--muted); font-size: var(--step-1); line-height: 1.5; }
@@ -95,4 +105,8 @@ const dark = tone !== 'light';
   @media (max-width: 900px) {
     .grid { margin-top: var(--space-xl); }
   }
+  .compact .inner { padding-bottom: var(--space-m); }
+  .compact .grid { margin-top: var(--space-l); }
+  .compact h1 { font-size: min(clamp(2.6rem, 1rem + 4.6vw, 5.5rem), var(--fit, 100vw)); }
+  .compact .lede { margin-top: 1.25rem; }
 </style>

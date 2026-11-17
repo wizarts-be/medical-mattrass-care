@@ -9,11 +9,16 @@ const {
   href = '/offerte/',
   label = 'Offerte aanvragen',
   staal = true,
-  steps,
+  // pass steps={[]} to hide the panel (e.g. a page that already explains its process)
+  steps = [
+    { t: 'Zeg wat u zoekt', d: 'Welke producten, welke maten en hoeveel. Een bestelcode uit de catalogus helpt, maar hoeft niet.' },
+    { t: 'Vraag eerst een staal', d: 'Voel en test het product of de stof zelf, voor u beslist.' },
+    { t: 'U krijgt snel een offerte', d: 'Een scherpe prijs voor uw aantallen. Bijna alle standaardproducten leveren we uit stock.' },
+  ],
   stepsTitle = 'Zo werkt het',
 } = Astro.props;
 ---
-<section class:list={['qband', { 'has-steps': steps?.length }]} aria-label={lines.join(' ')} data-qband>
+<section class:list={['qband', { 'has-steps': steps.length > 0 }]} aria-label={lines.join(' ')} data-qband>
   <h2>{lines.map((l, i) => (<span class="ln" style={`--i:${i}`}><span>{l}</span></span>))}</h2>
   <div class="side">
     <p>{text}</p>
@@ -23,7 +28,7 @@ const {
     </div>
     <p class="contact"><a href={`tel:${bedrijf.telefoonHref}`}>{bedrijf.telefoon}</a><a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></p>
   </div>
-  {steps?.length && (
+  {steps.length > 0 && (
     <div class="steps">
       <h3>{stepsTitle}</h3>
       <ol>

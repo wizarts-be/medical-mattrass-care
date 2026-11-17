@@ -56,20 +56,10 @@ const middelen = ontsmetting.split(/,\s*/);
       <a class="btn btn--light" href={offerteUrl({ code: 'MMC 210 PU-hoes' })}>Hoezen op maat aanvragen <Icon name="arrow" /></a>
       <a class="btn btn--ghost-light" href={offerteUrl({ code: 'MMC 210 PU-hoes' }, 'staal')}>Staal van de stof</a>
     </div>
+    <dl class="kern">
+      {kern.map((k) => (<div><dt>{k.v}</dt><dd>{k.l}</dd></div>))}
+    </dl>
   </PageHead>
-
-  <nav class="jump" aria-label="Op deze pagina">
-    <div class="wrap jump-in">
-      <dl class="kern">
-        {kern.map((k) => (<div><dt>{k.v}</dt><dd>{k.l}</dd></div>))}
-      </dl>
-      <ul class="jump-links">
-        <li><a class="btn btn--ghost btn--small" href="#eigenschappen">Eigenschappen <Icon name="arrow-down" /></a></li>
-        <li><a class="btn btn--ghost btn--small" href="#fiche">Technische fiche <Icon name="arrow-down" /></a></li>
-        <li><a class="btn btn--ghost btn--small" href="#onderhoud">Onderhoud <Icon name="arrow-down" /></a></li>
-      </ul>
-    </div>
-  </nav>
 
   <section class="sec" id="eigenschappen" aria-labelledby="eig-h">
     <div class="wrap two">
@@ -159,22 +149,15 @@ const middelen = ontsmetting.split(/,\s*/);
   .h2 { font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.8rem); font-weight: 700; font-stretch: 112%; letter-spacing: -0.045em; line-height: 0.95; color: var(--ink); text-wrap: balance; }
   .intro { margin-top: 1rem; color: var(--muted); font-size: var(--step-1); line-height: 1.5; max-width: 42ch; text-wrap: pretty; }
 
-  /* ── Facts + in-page links under the hero ── */
-  .jump { background: var(--white); border-bottom: 1px solid var(--sheet-line); }
-  .jump-in { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; min-height: 4.5rem; }
-  .kern { display: flex; gap: clamp(1rem, 2.2vw, 2rem); margin: 0; }
-  .kern div { display: flex; align-items: baseline; gap: 0.4rem; }
-  .kern dt { font-family: var(--display); font-stretch: 112%; font-weight: 700; font-size: var(--step-1); letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; }
-  .kern dd { margin: 0; font-size: var(--step--1); color: var(--muted); }
-  .jump-links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; color: var(--ink); }
-  .jump-links .btn { --bd: var(--sheet-line); }
-  @media (hover: hover) { .jump-links .btn:hover :global(svg) { transform: translateY(3px); } }
-  @media (max-width: 1100px) { .jump-in { flex-wrap: wrap; padding-block: 1rem; } }
-  .jump-links { gap: 0.4rem; }
-  .jump-links .btn { padding: 0.5rem 0.75rem; gap: 0.45em; font-size: 0.875rem; min-height: 2.5rem; }
-  @media (max-width: 640px) {
-    .kern { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem 1.5rem; width: 100%; padding-block: 1rem; }
+  /* ── Key facts in the hero, same row as the home hero ── */
+  .kern {
+    display: flex; flex-wrap: wrap; gap: 0.8rem clamp(1.5rem, 4vw, 3.5rem); margin: 0.75rem 0 0;
+    padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / 0.18); max-width: 44rem;
   }
+  .kern div { display: grid; gap: 0.15rem; }
+  .kern dt { font-family: var(--display); font-stretch: 112%; font-weight: 680; font-size: var(--step-2); letter-spacing: -0.03em; line-height: 1; color: var(--white); white-space: nowrap; }
+  .kern dd { margin: 0; font-size: var(--step--1); color: var(--on-indigo-muted); }
+  @media (max-width: 600px) { .kern dt { font-size: var(--step-1); } }
 
   /* ── Sections share one rhythm ── */
   .sec { padding-block: var(--space-xl) calc(var(--space-xl) * 1.1); background: var(--white); scroll-margin-top: var(--header-h); }

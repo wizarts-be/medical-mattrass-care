@@ -113,7 +113,8 @@ const [maDo, vr] = bedrijf.uren.map(([, u]) => u);
   .legal a:hover { color: var(--white); }
   .lang a[aria-current] { color: var(--orange); }
 
-  @media (max-width: 960px) {
+  /* Stack before the phone number gets wider than its column */
+  @media (max-width: 1100px) {
     .top { grid-template-columns: 1fr; align-items: start; }
     .brand, .reach { grid-column: 1; }
     .cols { grid-template-columns: 1fr 1fr; }

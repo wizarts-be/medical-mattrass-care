@@ -1,6 +1,6 @@
 ---
 // Eén lijnstijl: 1.6 px op een 20-raster, rechte uiteinden zoals de vormtaal.
-interface Props { name: 'arrow' | 'arrow-down' | 'phone' | 'mail' | 'pin' | 'download' | 'menu' | 'close' | 'check' | 'plus' | 'clock'; label?: string; }
+interface Props { name: 'arrow' | 'arrow-down' | 'phone' | 'mail' | 'pin' | 'download' | 'menu' | 'close' | 'check' | 'plus' | 'minus' | 'search' | 'clock'; label?: string; }
 const { name, label } = Astro.props;
 const paths: Record<string, string> = {
   arrow: '<path d="M3 10h13M11 5l5 5-5 5"/>',
@@ -13,6 +13,8 @@ const paths: Record<string, string> = {
   close: '<path d="M4.5 4.5l11 11M15.5 4.5l-11 11"/>',
   check: '<path d="M3.5 10.5l4 4 9-9"/>',
   plus: '<path d="M10 3v14M3 10h14"/>',
+  minus: '<path d="M3 10h14"/>',
+  search: '<path d="M8.5 14.5a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/><path d="M13 13l4.5 4.5"/>',
   clock: '<path d="M10 17.5a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15z"/><path d="M10 6v4.5l3 2"/>',
 };
 ---

@@ -82,9 +82,9 @@ export const producten = [
     aanname: 'Bestelcode en exacte hoesuitvoering van de politiecelmatras te bevestigen.',
   },
 
-  // ───────── Positioneringshulpstukken visco ─────────
+  // ───────── Positioneringskussens: visco ─────────
   {
-    slug: 'mmc-ck-01', code: 'MMC CK 01', naam: 'MMC cilinder klein', categorie: 'positionering-visco', status: 'actief',
+    slug: 'mmc-ck-01', code: 'MMC CK 01', naam: 'MMC cilinder klein', categorie: 'positionering', status: 'actief',
     toepassingen: ['positionering', 'druk'],
     kort: 'Kleine cilinder uit gesneden viscoschuim, 50 x 10 cm.',
     omschrijving: ['Een kleine steunrol uit gesneden viscoschuim, om enkels, knieën of de nek te ondersteunen en drukpunten te ontlasten.'],
@@ -92,7 +92,7 @@ export const producten = [
     hoes: PU210, maatwerk: true, foto: 'mmc-ck-01.jpg', fotoAlt: 'MMC cilinder klein in donkere PU-hoes',
   },
   {
-    slug: 'mmc-cg-02', code: 'MMC CG 02', naam: 'MMC cilinder groot', categorie: 'positionering-visco', status: 'actief',
+    slug: 'mmc-cg-02', code: 'MMC CG 02', naam: 'MMC cilinder groot', categorie: 'positionering', status: 'actief',
     toepassingen: ['positionering', 'druk'],
     kort: 'Grote cilinder uit viscoschuim, 50 x 20 cm.',
     omschrijving: ['Een grote steunrol uit viscoschuim, voor de knieholte of onder de onderbenen bij ruglig.'],
@@ -100,7 +100,7 @@ export const producten = [
     hoes: PU210, maatwerk: true, foto: 'mmc-cg-02.jpg', fotoAlt: 'MMC cilinder groot in donkere PU-hoes',
   },
   {
-    slug: 'mmc-hr-03', code: 'MMC HR 03', naam: 'MMC half rond', categorie: 'positionering-visco', status: 'actief',
+    slug: 'mmc-hr-03', code: 'MMC HR 03', naam: 'MMC half rond', categorie: 'positionering', status: 'actief',
     toepassingen: ['positionering', 'druk'],
     kort: 'Halfronde steun uit in de mal gegoten viscoschuim.',
     omschrijving: ['Een halfronde steun met een vlakke onderkant, zodat hij stabiel blijft liggen. Het viscoschuim is in de mal gegoten.'],
@@ -108,7 +108,7 @@ export const producten = [
     hoes: PU210, maatwerk: true, foto: 'mmc-hr-03.jpg', fotoAlt: 'MMC half rond in donkere PU-hoes',
   },
   {
-    slug: 'mmc-hp-04', code: 'MMC HP 04', naam: 'MMC hielpositionering', categorie: 'positionering-visco', status: 'actief',
+    slug: 'mmc-hp-04', code: 'MMC HP 04', naam: 'MMC hielpositionering', categorie: 'positionering', status: 'actief',
     toepassingen: ['druk', 'positionering'],
     kort: 'Hielbeschermer met holle vezel en klittenbandsluiting.',
     omschrijving: ['Houdt de hiel vrij van de matras en verlaagt zo de druk op een van de meest kwetsbare plekken. Gevuld met holle gesiliconiseerde polyestervezel, gesloten met klittenband.'],
@@ -116,7 +116,7 @@ export const producten = [
     hoes: PU210, maatwerk: true, foto: 'mmc-hp-04.jpg', fotoAlt: 'MMC hielpositionering, blauw, met klittenband',
   },
   {
-    slug: 'mmc-zp-05', code: 'MMC ZP 05', naam: 'MMC zitpositionering', categorie: 'positionering-visco', status: 'actief', uitgelicht: true,
+    slug: 'mmc-zp-05', code: 'MMC ZP 05', naam: 'MMC zitpositionering', categorie: 'positionering', status: 'actief', uitgelicht: true,
     toepassingen: ['zitten', 'druk'],
     kort: 'Zitkussen uit viscoschuim met anti-sliplaag, 43 x 43 x 7 cm.',
     omschrijving: ['Een zitkussen uit gesneden viscoschuim met een anti-sliplaag aan de onderkant. Ideaal als relaxzitkussen in de zetel of de rolstoel.'],
@@ -124,7 +124,7 @@ export const producten = [
     hoes: PU210, maatwerk: true, foto: 'mmc-zp-05.jpg', fotoAlt: 'MMC zitpositionering, vierkant zitkussen in donkere hoes',
   },
   {
-    slug: 'mmc-pk-08', code: 'MMC PK 08', naam: 'MMC peluwkussen', categorie: 'positionering-visco', status: 'actief',
+    slug: 'mmc-pk-08', code: 'MMC PK 08', naam: 'MMC peluwkussen', categorie: 'positionering', status: 'actief',
     toepassingen: ['positionering', 'slaap'],
     kort: 'Wigvormig kussen, aflopend van 8 naar 2 cm.',
     omschrijving: ['Een wigvormig kussen uit gesneden viscoschuim, aflopend van 8 naar 2 cm. Voor een licht verhoogde lighouding van hoofd of benen.'],
@@ -146,7 +146,7 @@ export const producten = [
     extraFotos: [{ src: 'mmc-r3dv-07-schuim.jpg', alt: 'Het gegoten viscoschuim van de MMC R3DV 07 met rasterpatroon' }],
   },
 
-  // ───────── Positioneringshulpstukken polystyreen ─────────
+  // ───────── Positioneringskussens: polystyreenbolletjes ─────────
   ...[
     ['mmcp-ak-01a', 'MMCP AK 01A', 'MMCP AK 01B', 'MMC abductie knie', 'Halve boog voor de ondersteuning van de knie.', '65 x 35 cm', 'mmcp-ak-01a.jpg', 'MMC abductie knie, blauwe halve boog'],
     ['mmcp-abp-02a', 'MMCP ABP 02A', 'MMCP ABP 02B', 'MMC arm- en beenpositionering', 'Kussen voor de ondersteuning van arm of been.', '39 x 21 cm', 'mmcp-abp-02a.jpg', 'Blauw positioneringskussen voor arm of been'],
@@ -156,7 +156,7 @@ export const producten = [
     ['mmcp-up-06a', 'MMCP UP 06A', 'MMCP UP 06B', 'MMC U-pillow', 'U-vormig kussen voor nek en schouders.', '161 x 80 cm', 'mmcp-up-06a.jpg', 'MMC U-pillow, lange blauwe boog'],
     ['mmcp-cg-07a', 'MMCP CG 07A', 'MMCP CG 07B', 'MMC cilinder groot (bolletjes)', 'Cilinder voor knie of voet bij ruglig.', '50 x 20 cm', 'mmcp-cg-07a.jpg', 'Blauwe cilinder gevuld met polystyreenbolletjes'],
   ].map(([slug, code, badstof, naam, kort, maat, foto, alt]) => ({
-    slug, code, naam, categorie: 'positionering-polystyreen', status: 'actief',
+    slug, code, naam, categorie: 'positionering', status: 'actief',
     toepassingen: slug === 'mmcp-up-06a' ? ['positionering', 'slaap'] : ['positionering', 'druk'],
     kort,
     omschrijving: ['Gevuld met brandvertragende polystyreenbolletjes die zich naar het lichaamsdeel vormen. Zo krijgt het een volledige en constante ondersteuning, met een anti-decubituswerking.'],

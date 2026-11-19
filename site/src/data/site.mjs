@@ -23,8 +23,7 @@ export const bedrijf = {
 
 export const categorieen = [
   { slug: 'matrassen', naam: 'Matrassen', kort: 'Visco, koudschuim en drukverdelend, standaard in de MMC 210 PU-hoes.', intro: 'Alle matrassen komen standaard in de MMC 210 PU-hoes. Zit uw matras er niet bij? MMC levert matrassen in opbouw en maat naar uw wens.', beeld: 'mmc-v10.jpg' },
-  { slug: 'positionering-visco', naam: 'Positionering visco', lang: 'Positioneringshulpstukken visco', kort: 'Cilinders, wiggen en zitkussens uit gesneden of gegoten viscoschuim.', intro: 'Hulpstukken uit viscoschuim, gesneden uit een blok of in de mal gegoten. Allemaal in de MMC 210 PU-hoes, op maat te maken.', beeld: 'mmc-cg-02.jpg' },
-  { slug: 'positionering-polystyreen', naam: 'Positionering bolletjes', lang: 'Positioneringshulpstukken polystyreen', kort: 'Kussens met polystyreenbolletjes die zich naar het lichaam vormen.', intro: 'Brandvertragende polystyreenbolletjes vormen zich naar het lichaamsdeel en geven een volledige, constante ondersteuning. Bij elk kussen is een badstofhoes apart te bestellen.', beeld: 'mmcp-collectie.jpg' },
+  { slug: 'positionering', naam: 'Positioneringskussens', lang: 'Positioneringskussens', kort: 'Cilinders, wiggen en kussens uit viscoschuim of met polystyreenbolletjes.', intro: 'Hulpstukken uit viscoschuim, gesneden uit een blok of in de mal gegoten, en kussens met brandvertragende polystyreenbolletjes die zich naar het lichaamsdeel vormen. Allemaal in de MMC 210 PU-hoes. Visco is op maat te maken; bij de kussens met bolletjes is een badstofhoes apart te bestellen.', beeld: 'mmc-cg-02.jpg' },
   { slug: 'zitkussens', naam: 'Zitkussens', lang: 'Positioneringszitkussen', kort: 'Rolstoelkussen uit gegoten visco met abductieheuvel.', intro: 'Een stabiele, rechte zithouding helpt decubitus voorkomen. Ons rolstoelkussen is in de mal gegoten en leidt de druk weg van de zitbeenderen.', beeld: 'mmc-r3dv-07.jpg' },
   { slug: 'bescherming', naam: 'Bescherming', lang: 'Beschermingshulpstukken', kort: 'Valmatras, driehoeken en onrusthekkenbeschermers.', intro: 'Hulpstukken die vallen opvangen en uit bed rollen voorkomen, zonder iemand te veel in zijn beweging te remmen.', beeld: 'mmc-fo-10.jpg' },
   { slug: 'hoofdkussens', naam: 'Hoofdkussens', kort: 'Holle vezel en visco, individueel verpakt.', intro: 'Alle kussens worden individueel verpakt geleverd. Kies holle vezel in een wasbare PU-hoes, of visco in een velours hoes.', beeld: 'mmc-pup-23.jpg' },
@@ -77,8 +76,8 @@ export const oudeUrls = {
   '/hoofdkussens-visco/': '/producten/hoofdkussens/',
   '/beschermingshulpstukken/': '/producten/bescherming/',
   '/positioneringszitkussen/': '/producten/zitkussens/',
-  '/positionering-visco/': '/producten/positionering-visco/',
-  '/positioneringshulpstukken-ps/': '/producten/positionering-polystyreen/',
+  '/positionering-visco/': '/producten/positionering/',
+  '/positioneringshulpstukken-ps/': '/producten/positionering/',
   '/dekbedden/': '/producten/dekbedden/',
   '/mmc-bicolor/': '/producten/dekbedden/mmc-bicolor/',
   '/mmc-baby-dekbed/': '/producten/dekbedden/mmc-baby-dekbed/',

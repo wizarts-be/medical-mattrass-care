@@ -17,13 +17,13 @@ const lagen = [
 const n = (...slugs: string[]) => slugs.reduce((a, s) => a + perCategorie(s).length, 0);
 const reeks = [
   { slug: 'matrassen', naam: 'Matrassen', picto: 'mattress', top: 'MMC V10', specs: [['Opbouw', '10 cm CMHR 40 + 5 cm Visco 50'], ['Maten', '90 tot 180 × 200 cm'], ['Hoes', 'MMC 210 PU']], n: n('matrassen') },
-  { slug: 'positionering-visco', naam: 'Positionering', picto: 'cylinder', top: 'MMC CK 01 · CG 02 · HR 03', specs: [['Schuim', 'visco 45 tot 50 kg/m³'], ['Maten', '50 × 10 tot 50 × 20 cm'], ['Ook', 'kussens met bolletjes']], n: n('positionering-visco', 'positionering-polystyreen') },
+  { slug: 'positionering', naam: 'Positioneringskussens', picto: 'cylinder', top: 'MMC CK 01 · CG 02 · HR 03', specs: [['Schuim', 'visco 45 tot 50 kg/m³'], ['Maten', '50 × 10 tot 50 × 20 cm'], ['Ook', 'kussens met bolletjes']], n: n('positionering') },
   { slug: 'zitkussens', naam: 'Zitkussens', picto: 'seat', top: 'MMC R3DV 07', specs: [['Schuim', 'gegoten Visco 60'], ['Vorm', 'met abductieheuvel'], ['Hoes', '210 PU met watergordijn']], n: n('zitkussens') },
   { slug: 'hoofdkussens', naam: 'Hoofdkussens', picto: 'pillow', top: 'MMC PUP 23', specs: [['Maat', '60 × 60 cm, 700 g'], ['Vulling', 'holle vezel'], ['Hoes', 'MMC 120 PU, afneembaar']], n: n('hoofdkussens') },
   { slug: 'dekbedden', naam: 'Dekbedden', picto: 'duvet', top: 'MMC Bicolor', specs: [['Maat', '220 × 150 cm'], ['Vulling', '300 g/m² Neotherm'], ['Onderhoud', 'wasbaar op 40 °C']], n: n('dekbedden') },
   { slug: 'bescherming', naam: 'Bescherming', picto: 'panels', top: 'MMC FO 10', specs: [['Maat', '3 × 60 × 60 cm'], ['Schuim', '7 cm CMHR 25'], ['Gebruik', 'naast het bed, bij evacuatie']], n: n('bescherming') },
 ] as const;
-const overige = categorieen.filter((c) => !reeks.some((r) => r.slug === c.slug) && !['positionering-polystyreen', 'zitkussens'].includes(c.slug) && perCategorie(c.slug).length);
+const overige = categorieen.filter((c) => !reeks.some((r) => r.slug === c.slug) && c.slug !== 'zitkussens' && perCategorie(c.slug).length);
 
 const hoesFeiten = [
   { k: 95, u: '°C', v: 'wasbaar' },

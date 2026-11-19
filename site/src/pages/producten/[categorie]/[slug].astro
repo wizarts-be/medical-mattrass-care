@@ -5,6 +5,8 @@ import ProductImage from '../../../components/ProductImage.astro';
 import ProductCard from '../../../components/ProductCard.astro';
 import Icon from '../../../components/Icon.astro';
 import QuoteBand from '../../../components/QuoteBand.astro';
+import MeerTekst from '../../../components/MeerTekst.astro';
+import { productTekst } from '../../../lib/teksten';
 import { zichtbaar, categorie, categorieUrl, perCategorie, hoes, offerteUrl, fotoUrl } from '../../../lib/catalogus.mjs';
 import { bedrijf } from '../../../data/site.mjs';
 
@@ -14,6 +16,7 @@ export function getStaticPaths() {
 const { p } = Astro.props;
 const c = categorie(p.categorie);
 const h = hoes(p.hoes);
+const meer = productTekst(p.slug);
 const verwant = perCategorie(p.categorie).filter((x) => x.slug !== p.slug).slice(0, 4);
 const fotos = [
   ...(p.foto ? [{ src: p.foto, alt: p.fotoAlt }] : []),
@@ -110,6 +113,8 @@ const jsonld = {
       <a class="link-arrow fiche" href={offerteUrl(p, 'fiche')}>Technische fiche aanvragen <Icon name="arrow" /></a>
     </div>
   </div>
+
+  <MeerTekst titel={`Meer over de ${p.naam}.`} blokken={meer} size="m" tone="white" />
 
   {verwant.length > 0 && (
     <section class="band band--sheet related" aria-labelledby="verwant">
